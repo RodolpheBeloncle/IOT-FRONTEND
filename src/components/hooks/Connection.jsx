@@ -3,9 +3,9 @@ import { Card, Button, Form, Input, Row, Col } from 'antd';
 const Connection = ({ connect, disconnect, connectBtn }) => {
   const [form] = Form.useForm();
   const record = {
-    host: '8.tcp.ngrok.io',
+    host: '2.tcp.ngrok.io',
     clientId: `mqttjs_ + ${Math.random().toString(16).substr(2, 8)}`,
-    port: 14329,
+    port: 14147,
   };
 
   const onFinish = (values) => {

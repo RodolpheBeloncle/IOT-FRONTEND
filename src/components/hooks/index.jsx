@@ -33,9 +33,9 @@ const qosOption = [
 const HookMqtt = () => {
   const [client, setClient] = useState(null);
   const [isSubed, setIsSub] = useState(false);
-  const [payload, setPayload] = useState([{ time: 0, value: 0 }]);
+  // const [payload, setPayload] = useState([{ time: 0, value: 0 }]);
+  const [payload, setPayload] = useState({});
   const [connectStatus, setConnectStatus] = useState('Connect');
-
 
   const mqttConnect = (host, mqttOption) => {
     setConnectStatus('Connecting');
@@ -54,15 +54,21 @@ const HookMqtt = () => {
       client.on('reconnect', () => {
         setConnectStatus('Reconnecting');
       });
+
+      // payload from test broker
+      // client.on('message', (topic, message, packet) => {
+      //   const newData = {
+      //     timestamp: new Date().toLocaleTimeString(),
+      //     temperature: parseFloat(message.toString()),
+      //   };
+      //   setPayload((prevData) => [...prevData, newData]);
+      // });
+
       client.on('message', (topic, message, packet) => {
-        const newData = {
-          timestamp: new Date().toLocaleTimeString(),
-          temperature: parseFloat(message.toString()),
-        };
-        setPayload((prevData) => [...prevData, newData]);
+        setPayload({ topic, message: message.toString() });
       });
     }
-    console.log('Payload', payload);
+    console.log('Received message:', payload);
   }, [client]);
 
   const mqttDisconnect = () => {
@@ -116,14 +122,14 @@ const HookMqtt = () => {
 
   return (
     <>
-      <LineChart width={800} height={400} data={payload}>
+      {/* <LineChart width={800} height={400} data={payload}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="timestamp" />
         <YAxis />
         <Tooltip />
         <Legend />
         <Line type="monotone" dataKey="temperature" stroke="#8884d8" />
-      </LineChart>
+      </LineChart> */}
 
       <Connection
         connect={mqttConnect}

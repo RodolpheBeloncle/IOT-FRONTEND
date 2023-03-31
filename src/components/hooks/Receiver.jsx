@@ -29,6 +29,11 @@ const Receiver = ({ payload }) => {
           dataSource={messages}
           renderItem={renderListItem}
         />
+        {/* <ul>
+          {payload.map((message, index) => (
+            <li key={index}>{message}</li>
+          ))}
+        </ul> */}
       </Card>
       <button onClick={() => refresh()}>refresh</button>
     </>
