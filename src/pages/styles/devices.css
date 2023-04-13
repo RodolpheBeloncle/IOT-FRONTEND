@@ -1,0 +1,11 @@
+
+
+.Red {background: rgb(235, 187, 187); color: white; width: 200px;}
+.Green {background: green; color: white; width: 200px;}
+.Blue {background: blue; color: white; width: 200px;}
+
+@media screen and (max-width: 600px) {
+  .column {
+    flex: 100% !important;
+  }
+}

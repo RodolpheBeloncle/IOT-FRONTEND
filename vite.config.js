@@ -1,12 +1,14 @@
 import react from "@vitejs/plugin-react";
 import nodePolyfills from "vite-plugin-node-stdlib-browser";
 import notifier from "vite-plugin-notifier";
+import dotenv from 'dotenv';
+dotenv.config();
 import { Buffer } from "buffer/";
 
 export default {
   plugins: [react(), notifier(), nodePolyfills()],
   server: {
-    port: 4040,
+    port: 3000,
   },
 
   resolve: {
