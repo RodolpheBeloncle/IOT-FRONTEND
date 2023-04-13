@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 const Navbar = ({ user }) => {
   const logout = () => {
+    //!set right url for logout
     window.open('http://localhost:5000/auth/logout');
   };
   return (

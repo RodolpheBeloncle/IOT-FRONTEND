@@ -11,24 +11,36 @@ import ChangePassword from './pages/ChangePassword';
 import ForgetPassword from './pages/ForgetPassword';
 import Profil from './pages/Profil';
 import ProtectedRoutes from './services/ProtectedRoutes';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { ColorModeContext, useMode } from './theme';
 const App = () => {
+  const [theme, colorMode] = useMode();
+  const [isSidebar, setIsSidebar] = useState(true);
   return (
     <>
-      <BrowserRouter>
-        <Navbar />
-        <BreadCrumb />
-        <Routes>
-          <Route path="/" element={<Devices />} />
-          <Route path="/reset-password" element={<ForgetPassword />} />
-          <Route path="/user/reset/:id/:token" element={<ChangePassword />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          {/* <Route path="/" element={<ProtectedRoutes />}>
+      <ColorModeContext.Provider value={colorMode}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <BrowserRouter>
+            <Navbar />
+            <BreadCrumb />
+            <Routes>
+              <Route path="/" element={<Devices />} />
+              <Route path="/reset-password" element={<ForgetPassword />} />
+              <Route
+                path="/user/reset/:id/:token"
+                element={<ChangePassword />}
+              />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              {/* <Route path="/" element={<ProtectedRoutes />}>
             <Route path="/profil" element={<Profil />} />
           </Route> */}
-          <Route path="/profil" element={<Profil />} />
-        </Routes>
-      </BrowserRouter>
+              <Route path="/profil" element={<Profil />} />
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>
+      </ColorModeContext.Provider>
     </>
   );
 };
