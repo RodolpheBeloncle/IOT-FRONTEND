@@ -1,37 +1,28 @@
-import React, { useEffect } from 'react';
-import { useAuth } from '../hooks/useAuth';
+import React, { useEffect, useContext } from 'react';
+import { UserContext } from '../context/UserContextProvider';
 import { Navigate, Outlet } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import BreadCrumb from '../components/BreadCrumb';
 
-const ProtectedRoute = ({ isAuthenticated }) => {
-  useEffect(() => {
-    console.log('pass the protected route ', isAuthenticated);
-  }, []);
+const ProtectedRoute = () => {
+  const { isAuthenticated, checkAuthentication } = useContext(UserContext);
 
-  // true ? (
-  //   <>
-  //     <Navbar />
-  //     {/* <BreadCrumb /> */}
-  //     {/* <Sidebar /> */}
-  //     <p>is Authorized</p>
-  //     {/* <Outlet /> */}
-  //   </>
-  // ) : (
-  //   // <Navigate to="/login" />
-  //   <p>protected routes</p>
-  // );
-  {
-    /* <BreadCrumb /> */
-  }
-  {
-    /* <Sidebar /> */
-  }
-  <p>is Authorized</p>;
-  {
-    /* <Outlet /> */
-  }
-  return isAuthenticated ? <Navbar /> : <p>is not Authorized</p>;
+  useEffect(() => {
+    checkAuthentication();
+  }, [isAuthenticated]);
+
+  return !isAuthenticated ? (
+    <Navigate to="/login" />
+   
+  ) : (
+    <>
+      <Navbar />
+      <BreadCrumb />
+      <div className="main-container">
+        <Outlet />
+      </div>
+    </>
+  );
 };
 
 export default ProtectedRoute;

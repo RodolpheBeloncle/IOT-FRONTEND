@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import Cookies from 'js-cookie';
 import axios from '../services/axiosInterceptor';
 import jwtDecode from 'jwt-decode';
@@ -6,9 +6,11 @@ import jwtDecode from 'jwt-decode';
 import { useNavigate, Link } from 'react-router-dom';
 import shareVideo from '../assets/share.mp4';
 import google from '../img/google.png';
-import { useAuth } from '../hooks/useAuth';
+import { UserContext } from '../context/UserContextProvider';
+
 const Login = () => {
-  const { login, isAuthenticated, setIsAuthenticated } = useAuth();
+  const { isAuthenticated, setIsAuthenticated, login, checkAuthentication } =
+    useContext(UserContext);
   const navigate = useNavigate();
   const [input, setInput] = useState({
     email: '',
@@ -30,7 +32,7 @@ const Login = () => {
         const token = Cookies.get('token');
 
         if (token) {
-          console.log('token is token', isAuthenticated);
+          console.log('token login is set', isAuthenticated);
           const decodedToken = jwtDecode(token);
           const currentTime = Date.now() / 1000;
 
@@ -58,10 +60,8 @@ const Login = () => {
   };
 
   useEffect(() => {
-    // if (!isAuthenticated) {
-    //   navigate('/login');
-    // }
-    // console.log('login', isAuthenticated);
+    checkAuthentication();
+    console.log('login usercontext', isAuthenticated);
   }, []);
 
   return (
