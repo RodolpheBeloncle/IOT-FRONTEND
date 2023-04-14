@@ -30,7 +30,9 @@ export const UserContextProvider = ({ children }) => {
 
   const checkAuthentication = async () => {
     try {
-      const token = Cookies.get('token');
+      const token = await Cookies.get('token');
+      // const googleToken = Cookies.get('connect.sid');
+      console.log('googletoken', token);
 
       console.log('decoded token : ', jwtDecode(token));
       if (token) {

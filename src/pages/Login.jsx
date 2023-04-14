@@ -41,12 +41,13 @@ const Login = () => {
             Cookies.remove('token');
             return navigate('/login');
           } else {
+            //!TODO REDIRECT THROW ANOTHER DIRECTION THAN DEVICES
             setIsAuthenticated(true);
             return navigate('/');
           }
         } else {
           setIsAuthenticated(false);
-          return navigate('/');
+          return navigate('/login');
         }
       })
       .catch((error) => {
@@ -55,8 +56,12 @@ const Login = () => {
       });
   };
 
-  const handleGoogleLogin = () => {
-    window.open('http://localhost:5000/auth/google', '_self');
+  const handleGoogleLogin = async () => {
+    try {
+      window.open('http://localhost:5000/auth/google', '_self');
+    } catch (error) {
+      console.log('google login error', error);
+    }
   };
 
   useEffect(() => {
