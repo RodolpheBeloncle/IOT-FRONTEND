@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import axios from '../services/axiosInterceptor';
+import jwtDecode from 'jwt-decode';
 // import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import shareVideo from '../assets/share.mp4';
 import google from '../img/google.png';
 import { useAuth } from '../hooks/useAuth';
 const Login = () => {
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, setIsAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [input, setInput] = useState({
     email: '',
@@ -17,20 +18,38 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const response = await axios
+    await axios
       .post('/api/auth/users/login', input, {
         widthCredentials: true,
       })
       .then((response) => {
         alert(response.data.message);
         login(response.data.token, response.data.username);
-        // Cookies.set('token', response.data.token, { expires: 7 });
-        // Cookies.set('username', response.data.username);
+
         console.log('COOKIES', Cookies.get('token'));
+        const token = Cookies.get('token');
+
+        if (token) {
+          console.log('token is token', isAuthenticated);
+          const decodedToken = jwtDecode(token);
+          const currentTime = Date.now() / 1000;
+
+          if (decodedToken.exp < currentTime) {
+            setIsAuthenticated(false);
+            Cookies.remove('token');
+            return navigate('/login');
+          } else {
+            setIsAuthenticated(true);
+            return navigate('/');
+          }
+        } else {
+          setIsAuthenticated(false);
+          return navigate('/');
+        }
       })
       .catch((error) => {
-        console.log('message error', error);
-        alert(error.response.data.message);
+        console.log('message error : ', error);
+        alert(error);
       });
   };
 
@@ -39,10 +58,11 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/');
-    }
-  }, [isAuthenticated, navigate]);
+    // if (!isAuthenticated) {
+    //   navigate('/login');
+    // }
+    // console.log('login', isAuthenticated);
+  }, []);
 
   return (
     <div className="login">

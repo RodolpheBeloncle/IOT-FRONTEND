@@ -4,13 +4,14 @@ import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
-  const { logout ,isAuthenticated } = useAuth();
- 
+  const { logout, isAuthenticated } = useAuth();
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    !isAuthenticated && navigate('/login');
-  }, [isAuthenticated]);
+  // useEffect(() => {
+  //   isAuthenticated && navigate('/');
+  //   console.log('navbar', isAuthenticated);
+  // }, []);
 
   const handleLogout = async () => {
     try {

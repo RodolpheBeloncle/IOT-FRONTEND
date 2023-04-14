@@ -23,12 +23,12 @@ const Devices = () => {
       .catch((err) => console.log(err));
   }, [isOpenModal]);
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/login');
-    }
-    console.log('Devices', isAuthenticated);
-  }, [isAuthenticated]);
+  // useEffect(() => {
+  //   if (!isAuthenticated) {
+  //     navigate('/login');
+  //   }
+  //   console.log('Devices', isAuthenticated);
+  // }, [isAuthenticated]);
 
   return (
     <>
