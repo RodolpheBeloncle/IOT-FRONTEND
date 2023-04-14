@@ -1,22 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 
-const Navbar = ({ user }) => {
-  const logout = () => {
-    //!set right url for logout
-    window.open('http://localhost:5000/auth/logout');
+const Navbar = () => {
+  const { logout ,isAuthenticated } = useAuth();
+ 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    !isAuthenticated && navigate('/login');
+  }, [isAuthenticated]);
+
+  const handleLogout = async () => {
+    try {
+      logout();
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   return (
     <div className="navbar">
       <span className="logo">
         <Link className="link" to="/">
-         IOT Dashboard
+          IOT Dashboard
         </Link>
       </span>
       {true ? (
         <ul className="list">
           <li className="listItem">
-            <img
+            {/* <img
               src={
                 user
                   ? user.picture
@@ -24,10 +38,10 @@ const Navbar = ({ user }) => {
               }
               alt="profil_pic"
               className="avatar"
-            />
+            /> */}
           </li>
           <li className="listItem">username</li>
-          <li className="listItem" onClick={logout}>
+          <li className="listItem" onClick={handleLogout}>
             Logout
           </li>
         </ul>

@@ -1,46 +1,45 @@
-import React, { useEffect, useState } from 'react';
-import BreadCrumb from './components/BreadCrumb';
-import axios from './services/axiosInterceptor';
+import React, { useState } from 'react';
 import './app.css';
-import Navbar from './components/Navbar';
+// import BreadCrumb from './components/BreadCrumb';
+// import Navbar from './components/Navbar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './components/Login';
+import Login from './pages/Login';
 import Devices from './pages/Devices';
-import Register from './components/Register';
+import Register from './pages/Register';
 import ChangePassword from './pages/ChangePassword';
 import ForgetPassword from './pages/ForgetPassword';
 import Profil from './pages/Profil';
-import ProtectedRoutes from './services/ProtectedRoutes';
+import ProtectedRoute from './services/ProtectedRoute';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { ColorModeContext, useMode } from './theme';
+import { UserContextProvider } from './context/UserContextProvider';
 const App = () => {
   const [theme, colorMode] = useMode();
   const [isSidebar, setIsSidebar] = useState(true);
+
   return (
     <>
-      <ColorModeContext.Provider value={colorMode}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <BrowserRouter>
-            <Navbar />
-            <BreadCrumb />
-            <Routes>
-              <Route path="/" element={<Devices />} />
-              <Route path="/reset-password" element={<ForgetPassword />} />
-              <Route
-                path="/user/reset/:id/:token"
-                element={<ChangePassword />}
-              />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              {/* <Route path="/" element={<ProtectedRoutes />}>
-            <Route path="/profil" element={<Profil />} />
-          </Route> */}
-              <Route path="/profil" element={<Profil />} />
-            </Routes>
-          </BrowserRouter>
-        </ThemeProvider>
-      </ColorModeContext.Provider>
+      <BrowserRouter>
+        <UserContextProvider>
+          <ColorModeContext.Provider value={colorMode}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <Routes>
+                <Route path="login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/reset-password" element={<ForgetPassword />} />
+                <Route
+                  path="/user/reset/:id/:token"
+                  element={<ChangePassword />}
+                />
+                <Route path="/" element={<ProtectedRoute />}></Route>
+                <Route index element={<Devices />} />
+                <Route path="/profil" element={<Profil />} />
+              </Routes>
+            </ThemeProvider>
+          </ColorModeContext.Provider>
+        </UserContextProvider>
+      </BrowserRouter>
     </>
   );
 };

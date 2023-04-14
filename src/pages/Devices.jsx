@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import '../pages/styles/devices.css';
 import { Row } from 'antd';
-import { HashRouter } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import CardDevice from '../components/CardDevice';
 import CustomFormModal from '../components/CustomFormModal';
 
 const Devices = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [devices, setDevices] = useState([]);
 
@@ -20,10 +23,15 @@ const Devices = () => {
       .catch((err) => console.log(err));
   }, [isOpenModal]);
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+    console.log('Devices', isAuthenticated);
+  }, [isAuthenticated]);
+
   return (
     <>
-    
-
       <Row className="row" span={4}>
         <CustomFormModal
           isOpenModal={isOpenModal}

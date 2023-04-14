@@ -5,7 +5,9 @@ import axios from '../services/axiosInterceptor';
 import { useNavigate, Link } from 'react-router-dom';
 import shareVideo from '../assets/share.mp4';
 import google from '../img/google.png';
+import { useAuth } from '../hooks/useAuth';
 const Login = () => {
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [input, setInput] = useState({
     email: '',
@@ -21,10 +23,10 @@ const Login = () => {
       })
       .then((response) => {
         alert(response.data.message);
-        Cookies.set('token', response.data.token, { expires: 7 });
-        Cookies.set('username', response.data.username);
+        login(response.data.token, response.data.username);
+        // Cookies.set('token', response.data.token, { expires: 7 });
+        // Cookies.set('username', response.data.username);
         console.log('COOKIES', Cookies.get('token'));
-        navigate('/');
       })
       .catch((error) => {
         console.log('message error', error);
@@ -35,6 +37,12 @@ const Login = () => {
   const handleGoogleLogin = () => {
     window.open('http://localhost:5000/auth/google', '_self');
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <div className="login">
