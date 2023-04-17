@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import Cookies from 'js-cookie';
 import '../pages/styles/devices.css';
 import { Row } from 'antd';
 import { UserContext } from '../context/UserContextProvider';
@@ -20,6 +21,7 @@ const Devices = () => {
         setDevices(res.data);
       })
       .catch((err) => console.log(err));
+
   }, [isOpenModal]);
 
   return (

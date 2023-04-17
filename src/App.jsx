@@ -12,6 +12,7 @@ import Profil from './pages/Profil';
 import ProtectedRoute from './services/ProtectedRoute';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { ColorModeContext, useMode } from './theme';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -21,23 +22,26 @@ const App = () => {
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/reset-password" element={<ForgetPassword />} />
-              <Route
-                path="/user/reset/:id/:token"
-                element={<ChangePassword />}
-              />
+          <GoogleOAuthProvider clientId="43002333952-1r210l702o69enm56gb1nh33l27guvhf.apps.googleusercontent.com">
+            <BrowserRouter>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/reset-password" element={<ForgetPassword />} />
+                <Route
+                  path="/user/reset/:id/:token"
+                  element={<ChangePassword />}
+                />
 
-              <Route path="/" element={<ProtectedRoute />}>
-                <Route index element={<Devices />} />
-              </Route>
+                <Route path="/" element={<ProtectedRoute />}>
+                  <Route index element={<Devices />} />
+                </Route>
 
-              <Route path="/profil" element={<Profil />} />
-            </Routes>
-          </BrowserRouter>
+                <Route path="/profil" element={<Profil />} />
+              </Routes>
+            </BrowserRouter>
+          </GoogleOAuthProvider>
+          ;
         </ThemeProvider>
       </ColorModeContext.Provider>
     </>

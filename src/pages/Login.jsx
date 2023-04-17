@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import Cookies from 'js-cookie';
 import axios from '../services/axiosInterceptor';
 import jwtDecode from 'jwt-decode';
@@ -7,6 +7,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import shareVideo from '../assets/share.mp4';
 import google from '../img/google.png';
 import { UserContext } from '../context/UserContextProvider';
+import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
   const { isAuthenticated, setIsAuthenticated, login, checkAuthentication } =
@@ -28,7 +29,7 @@ const Login = () => {
         alert(response.data.message);
         login(response.data.token, response.data.username);
 
-        console.log('COOKIES', Cookies.get('token'));
+        console.log('handle login async cookie', Cookies.get('token'));
         const token = Cookies.get('token');
 
         if (token) {
@@ -56,17 +57,20 @@ const Login = () => {
       });
   };
 
-  const handleGoogleLogin = async () => {
-    try {
-      window.open('http://localhost:5000/auth/google', '_self');
-    } catch (error) {
-      console.log('google login error', error);
-    }
+  const handleSuccessResponse = (credentialResponse) => {
+    console.log(credentialResponse);
+    setIsAuthenticated(true);
+    return navigate('/');
+  };
+
+  const handleErrorResponse = (error) => {
+    console.log('Login Failed');
+    setIsAuthenticated(true);
+    return navigate('/login');
   };
 
   useEffect(() => {
     checkAuthentication();
-    console.log('login usercontext', isAuthenticated);
   }, []);
 
   return (
@@ -84,9 +88,17 @@ const Login = () => {
       <h1 className="loginTitle">Choose a Login Method</h1>
       <div className="wrapper">
         <div className="left">
-          <div className="loginButton google" onClick={handleGoogleLogin}>
+          {/* <div className="loginButton google" onClick={signInWithGoogle}>
             <img src={google} alt="" className="icon" />
-          </div>
+          </div> */}
+          <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              handleSuccessResponse(credentialResponse);
+            }}
+            onError={(error) => {
+              handleErrorResponse(error);
+            }}
+          />
         </div>
         <div className="center">
           <div className="line" />

@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
-import jwtDecode from 'jwt-decode';
 import Cookies from 'js-cookie';
+import jwtDecode from 'jwt-decode';
 
 export const UserContext = createContext();
 
@@ -30,11 +30,12 @@ export const UserContextProvider = ({ children }) => {
 
   const checkAuthentication = async () => {
     try {
+      console.log('Cookies token', Cookies.get('token'));
       const token = await Cookies.get('token');
       // const googleToken = Cookies.get('connect.sid');
-      console.log('googletoken', token);
+      console.log('checkAuthentication', token);
 
-      console.log('decoded token : ', jwtDecode(token));
+      console.log('decoded checkAuthentication : ', jwtDecode(token));
       if (token) {
         const decodedToken = await jwtDecode(token);
         const currentTime = Date.now() / 1000;

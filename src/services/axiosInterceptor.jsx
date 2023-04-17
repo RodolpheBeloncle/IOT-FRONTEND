@@ -7,15 +7,4 @@ const instance = axios.create({
   timeout: 2000,
 });
 
-
-// todo check the logic on the front width the back end logic
-
-// axios.interceptors.request.use(config => {
-//   const accessToken = Cookies.get('connect.sid');
-//   if (accessToken) {
-//     config.headers.Authorization = `Bearer ${accessToken}`;
-//   }
-//   return config;
-// });
-
 export default instance;
