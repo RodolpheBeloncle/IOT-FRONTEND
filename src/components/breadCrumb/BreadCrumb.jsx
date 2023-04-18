@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, Breadcrumb, Row } from 'antd';
-import '../components/styles/breadCrumb.css';
+import './styles/breadCrumb.css';
 import { HashRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 
 const breadcrumbNameMap = {
