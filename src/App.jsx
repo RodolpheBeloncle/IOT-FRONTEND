@@ -1,7 +1,6 @@
 import React from 'react';
 import './app.css';
 
-
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import Devices from './pages/Devices';
@@ -14,15 +13,11 @@ import { CssBaseline, ThemeProvider } from '@mui/material';
 import { ColorModeContext, useMode } from './theme';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-
-
 import Dashboard from './pages/dashboard/Dashboard';
 import Team from './pages/team/Team';
-import Contacts from './pages/contacts/Contacts';
+import ControllersIoT from './pages/controllersiot/ControllersIoT';
 import FormUser from './pages/formUser/FormUser';
 import FAQ from './pages/faq/Faq';
-
-
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -48,7 +43,7 @@ const App = () => {
                   <Route path="/form" element={<FormUser />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/team" element={<Team />} />
-                  <Route path="/contacts" element={<Contacts />} />
+                  <Route path="/controllersiot" element={<ControllersIoT />} />
                   <Route path="/faq" element={<FAQ />} />
                 </Route>
               </Routes>

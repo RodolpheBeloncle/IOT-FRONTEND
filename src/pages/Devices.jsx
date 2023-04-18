@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useContext } from "react";
-import "../pages/styles/devices.css";
-import { Row } from "antd";
-import { UserContext } from "../context/UserContextProvider";
-import axios from "axios";
-import CardDevice from "../components/CardDevice";
-import CustomFormModal from "../components/CustomFormModal";
+import React, { useState, useEffect, useContext } from 'react';
+import '../pages/styles/devices.css';
+import { Row } from 'antd';
+import { UserContext } from '../context/UserContextProvider';
+import axios from 'axios';
+import CardDevice from '../components/CardDevice';
+import CustomFormModal from '../components/CustomFormModal';
 
 const Devices = () => {
   const { isAuthenticated } = useContext(UserContext);
-  console.log("auth devices ", isAuthenticated);
+  console.log('auth DEVICES ', isAuthenticated);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [devices, setDevices] = useState([]);
 
   useEffect(() => {
     axios
-      .get(import.meta.env.VITE_REACT_APP_API_URL)
+      .get(import.meta.env.VITE_REACT_APP_API_DEVICES)
       .then((res) => {
-        console.log("controllers", res.data);
+        console.log('Devices : ', res.data);
         setDevices(res.data);
       })
       .catch((err) => console.log(err));

@@ -1,38 +1,52 @@
-import React from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Box, Typography, useTheme } from '@mui/material';
+import { UserContext } from '../../context/UserContextProvider';
+import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { tokens } from '../../theme';
-import { mockDataTeam } from '../../data/mockData';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
 import Header from '../../components/Header';
 
 const Team = () => {
+  const { isAuthenticated } = useContext(UserContext);
+  console.log('auth MANAGE TEAM ', isAuthenticated);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(import.meta.env.VITE_REACT_APP_API_USERS)
+      .then((res) => {
+        console.log('users', res.data);
+        setUsers(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const columns = [
     { field: 'id', headerName: 'Id' },
     {
-      field: 'name',
+      field: 'username',
       headerName: 'Name',
       width: 200,
       cellClassName: 'name-column--cell',
     },
     {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
+      field: 'isVerified',
+      headerName: 'isVerified',
+      type: 'boolean',
       headerAlign: 'left',
       align: 'left',
     },
-    { field: 'phone', headerName: 'Phone Number', width: 100 },
     { field: 'email', headerName: 'Email', width: 200 },
     {
-      field: 'access',
-      headerName: 'Access Llvel',
+      field: 'Role',
+      headerName: 'Role Llvel',
       width: 100,
-      renderCell: ({ row: { access } }) => {
+      renderCell: ({ row: { role } }) => {
         return (
           <Box
             width="100%"
@@ -41,17 +55,17 @@ const Team = () => {
             display="flex"
             justifyContent="center"
             backgroundColor={
-              access === 'admin'
+              role === 'admin'
                 ? colors.greenAccent[600]
                 : colors.greenAccent[800]
             }
             borderRadius="4px"
           >
-            {access === 'admin' && <AdminPanelSettingsOutlinedIcon />}
-            {access === 'manager' && <SecurityOutlinedIcon />}
-            {access === 'user' && <LockOpenOutlinedIcon />}
+            {role === 'admin' && <AdminPanelSettingsOutlinedIcon />}
+            {role === 'manager' && <SecurityOutlinedIcon />}
+            {role === 'user' && <LockOpenOutlinedIcon />}
             <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
-              {access}
+              {role}
             </Typography>
           </Box>
         );
@@ -61,7 +75,7 @@ const Team = () => {
   return (
     <Box m="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Header title="TEAM" subtitle="welcome to you Team" />
+        <Header title="TEAM" subtitle="welcome to your Team" />
       </Box>
       <Box
         m="8px 0 0 0"
@@ -92,7 +106,7 @@ const Team = () => {
           },
         }}
       >
-        <DataGrid rows={mockDataTeam} columns={columns} />
+        <DataGrid rows={users} columns={columns} />
       </Box>
     </Box>
   );

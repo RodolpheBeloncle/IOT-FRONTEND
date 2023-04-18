@@ -63,7 +63,7 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
 
   const onFinish = async () => {
     await axios
-      .post(process.env.REACT_APP_API_URL, formInputs)
+      .post(process.env.REACT_APP_API_URL_DEVICES, formInputs)
       .then((res) => {
         console.log('add controllers', res);
         openNotification(res.data.type);
