@@ -1,31 +1,31 @@
-import React, { createContext, useEffect, useState } from 'react';
-import Connection from './Connection';
-import Publisher from './Publisher';
+import React, { createContext, useEffect, useState } from "react";
+import Connection from "./Connection";
+import Publisher from "./Publisher";
 // import Subscriber from './Subscriber';
-import Receiver from './Receiver';
-import mqtt from 'mqtt';
+import Receiver from "./Receiver";
+import mqtt from "mqtt";
 
 export const QosOption = createContext([]);
 const qosOption = [
   {
-    label: '0',
+    label: "0",
     value: 0,
   },
   {
-    label: '1',
+    label: "1",
     value: 1,
   },
   {
-    label: '2',
+    label: "2",
     value: 2,
   },
 ];
 
-const HookMqtt = ({ controllersIOT }) => {
+const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
   const [client, setClient] = useState(null);
   const [isSubed, setIsSub] = useState(false);
   const [payload, setPayload] = useState({});
-  const [connectStatus, setConnectStatus] = useState('Connect');
+  // const [connectStatus, setConnectStatus] = useState("Connect");
 
   const mqttPublish = (context) => {
     if (client) {
@@ -36,7 +36,7 @@ const HookMqtt = ({ controllersIOT }) => {
       const { topic, qos, payload } = context;
       client.publish(topic, payload, options, (error) => {
         if (error) {
-          console.log('Publish error: ', error);
+          console.log("Publish error: ", error);
         }
       });
     }
@@ -78,7 +78,7 @@ const HookMqtt = ({ controllersIOT }) => {
       const { topic, qos } = record;
       client.subscribe(topic, { qos }, (error) => {
         if (error) {
-          console.log('Subscribe to topics error', error);
+          console.log("Subscribe to topics error", error);
           return;
         }
         setIsSub(true);
@@ -95,7 +95,7 @@ const HookMqtt = ({ controllersIOT }) => {
       const { topic } = record;
       client.unsubscribe(topic, (error) => {
         if (error) {
-          console.log('Unsubscribe error', error);
+          console.log("Unsubscribe error", error);
           return;
         }
         setIsSub(false);
@@ -106,45 +106,45 @@ const HookMqtt = ({ controllersIOT }) => {
   const mqttConnect = (host, mqttOption) => {
     mqttUnSub();
     mqttSub();
-    setConnectStatus('Connecting');
+    setConnectStatus("connecting");
     setClient(mqtt.connect(host, mqttOption));
   };
 
   const mqttDisconnect = () => {
     if (client) {
       client.end(() => {
-        setConnectStatus('Connect');
+        setConnectStatus("connect");
       });
     }
   };
 
   useEffect(() => {
     if (client) {
-      client.on('connect', () => {
-        setConnectStatus('Connected');
+      client.on("connect", () => {
+        setConnectStatus("connected");
       });
-      client.on('error', (err) => {
-        console.error('Connection error: ', err);
+      client.on("error", (err) => {
+        console.error("Connection error: ", err);
         client.end();
       });
-      client.on('reconnect', () => {
-        setConnectStatus('Reconnecting');
+      client.on("reconnect", () => {
+        setConnectStatus("reconnecting");
       });
-      client.on('message', (topic, message, packet) => {
+      client.on("message", (topic, message, packet) => {
         setPayload({ topic, message: message.toString() });
       });
     }
-    console.log('Received message:', payload);
-  }, [client]);
+    console.log("Received message:", payload);
+  }, [client, connectStatus]);
 
   return (
     <>
-   
       <Connection
         deviceId={controllersIOT.id}
         connect={mqttConnect}
         disconnect={mqttDisconnect}
         connectBtn={connectStatus}
+        setConnectStatus={setConnectStatus}
       />
       <QosOption.Provider value={qosOption}>
         {/* <Subscriber
@@ -153,7 +153,7 @@ const HookMqtt = ({ controllersIOT }) => {
           showUnsub={isSubed}
           topic={controllersIOT.topic}
         /> */}
-        {controllersIOT.type === 'switch' ? (
+        {controllersIOT.type === "switch" ? (
           <Publisher
             publish={mqttPublish}
             type={controllersIOT.type}
@@ -161,7 +161,7 @@ const HookMqtt = ({ controllersIOT }) => {
           />
         ) : null}
       </QosOption.Provider>
-      {controllersIOT.type === 'sensor' ? (
+      {controllersIOT.type === "sensor" ? (
         <Receiver
           payload={payload}
           type={controllersIOT.type}

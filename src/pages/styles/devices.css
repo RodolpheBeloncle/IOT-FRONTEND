@@ -1,8 +1,18 @@
-
-
-.Red {background: rgb(235, 187, 187); color: white; width: 200px;}
-/* .Green {background: green; color: white; width: 200px;}
-.Blue {background: blue; color: white; width: 200px;} */
+.Red {
+  background: rgb(238, 3, 3);
+  color: white;
+  width: 200px;
+}
+.Green {
+  background: green;
+  color: white;
+  width: 200px;
+}
+.Orange {
+  background: rgb(235, 163, 7);
+  color: white;
+  width: 200px;
+}
 
 @media screen and (max-width: 600px) {
   .column {

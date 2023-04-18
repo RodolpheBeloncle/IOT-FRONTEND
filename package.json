@@ -21,6 +21,7 @@
     "dotenv": "^16.0.3",
     "install": "^0.13.0",
     "js-cookie": "^3.0.1",
+    "json-server": "^0.17.3",
     "jwt-decode": "^3.1.2",
     "mqtt": "^4.3.7",
     "npm": "^9.6.4",

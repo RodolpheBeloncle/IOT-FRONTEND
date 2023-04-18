@@ -1,0 +1,102 @@
+{
+  "devices": [
+    {
+      "id": 1,
+      "url": "ws://2.tcp.ngrok.io:14899/mqtt",
+      "options": {
+        "keepalive": 30,
+        "protocolVersion": 4,
+        "clean": true,
+        "reconnectPeriod": 1000,
+        "connectTimeout": 30000,
+        "will": {
+          "topic": "WillMsg",
+          "payload": "Connection Closed abnormally..!",
+          "qos": 0,
+          "retain": false
+        },
+        "requestCert": true,
+        "rejectUnauthorized": false,
+        "clientId": "id1",
+        "username": "rodolphe",
+        "password": "authtoken"
+      },
+      "topic": "light",
+      "type": "switch"
+    },
+    {
+      "id": 2,
+      "url": "ws://2.tcp.ngrok.io:14899/mqtt",
+      "options": {
+        "keepalive": 30,
+        "protocolVersion": 4,
+        "clean": true,
+        "reconnectPeriod": 1000,
+        "connectTimeout": 30000,
+        "will": {
+          "topic": "WillMsg",
+          "payload": "Connection Closed abnormally..!",
+          "qos": 0,
+          "retain": false
+        },
+        "requestCert": true,
+        "rejectUnauthorized": false,
+        "clientId": "id2",
+        "username": "rodolphe",
+        "password": "authtoken"
+      },
+      "topic": "temp",
+      "type": "sensor"
+    },
+    {
+      "id": 3,
+      "url": "ws://2.tcp.ngrok.io:14899/mqtt",
+      "options": {
+        "keepalive": 30,
+        "protocolVersion": 4,
+        "clean": true,
+        "reconnectPeriod": 1000,
+        "connectTimeout": 300000,
+        "will": {
+          "topic": "WillMsg",
+          "payload": "Connection Closed abnormally..!",
+          "qos": 0,
+          "retain": false
+        },
+        "requestCert": true,
+        "rejectUnauthorized": false,
+        "clientId": "id3",
+        "username": "rodolphe",
+        "password": "authtoken"
+      },
+      "topic": "light",
+      "type": "switch"
+    },
+    {
+      "id": 3,
+      "url": "ws://2.tcp.ngrok.io:14899/mqtt",
+      "options": {
+        "keepalive": 30,
+        "protocolVersion": 4,
+        "clean": true,
+        "reconnectPeriod": 1000,
+        "connectTimeout":30000,
+        "will": {
+          "topic": "WillMsg",
+          "payload": "Connection Closed abnormally..!",
+          "qos": 0,
+          "retain": false
+        },
+        "requestCert": true,
+        "rejectUnauthorized": false,
+        "clientId": "id3",
+        "username": "rodolphe",
+        "password": "authtoken"
+      },
+      "topic": "temp",
+      "type": "sensor"
+    }
+   
+  ]
+
+}

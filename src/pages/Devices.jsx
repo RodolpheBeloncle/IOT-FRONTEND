@@ -1,15 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react';
-import Cookies from 'js-cookie';
-import '../pages/styles/devices.css';
-import { Row } from 'antd';
-import { UserContext } from '../context/UserContextProvider';
-import axios from 'axios';
-import CardDevice from '../components/CardDevice';
-import CustomFormModal from '../components/CustomFormModal';
+import React, { useState, useEffect, useContext } from "react";
+import "../pages/styles/devices.css";
+import { Row } from "antd";
+import { UserContext } from "../context/UserContextProvider";
+import axios from "axios";
+import CardDevice from "../components/CardDevice";
+import CustomFormModal from "../components/CustomFormModal";
 
 const Devices = () => {
   const { isAuthenticated } = useContext(UserContext);
-  console.log('auth devices ', isAuthenticated);
+  console.log("auth devices ", isAuthenticated);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [devices, setDevices] = useState([]);
 
@@ -17,11 +16,10 @@ const Devices = () => {
     axios
       .get(import.meta.env.VITE_REACT_APP_API_URL)
       .then((res) => {
-        console.log('controllers', res.data);
+        console.log("controllers", res.data);
         setDevices(res.data);
       })
       .catch((err) => console.log(err));
-
   }, [isOpenModal]);
 
   return (
@@ -34,11 +32,15 @@ const Devices = () => {
           />
         </Row>
         <div className="home">
-          {devices.map((controller, index) => (
-            <Row key={index} className="row" span={4}>
-              <CardDevice key={controller.id} controllersIOT={controller} />
-            </Row>
-          ))}
+          {devices.length > 0 ? (
+            devices.map((controller, index) => (
+              <Row key={index} className="row" span={4}>
+                <CardDevice key={controller.id} controllersIOT={controller} />
+              </Row>
+            ))
+          ) : (
+            <span>No Devices to display</span>
+          )}
         </div>
       </>
     </>
