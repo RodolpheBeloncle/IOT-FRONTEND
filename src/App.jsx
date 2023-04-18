@@ -1,39 +1,28 @@
-import React, { useState, useEffect, useContext } from "react";
-import "./app.css";
-// import BreadCrumb from './components/BreadCrumb';
-// import Navbar from './components/Navbar';
-import { ProSidebarProvider } from "react-pro-sidebar";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
-import Devices from "./pages/Devices";
-import Register from "./pages/Register";
-import ChangePassword from "./pages/ChangePassword";
-import ForgetPassword from "./pages/ForgetPassword";
-import Profil from "./pages/Profil";
-import ProtectedRoute from "./services/ProtectedRoute";
-import { CssBaseline, ThemeProvider } from "@mui/material";
-import { ColorModeContext, useMode } from "./theme";
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import React from 'react';
+import './app.css';
 
-// == TEST IMPLEMENT ==
 
-import { MyProSidebarProvider } from "./pages/global/sidebar/sidebarContext";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Devices from './pages/Devices';
+import Register from './pages/Register';
+import ChangePassword from './pages/ChangePassword';
+import ForgetPassword from './pages/ForgetPassword';
+import Profil from './pages/Profil';
+import ProtectedRoute from './services/ProtectedRoute';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { ColorModeContext, useMode } from './theme';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
-import Topbar from "./pages/global/Topbar";
 
-import Dashboard from "./pages/dashboard";
-import Team from "./pages/team";
-import Invoices from "./pages/invoices";
-import Contacts from "./pages/contacts";
-import Form from "./pages/form";
-import Calendar from "./pages/calendar";
-import Bar from "./pages/bar";
-import Line from "./pages/line";
-import Pie from "./pages/pie";
-import FAQ from "./pages/faq";
-import Geography from "./pages/geography";
 
-// == ======================
+import Dashboard from './pages/dashboard/Dashboard';
+import Team from './pages/team/Team';
+import Contacts from './pages/contacts/Contacts';
+import FormUser from './pages/formUser/FormUser';
+import FAQ from './pages/faq/Faq';
+
+
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -44,23 +33,26 @@ const App = () => {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <GoogleOAuthProvider clientId="43002333952-1r210l702o69enm56gb1nh33l27guvhf.apps.googleusercontent.com">
-            <ProSidebarProvider>
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/reset-password" element={<ForgetPassword />} />
-                  <Route
-                    path="/user/reset/:id/:token"
-                    element={<ChangePassword />}
-                  />
-                  <Route path="/" element={<ProtectedRoute />}>
-                    <Route index element={<Devices />} />
-                  </Route>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/reset-password" element={<ForgetPassword />} />
+                <Route
+                  path="/user/reset/:id/:token"
+                  element={<ChangePassword />}
+                />
+                <Route path="/" element={<ProtectedRoute />}>
+                  <Route index element={<Devices />} />
                   <Route path="/profil" element={<Profil />} />
-                </Routes>
-              </BrowserRouter>
-            </ProSidebarProvider>
+                  <Route path="/form" element={<FormUser />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/team" element={<Team />} />
+                  <Route path="/contacts" element={<Contacts />} />
+                  <Route path="/faq" element={<FAQ />} />
+                </Route>
+              </Routes>
+            </BrowserRouter>
           </GoogleOAuthProvider>
           ;
         </ThemeProvider>

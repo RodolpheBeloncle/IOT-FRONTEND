@@ -19,6 +19,7 @@
     "bootstrap": "^5.2.1",
     "buffer": "^6.0.3",
     "dotenv": "^16.0.3",
+    "formik": "^2.2.9",
     "install": "^0.13.0",
     "js-cookie": "^3.0.1",
     "json-server": "^0.17.3",
@@ -27,13 +28,12 @@
     "npm": "^9.6.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.10.0",
-    "formik": "^2.2.9",
-    "yup": "0.32.11",
-    "recharts": "^2.5.0",
     "react-pro-sidebar": "1.0.0-alpha.7",
+    "react-router-dom": "^6.10.0",
+    "recharts": "^2.5.0",
     "vite-plugin-node-stdlib-browser": "^0.2.1",
-    "vite-plugin-notifier": "^0.1.5"
+    "vite-plugin-notifier": "^0.1.5",
+    "yup": "0.32.11"
   },
   "devDependencies": {
     "@types/node": "^18.15.10",
