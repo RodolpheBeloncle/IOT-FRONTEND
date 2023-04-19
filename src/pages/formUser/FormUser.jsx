@@ -3,11 +3,14 @@ import axios from 'axios';
 import {
   Box,
   // Button,
+  Checkbox,
   TextField,
   Select,
   InputLabel,
   MenuItem,
+  Input,
 } from '@mui/material';
+import emptyAvatar from '../../assets/profile.png';
 
 import { Upload, message, Modal, Button } from 'antd';
 import ImgCrop from 'antd-img-crop';
@@ -17,17 +20,46 @@ import { useMediaQuery } from '@mui/material';
 import Header from '../../components/Header';
 
 const Form = () => {
+  // const [fileList, setFileList] = useState([]);
+  const [inputsField, setInputsField] = useState({
+    username: '',
+    email: '',
+    password: '',
+    isVerified: false,
+    picture: [
+      {
+        uid: '-1',
+        name: 'image.png',
+        status: 'done',
+        url: emptyAvatar,
+      },
+    ],
 
-  const [fileList, setFileList] = useState([
-    {
-      uid: '-1',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-  ]);
-  const onChange = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
+    role: '',
+    color: '',
+  });
+
+  const handleChange = (e) => {
+    // setFileList(newFileList);
+    console.log(e);
+    // let name = e.target.name;
+    // let value = e.target.value;
+
+    // setInputsField((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const onChangeFile = ({ file, fileList }) => {
+    if ((file.status = 'removed')) {
+      inputsField.picture = [];
+      setInputsField((prevState) => ({
+        ...prevState,
+        picture: inputsField.picture,
+      }));
+    }
+    setInputsField((prevState) => ({
+      ...prevState,
+      picture: fileList,
+    }));
   };
   const onPreview = async (file) => {
     let src = file.url;
@@ -43,7 +75,7 @@ const Form = () => {
     const imgWindow = window.open(src);
     imgWindow?.document.write(image.outerHTML);
   };
- 
+
   const isNonMobile = useMediaQuery('(min-width:600px)');
 
   const handleFormSubmit = async (values) => {
@@ -63,15 +95,15 @@ const Form = () => {
     //   });
   };
 
-  const initialValues = {
-    username: '',
-    email: '',
-    password: '',
-    isVerified: false,
-    picture: fileList,
-    role: '',
-    color: '',
-  };
+  // const initialValues = {
+  //   username: '',
+  //   email: '',
+  //   password: '',
+  //   isVerified: false,
+  //   picture: fileList,
+  //   role: '',
+  //   color: '',
+  // };
   const checkoutSchema = yup.object().shape({
     username: yup.string().required('Required'),
     email: yup.string().email('Invalid email!').required('Required'),
@@ -89,7 +121,7 @@ const Form = () => {
 
       <Formik
         onSubmit={handleFormSubmit}
-        initialValues={initialValues}
+        initialValues={inputsField}
         validationSchema={checkoutSchema}
       >
         {({
@@ -113,14 +145,14 @@ const Form = () => {
                 <Upload
                   action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
                   listType="picture-card"
-                  fileList={fileList}
-                  onChange={onChange}
+                  fileList={inputsField.picture}
+                  onChange={onChangeFile}
                   onPreview={onPreview}
                 >
-                  {fileList.length < 5 && '+ Upload'}
+                  {inputsField.picture.length < 1 && '+ Upload'}
                 </Upload>
               </ImgCrop>
-          
+
               <TextField
                 fullWidth
                 variant="filled"
@@ -162,7 +194,7 @@ const Form = () => {
                 helperText={touched.password && errors.password}
                 sx={{ gridColumn: 'span 2' }}
               />
-              <TextField
+              {/* <TextField
                 fullWidth
                 variant="filled"
                 type="checkbox"
@@ -174,7 +206,25 @@ const Form = () => {
                 error={!!touched.isVerified && !!errors.isVerified}
                 helperText={touched.isVerified && errors.isVerified}
                 sx={{ gridColumn: 'span 2' }}
-              />
+              /> */}
+
+              <InputLabel
+                id="role"
+                style={{ disableAnimation: false }}
+                disableAnimation={false}
+                htmlFor="assignRole"
+                sx={{ gridColumn: 'span 4' }}
+              >
+                Is Verified
+                <Checkbox
+                  label="IsVerified"
+                  name="isVerified"
+                  sx={{ gridColumn: 'span 2' }}
+                  checked={values.isVerified}
+                  onChange={handleChange}
+                  inputProps={{ 'aria-label': 'controlled' }}
+                />
+              </InputLabel>
 
               <TextField
                 fullWidth
@@ -191,18 +241,26 @@ const Form = () => {
               />
             </Box>
 
-            <InputLabel id="role">Select role</InputLabel>
+            <InputLabel
+              id="role"
+              style={{ disableAnimation: false }}
+              disableAnimation={false}
+              htmlFor="assignRole"
+              sx={{ gridColumn: 'span 4' }}
+            >
+              Select role *
+            </InputLabel>
+
             <Select
               labelId="role"
               id="role"
               name="role"
               value={values.role}
               label="role"
-              onBlur={handleBlur}
               onChange={handleChange}
               error={!!touched.role && !!errors.role}
               helperText={touched.role && errors.role}
-              sx={{ gridColumn: 'span 4' }}
+              input={<Input name="assignRole" id="assignRole" />}
             >
               <MenuItem value="user">User</MenuItem>
               <MenuItem value="admin">Admin</MenuItem>
