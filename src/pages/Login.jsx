@@ -20,41 +20,35 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    await axios
-      .post('/api/auth/users/login', input, {
+    try {
+      const response = await axios.post('/api/auth/users/login', input, {
         widthCredentials: true,
-      })
-      .then((response) => {
-        alert(response.data.message);
-        login(response.data.token, response.data.username);
-
-        console.log('handle login async cookie', Cookies.get('token'));
-        const token = Cookies.get('token');
-
-        if (token) {
-          console.log('token login is set', isAuthenticated);
-          const decodedToken = jwtDecode(token);
-          const currentTime = Date.now() / 1000;
-
-          if (decodedToken.exp < currentTime) {
-            setIsAuthenticated(false);
-            Cookies.remove('token');
-            return navigate('/login');
-          } else {
-            //!TODO REDIRECT THROW ANOTHER DIRECTION THAN DEVICES
-            setIsAuthenticated(true);
-            return navigate('/');
-          }
-        } else {
-          setIsAuthenticated(false);
-          return navigate('/login');
-        }
-      })
-      .catch((error) => {
-        console.log('message error : ', error);
-        alert(error);
       });
+      alert(response.data.message);
+      login(response.data.token, response.data.username);
+
+      console.log('handle login async cookie', Cookies.get('token'));
+      const token = Cookies.get('token');
+      
+      if (!token) {
+        setIsAuthenticated(false);
+        return navigate('/login');
+      }
+
+      const decodedToken = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
+
+      if (decodedToken.exp < currentTime) {
+        setIsAuthenticated(false);
+        Cookies.remove('token');
+        return navigate('/login');
+      }
+      setIsAuthenticated(true);
+      return navigate('/');
+    } catch (error) {
+      console.log('message error : ', error);
+      alert(error);
+    }
   };
 
   const handleSuccessResponse = (credentialResponse) => {

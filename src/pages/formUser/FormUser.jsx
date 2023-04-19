@@ -2,79 +2,65 @@ import React, { useState, useMemo } from 'react';
 import axios from 'axios';
 import {
   Box,
-  Button,
+  // Button,
   TextField,
   Select,
   InputLabel,
   MenuItem,
 } from '@mui/material';
 
-import { Upload, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
-import { UploadFile } from 'antd/lib/upload/interface';
+import { Upload, message, Modal, Button } from 'antd';
+import ImgCrop from 'antd-img-crop';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import { useMediaQuery } from '@mui/material';
 import Header from '../../components/Header';
 
 const Form = () => {
-  // test ant design implementation //
 
-  const [fileList, setFileList] = useState([]);
-
-  const validateFileType = ({ type, name }) => {
-    if (!allowedTypes) {
-      return true;
-    }
-
-    if (type) {
-      return allowedTypes.includes(type);
-    }
+  const [fileList, setFileList] = useState([
+    {
+      uid: '-1',
+      name: 'image.png',
+      status: 'done',
+      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+    },
+  ]);
+  const onChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
   };
-
-  const uploadProps = useMemo(
-    () => ({
-      beforeUpload: (file) => {
-        const isAllowedType = validateFileType(file, 'image/png');
-        if (!isAllowedType) {
-          setFileList((state) => [...state]);
-          message.error(`${file.name} is not PNG file`);
-          return false;
-        }
-        setFileList((state) => [...state, file]);
-        return false;
-      },
-      onRemove: (file) => {
-        if (fileList.some((item) => item.uid === file.uid)) {
-          setFileList((fileList) =>
-            fileList.filter((item) => item.uid !== file.uid)
-          );
-          return true;
-        }
-        return false;
-      },
-    }),
-    [fileList]
-  );
-
-  //================================
+  const onPreview = async (file) => {
+    let src = file.url;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  };
+ 
   const isNonMobile = useMediaQuery('(min-width:600px)');
 
   const handleFormSubmit = async (values) => {
     console.log(values);
 
-    await axios
-      .post(process.env.REACT_APP_API_URL_DEVICES, values)
-      .then((res) => {
-        console.log('add controllers', res);
-        openNotification(res.data.type);
-        handleOk();
-        form.resetFields();
-      })
-      .catch((err) => {
-        onFinishFailed(err);
-        console.log(err);
-      });
+    // await axios
+    //   .post(process.env.REACT_APP_API_URL_DEVICES, values)
+    //   .then((res) => {
+    //     console.log('add controllers', res);
+    //     openNotification(res.data.type);
+    //     handleOk();
+    //     form.resetFields();
+    //   })
+    //   .catch((err) => {
+    //     onFinishFailed(err);
+    //     console.log(err);
+    //   });
   };
 
   const initialValues = {
@@ -82,7 +68,7 @@ const Form = () => {
     email: '',
     password: '',
     isVerified: false,
-    picture: '',
+    picture: fileList,
     role: '',
     color: '',
   };
@@ -123,15 +109,18 @@ const Form = () => {
                 '& > div': { gridColumn: isNonMobile ? undefined : 'span 4' },
               }}
             >
-              <Upload
-                multiple
-                {...uploadProps}
-                fileList={fileList}
-                sx={{ gridColumn: 'span 2' }}
-              >
-                <Button icon={<UploadOutlined />}>Upload png only</Button>
-              </Upload>
-
+              <ImgCrop rotationSlider>
+                <Upload
+                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                  listType="picture-card"
+                  fileList={fileList}
+                  onChange={onChange}
+                  onPreview={onPreview}
+                >
+                  {fileList.length < 5 && '+ Upload'}
+                </Upload>
+              </ImgCrop>
+          
               <TextField
                 fullWidth
                 variant="filled"
@@ -145,6 +134,21 @@ const Form = () => {
                 helperText={touched.username && errors.username}
                 sx={{ gridColumn: 'span 2' }}
               />
+
+              <TextField
+                fullWidth
+                variant="filled"
+                type="text"
+                label="Email"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.email}
+                name="email"
+                error={!!touched.email && !!errors.email}
+                helperText={touched.email && errors.email}
+                sx={{ gridColumn: 'span 2' }}
+              />
+
               <TextField
                 fullWidth
                 variant="filled"
@@ -161,19 +165,6 @@ const Form = () => {
               <TextField
                 fullWidth
                 variant="filled"
-                type="text"
-                label="Email"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.email}
-                name="email"
-                error={!!touched.email && !!errors.email}
-                helperText={touched.email && errors.email}
-                sx={{ gridColumn: 'span 4' }}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
                 type="checkbox"
                 label="is Verified"
                 onBlur={handleBlur}
@@ -182,38 +173,8 @@ const Form = () => {
                 name="isVerified"
                 error={!!touched.isVerified && !!errors.isVerified}
                 helperText={touched.isVerified && errors.isVerified}
-                sx={{ gridColumn: 'span 4' }}
+                sx={{ gridColumn: 'span 2' }}
               />
-              {/* <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="role"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.role}
-                name="role"
-                error={!!touched.role && !!errors.role}
-                helperText={touched.role && errors.role}
-                sx={{ gridColumn: 'span 4' }}
-              /> */}
-              <InputLabel id="role">Role</InputLabel>
-              <Select
-                labelId="role"
-                id="role"
-                name="role"
-                value={values.role}
-                label="role"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                error={!!touched.role && !!errors.role}
-                helperText={touched.role && errors.role}
-                sx={{ gridColumn: 'span 4' }}
-              >
-                <MenuItem value={10}>User</MenuItem>
-                <MenuItem value={20}>Admin</MenuItem>
-                <MenuItem value={30}>Manager</MenuItem>
-              </Select>
 
               <TextField
                 fullWidth
@@ -226,9 +187,27 @@ const Form = () => {
                 name="color"
                 error={!!touched.color && !!errors.color}
                 helperText={touched.color && errors.color}
-                sx={{ gridColumn: 'span 4' }}
+                sx={{ gridColumn: 'span 2' }}
               />
             </Box>
+
+            <InputLabel id="role">Select role</InputLabel>
+            <Select
+              labelId="role"
+              id="role"
+              name="role"
+              value={values.role}
+              label="role"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              error={!!touched.role && !!errors.role}
+              helperText={touched.role && errors.role}
+              sx={{ gridColumn: 'span 4' }}
+            >
+              <MenuItem value="user">User</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+              <MenuItem value="manager">Manager</MenuItem>
+            </Select>
             <Box display="flex" justifyContent="end" mt="20px">
               <Button type="submit" color="secondary" variant="contained">
                 Create New User
