@@ -21,7 +21,6 @@
     "bootstrap": "^5.2.1",
     "buffer": "^6.0.3",
     "dotenv": "^16.0.3",
-    "formik": "^2.2.9",
     "install": "^0.13.0",
     "js-cookie": "^3.0.1",
     "json-server": "^0.17.3",

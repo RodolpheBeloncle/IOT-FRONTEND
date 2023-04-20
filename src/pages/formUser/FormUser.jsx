@@ -2,25 +2,22 @@ import React, { useState, useMemo } from 'react';
 import axios from 'axios';
 import {
   Box,
-  // Button,
   Checkbox,
   TextField,
   Select,
   InputLabel,
   MenuItem,
-  Input,
+  FormControl,
+  FormControlLabel,
 } from '@mui/material';
 import emptyAvatar from '../../assets/profile.png';
-
 import { Upload, message, Modal, Button } from 'antd';
 import ImgCrop from 'antd-img-crop';
-import { Formik } from 'formik';
 import * as yup from 'yup';
 import { useMediaQuery } from '@mui/material';
 import Header from '../../components/Header';
 
 const Form = () => {
-  // const [fileList, setFileList] = useState([]);
   const [inputsField, setInputsField] = useState({
     username: '',
     email: '',
@@ -35,17 +32,53 @@ const Form = () => {
       },
     ],
 
-    role: '',
-    color: '',
+    role: 'user',
+    color: '#ffffff',
   });
 
-  const handleChange = (e) => {
-    // setFileList(newFileList);
-    console.log(e);
-    // let name = e.target.name;
-    // let value = e.target.value;
+  const checkoutSchema = yup.object().shape({
+    username: yup.string().required('Required'),
+    email: yup.string().email('Invalid email!').required('Required'),
+    password: yup
+      .string()
+      .required('No password provided.')
+      .min(8, 'Password is too short - should be 8 chars minimum.')
+      .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
+    role: yup.string().oneOf(['admin', 'manager', 'user']).required(),
+    isVerified: yup.boolean(),
+    picture: yup.array(),
+    color: yup
+      .string()
+      .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'Invalid color value')
+      .required('Color is required'),
+  });
+  const [errors, setErrors] = useState({});
 
-    // setInputsField((prevState) => ({ ...prevState, [name]: value }));
+  const handleChange = (e) => {
+    console.log(e.target.value);
+    const { name, value, type, checked } = e.target;
+    setInputsField((prevData) => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    // e.preventDefault();
+
+    try {
+      await axios.post(import.meta.env.VITE_REACT_APP_API_USERS, inputsField);
+      console.log('Form data is valid:', inputsField);
+      await checkoutSchema.validate(inputsField, { abortEarly: false });
+      // form data is valid, proceed with submission
+
+      // await axios.post(import.meta.env.VITE_REACT_APP_API_USERS, inputsField);
+    } catch (err) {
+      // validation errors occurred, update error state
+      const validationErrors = {};
+
+      setErrors(validationErrors);
+    }
   };
 
   const onChangeFile = ({ file, fileList }) => {
@@ -61,6 +94,7 @@ const Form = () => {
       picture: fileList,
     }));
   };
+
   const onPreview = async (file) => {
     let src = file.url;
     if (!src) {
@@ -77,203 +111,114 @@ const Form = () => {
   };
 
   const isNonMobile = useMediaQuery('(min-width:600px)');
-
-  const handleFormSubmit = async (values) => {
-    console.log(values);
-
-    // await axios
-    //   .post(process.env.REACT_APP_API_URL_DEVICES, values)
-    //   .then((res) => {
-    //     console.log('add controllers', res);
-    //     openNotification(res.data.type);
-    //     handleOk();
-    //     form.resetFields();
-    //   })
-    //   .catch((err) => {
-    //     onFinishFailed(err);
-    //     console.log(err);
-    //   });
-  };
-
-  // const initialValues = {
-  //   username: '',
-  //   email: '',
-  //   password: '',
-  //   isVerified: false,
-  //   picture: fileList,
-  //   role: '',
-  //   color: '',
-  // };
-  const checkoutSchema = yup.object().shape({
-    username: yup.string().required('Required'),
-    email: yup.string().email('Invalid email!').required('Required'),
-    password: yup
-      .string()
-      .required('No password provided.')
-      .min(8, 'Password is too short - should be 8 chars minimum.')
-      .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
-    role: yup.string().oneOf(['admin', 'manager', 'user']).required(),
-  });
-
   return (
     <Box m="20px">
       <Header title="CREATE USER" subtitle="Create a New User Profile" />
 
-      <Formik
-        onSubmit={handleFormSubmit}
-        initialValues={inputsField}
-        validationSchema={checkoutSchema}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-        }) => (
-          <form onSubmit={handleSubmit}>
-            <Box
-              display="grid"
-              gap="30px"
-              gridTemplateColumns="repeat(4, minmax(0, 1fr))"
-              sx={{
-                '& > div': { gridColumn: isNonMobile ? undefined : 'span 4' },
-              }}
+      <form onSubmit>
+        <Box
+          display="grid"
+          gap="30px"
+          gridTemplateColumns="repeat(4, minmax(0, 1fr))"
+          sx={{
+            '& > div': { gridColumn: isNonMobile ? undefined : 'span 4' },
+          }}
+        >
+          <ImgCrop rotationSlider>
+            <Upload
+              // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              listType="picture-card"
+              fileList={inputsField.picture}
+              onChange={onChangeFile}
+              onPreview={onPreview}
             >
-              <ImgCrop rotationSlider>
-                <Upload
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  listType="picture-card"
-                  fileList={inputsField.picture}
-                  onChange={onChangeFile}
-                  onPreview={onPreview}
-                >
-                  {inputsField.picture.length < 1 && '+ Upload'}
-                </Upload>
-              </ImgCrop>
+              {inputsField.picture.length < 1 && '+ Upload'}
+            </Upload>
+          </ImgCrop>
 
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Username"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.username}
-                name="username"
-                error={!!touched.username && !!errors.username}
-                helperText={touched.username && errors.username}
-                sx={{ gridColumn: 'span 2' }}
-              />
+          <TextField
+            label="Username"
+            name="username"
+            value={inputsField.username}
+            onChange={handleChange}
+            error={!!errors.username}
+            helperText={errors.username}
+            required
+          />
+          <TextField
+            label="Email"
+            name="email"
+            value={inputsField.email}
+            onChange={handleChange}
+            error={!!errors.email}
+            helperText={errors.email}
+            required
+          />
+          <TextField
+            label="Password"
+            name="password"
+            type="password"
+            value={inputsField.password}
+            onChange={handleChange}
+            error={!!errors.password}
+            helperText={errors.password}
+            required
+          />
 
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Email"
-                onBlur={handleBlur}
+          <FormControlLabel
+            control={
+              <Checkbox
+                value={inputsField.isVerified}
                 onChange={handleChange}
-                value={values.email}
-                name="email"
-                error={!!touched.email && !!errors.email}
-                helperText={touched.email && errors.email}
-                sx={{ gridColumn: 'span 2' }}
-              />
-
-              <TextField
-                fullWidth
-                variant="filled"
-                type="password"
-                label="password"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.password}
-                name="password"
-                error={!!touched.password && !!errors.password}
-                helperText={touched.password && errors.password}
-                sx={{ gridColumn: 'span 2' }}
-              />
-              {/* <TextField
-                fullWidth
-                variant="filled"
-                type="checkbox"
-                label="is Verified"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.isVerified}
                 name="isVerified"
-                error={!!touched.isVerified && !!errors.isVerified}
-                helperText={touched.isVerified && errors.isVerified}
-                sx={{ gridColumn: 'span 2' }}
-              /> */}
-
-              <InputLabel
-                id="role"
-                style={{ disableAnimation: false }}
-                disableAnimation={false}
-                htmlFor="assignRole"
-                sx={{ gridColumn: 'span 4' }}
-              >
-                Is Verified
-                <Checkbox
-                  label="IsVerified"
-                  name="isVerified"
-                  sx={{ gridColumn: 'span 2' }}
-                  checked={values.isVerified}
-                  onChange={handleChange}
-                  inputProps={{ 'aria-label': 'controlled' }}
-                />
-              </InputLabel>
-
-              <TextField
-                fullWidth
-                variant="filled"
-                type="color"
-                label="color"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.color}
-                name="color"
-                error={!!touched.color && !!errors.color}
-                helperText={touched.color && errors.color}
-                sx={{ gridColumn: 'span 2' }}
               />
-            </Box>
+            }
+            label="isVerified"
+            error={!!errors.isVerified}
+            helperText={errors.isVerified}
+          />
 
-            <InputLabel
-              id="role"
-              style={{ disableAnimation: false }}
-              disableAnimation={false}
-              htmlFor="assignRole"
-              sx={{ gridColumn: 'span 4' }}
-            >
-              Select role *
-            </InputLabel>
-
+          <FormControl>
+            <InputLabel id="role-label">Role</InputLabel>
             <Select
-              labelId="role"
+              labelId="role-label"
               id="role"
-              name="role"
-              value={values.role}
-              label="role"
+              value={inputsField.role}
               onChange={handleChange}
-              error={!!touched.role && !!errors.role}
-              helperText={touched.role && errors.role}
-              input={<Input name="assignRole" id="assignRole" />}
             >
-              <MenuItem value="user">User</MenuItem>
+              <MenuItem value="">
+                <em>-- Select a role --</em>
+              </MenuItem>
               <MenuItem value="admin">Admin</MenuItem>
-              <MenuItem value="manager">Manager</MenuItem>
+              <MenuItem value="user">User</MenuItem>
             </Select>
-            <Box display="flex" justifyContent="end" mt="20px">
-              <Button type="submit" color="secondary" variant="contained">
-                Create New User
-              </Button>
-            </Box>
-          </form>
-        )}
-      </Formik>
+            {errors?.role && <span role="alert">{errors.role.message}</span>}
+          </FormControl>
+
+          <TextField
+            onChange={handleChange}
+            label="Color"
+            type="color"
+            value={inputsField.color}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            error={!!errors.color}
+            helperText={errors.color}
+          />
+        </Box>
+
+        <Box display="flex" justifyContent="end" mt="20px">
+          <Button
+            type="submit"
+            onClick={(e) => handleSubmit(e)}
+            color="secondary"
+            variant="contained"
+          >
+            Create New User
+          </Button>
+        </Box>
+      </form>
     </Box>
   );
 };
