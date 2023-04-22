@@ -9,7 +9,7 @@ const Receiver = ({ payload, type, topic }) => {
     if (payload.topic) {
       setMessages((messages) => [...messages, payload]);
     }
-    console.log('payload message', parseInt(payload.message));
+    // console.log('payload message', parseInt(payload.message));
   }, [payload]);
 
   const refresh = () => {

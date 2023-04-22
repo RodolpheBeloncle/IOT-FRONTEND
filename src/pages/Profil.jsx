@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
 import axios from '../services/axiosInterceptor';
 // import axios from 'axios';
 import { useNavigate, Navigate } from 'react-router-dom';
@@ -7,7 +6,6 @@ import { useNavigate, Navigate } from 'react-router-dom';
 const Profil = () => {
   const navigate = useNavigate();
   // !!  === TODO setname in cookie too   ===
-  const token = Cookies.get('token');
   const username = Cookies.get('username');
   const [input, setInput] = useState({
     newpassword: '',
@@ -16,8 +14,11 @@ const Profil = () => {
   });
 
   const handleLogout = () => {
-    Cookies.remove('token');
-    Cookies.remove('username');
+    document.cookie =
+      'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/login;';
+
+    document.cookie =
+      'username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/login;';
     navigate('/login');
   };
 

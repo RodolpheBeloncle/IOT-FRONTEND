@@ -4,8 +4,9 @@
   "main": "vite.config.js",
   "scripts": {
     "dev": "vite",
+    "start": "npm run dev",
     "build": "vite build",
-    "preview": "vite preview"
+    "launch": "json-server --watch json_Server/db.json -p  8000"
   },
   "dependencies": {
     "@ant-design/icons": "5.0.1",
@@ -14,7 +15,6 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.12.1",
     "@mui/x-data-grid": "^5.17.2",
-    "@react-oauth/google": "^0.10.0",
     "antd": "5.4.2",
     "antd-img-crop": "^4.12.2",
     "axios": "^0.27.2",
@@ -22,7 +22,6 @@
     "buffer": "^6.0.3",
     "dotenv": "^16.0.3",
     "install": "^0.13.0",
-    "js-cookie": "^3.0.1",
     "json-server": "^0.17.3",
     "jwt-decode": "^3.1.2",
     "mqtt": "^4.3.7",

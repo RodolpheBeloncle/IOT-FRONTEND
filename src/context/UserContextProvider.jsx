@@ -1,27 +1,58 @@
 import React, { createContext, useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
 import jwtDecode from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 
 export const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [tokenAuth, setTokenAuth] = useState(null);
+  const navigate = useNavigate();
 
-  const login = async (token, username) => {
-    try {
-      Cookies.set('token', token);
-      Cookies.set('username', username);
+  const getCookie = (key) => {
+    const cookie = document.cookie.match(
+      '(^|;)\\s*' + key + '\\s*=\\s*([^;]+)'
+    );
+    console.log(cookie);
+    const firstElement = cookie[0];
+    const tokenIndex = firstElement.indexOf('token='); // Find the starting index of "token="
+    const tokenValue = firstElement.substring(tokenIndex + 6);
+    console.log('getcookie token', tokenValue);
+    // setTokenAuth(tokenValue);
 
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.log('login error: ', error);
-    }
+    // const cookieString = document.cookie; // Get the cookie string
+    // const cookieArray = cookieString.split(';'); // Split the cookie string into an array of individual cookies
+    // // Find the cookie with the name 'token' and extract its value
+    // const tokenCookie = cookieArray.find((cookie) =>
+    //   cookie.trim().startsWith('token')
+    // );
+
+    // if (tokenCookie) {
+    //   const token = tokenCookie.split('=')[1];
+    //   console.log('token', token);
+    //   setTokenAuth(token);
+    //   return token;
+    // } else {
+    //   return null;
+    // }
+  };
+
+  const setCookie = (key, value) => {
+    document.cookie = `${key}=${value}`;
+    console.log('setcookie', document.cookie);
+  };
+
+  const removeCookie = (key) => {
+    document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/login;`;
+  };
+
+  const login = (token, username) => {
+    setTokenAuth(token);
+    setIsAuthenticated(true);
   };
 
   const logout = async () => {
     try {
-      Cookies.remove('token');
-      Cookies.remove('username');
       setIsAuthenticated(false);
     } catch (error) {
       console.log('logout error : ', error);
@@ -30,33 +61,49 @@ export const UserContextProvider = ({ children }) => {
 
   const checkAuthentication = async () => {
     try {
-      console.log('Cookies token', Cookies.get('token'));
-      const token = await Cookies.get('token');
-      // const googleToken = Cookies.get('connect.sid');
-      console.log('checkAuthentication', token);
-
-      console.log('decoded checkAuthentication : ', jwtDecode(token));
-      if (token) {
-        const decodedToken = await jwtDecode(token);
-        const currentTime = Date.now() / 1000;
-
-        if (decodedToken.exp < currentTime) {
-          Cookies.remove('token');
-          setIsAuthenticated(false);
-        } else {
-          setIsAuthenticated(true);
-        }
-      } else {
-        setIsAuthenticated(false);
+      // login(response.data.token, response.data.username);
+      const cookieString = await document.cookie; // Get the cookie string
+      const cookieArray = await cookieString.split(';'); // Split the cookie string into an array of individual cookies
+      // Find the cookie with the name 'token' and extract its value
+      const tokenCookie = await cookieArray.find((cookie) =>
+        cookie.trim().startsWith('token=')
+      );
+      console.log('token', tokenCookie);
+      if (tokenCookie) {
+        const token = tokenCookie.split('=')[1];
+        console.log('token', jwtDecode(token));
+        setTokenAuth(token);
+        // setIsAuthenticated(true);
+        // navigate('/');
+        // return token;
       }
+      // setIsAuthenticated(false);
+      // navigate('/login');
+      // return null;
+
+      // if (!tokenAuth) {
+      //   setIsAuthenticated(false);
+      //   navigate('/login');
+      // }else if()
+
+      // const decodedToken = jwtDecode(tokenAuth);
+      // console.log('decoded token', decodedToken);
+      // const currentTime = Date.now() / 1000;
+
+      // if (decodedToken.exp < currentTime) {
+      //   setIsAuthenticated(false);
+      //   removeCookie('token');
+      //   navigate('/login');
+      // }
+      // setIsAuthenticated(true);
+      // navigate('/');
     } catch (error) {
-      console.log('checkAuthentication error : ', error.message);
+      console.log('message error : ', error);
+      // alert(error);
     }
   };
 
-  useEffect(() => {
-    console.log('User context is auth ? ', isAuthenticated);
-  }, [isAuthenticated]);
+
 
   return (
     <UserContext.Provider
@@ -65,7 +112,13 @@ export const UserContextProvider = ({ children }) => {
         setIsAuthenticated,
         login,
         logout,
+        getCookie,
+        setCookie,
+        removeCookie,
         checkAuthentication,
+        tokenAuth,
+        setTokenAuth
+     
       }}
     >
       {children}

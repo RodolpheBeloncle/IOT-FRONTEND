@@ -1,6 +1,5 @@
 import { useState, useContext } from 'react';
 import jwtDecode from 'jwt-decode';
-import Cookies from 'js-cookie';
 
 import { UserContext } from '../context/UserContextProvider';
 
@@ -9,21 +8,25 @@ export const useAuth = () => {
   const userContext = useContext(UserContext);
 
   const login = (token, username) => {
-    Cookies.set('token', token);
-    Cookies.set('username', username);
+    document.cookie = `token=${token}`;
+    document.cookie = `username=${username}`;
 
+    console.log('Cooky have been seted!!!');
     setIsAuthenticated(true);
   };
 
   const logout = () => {
-    Cookies.remove('token');
-    Cookies.remove('username');
+    document.cookie =
+      'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/login;';
+    document.cookie =
+      'username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/login;';
     setIsAuthenticated(false);
   };
 
   const checkAuthentication = async () => {
-    const token = Cookies.get('token');
-   
+    document.cookie = `token=${token}`;
+    const token = document.cookie.token;
+
     console.log('decoded token : ', jwtDecode(token));
     try {
       if (token) {
@@ -32,7 +35,8 @@ export const useAuth = () => {
 
         if (decodedToken.exp < currentTime) {
           setIsAuthenticated(false);
-          Cookies.remove('token');
+          document.cookie =
+            'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/login;';
         } else {
           setIsAuthenticated(true);
         }

@@ -1,18 +1,16 @@
 import React from 'react';
 import './app.css';
-
+import UserContextProvider from './context/UserContextProvider';
+import { CssBaseline, ThemeProvider } from '@mui/material';
+import { ColorModeContext, useMode } from './theme';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './services/ProtectedRoute';
 import Login from './pages/Login';
 import Devices from './pages/Devices';
 import Register from './pages/Register';
 import ChangePassword from './pages/ChangePassword';
 import ForgetPassword from './pages/ForgetPassword';
 import Profil from './pages/Profil';
-import ProtectedRoute from './services/ProtectedRoute';
-import { CssBaseline, ThemeProvider } from '@mui/material';
-import { ColorModeContext, useMode } from './theme';
-import { GoogleOAuthProvider } from '@react-oauth/google';
-
 import Dashboard from './pages/dashboard/Dashboard';
 import Team from './pages/team/Team';
 import ControllersIoT from './pages/controllersiot/ControllersIoT';
@@ -27,8 +25,8 @@ const App = () => {
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <GoogleOAuthProvider clientId="43002333952-1r210l702o69enm56gb1nh33l27guvhf.apps.googleusercontent.com">
-            <BrowserRouter>
+          <BrowserRouter>
+            <UserContextProvider>
               <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
@@ -47,8 +45,8 @@ const App = () => {
                   <Route path="/faq" element={<FAQ />} />
                 </Route>
               </Routes>
-            </BrowserRouter>
-          </GoogleOAuthProvider>
+            </UserContextProvider>
+          </BrowserRouter>
           ;
         </ThemeProvider>
       </ColorModeContext.Provider>

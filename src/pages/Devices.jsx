@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import '../pages/styles/devices.css';
 import { Row } from 'antd';
-import { UserContext } from '../context/UserContextProvider';
 import axios from 'axios';
 import CardDevice from '../components/CardDevice';
 import CustomFormModal from '../components/CustomFormModal';
 
 const Devices = () => {
-  const { isAuthenticated } = useContext(UserContext);
-  console.log('auth DEVICES ', isAuthenticated);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [devices, setDevices] = useState([]);
 
@@ -21,7 +18,6 @@ const Devices = () => {
       })
       .catch((err) => console.log(err));
   }, [isOpenModal]);
-
   return (
     <>
       <>

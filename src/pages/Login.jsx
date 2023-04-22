@@ -1,17 +1,17 @@
-import React, { useEffect, useState, useContext, useCallback } from 'react';
-import Cookies from 'js-cookie';
+import React, { useEffect, useState, useContext } from 'react';
+import { Space, Spin } from 'antd';
 import axios from '../services/axiosInterceptor';
-import jwtDecode from 'jwt-decode';
 // import axios from 'axios';
+import jwtDecode from 'jwt-decode';
 import { useNavigate, Link } from 'react-router-dom';
 import shareVideo from '../assets/share.mp4';
 import google from '../img/google.png';
 import { UserContext } from '../context/UserContextProvider';
-import { GoogleLogin } from '@react-oauth/google';
 
 const Login = () => {
-  const { isAuthenticated, setIsAuthenticated, login, checkAuthentication } =
+  const { setIsAuthenticated, login, tokenAuth, setTokenAuth,setCookie } =
     useContext(UserContext);
+  const [isLoading, setIsLoading] = useState(null);
   const navigate = useNavigate();
   const [input, setInput] = useState({
     email: '',
@@ -25,47 +25,35 @@ const Login = () => {
         widthCredentials: true,
       });
       alert(response.data.message);
-      login(response.data.token, response.data.username);
+      console.log('token from userlogin', response.data.token);
+      // login(response.data.token, response.data.username);
 
-      console.log('handle login async cookie', Cookies.get('token'));
-      const token = Cookies.get('token');
-      
-      if (!token) {
+      if (!response.data.token) {
         setIsAuthenticated(false);
-        return navigate('/login');
+        navigate('/login');
       }
 
-      const decodedToken = jwtDecode(token);
+      const decodedToken = jwtDecode(response.data.token);
       const currentTime = Date.now() / 1000;
 
       if (decodedToken.exp < currentTime) {
         setIsAuthenticated(false);
-        Cookies.remove('token');
-        return navigate('/login');
+        // Cookies.remove('token');
+        navigate('/login');
       }
+
+      setCookie('token', response.data.token);
       setIsAuthenticated(true);
-      return navigate('/');
+      navigate('/');
     } catch (error) {
       console.log('message error : ', error);
       alert(error);
     }
   };
 
-  const handleSuccessResponse = (credentialResponse) => {
-    console.log(credentialResponse);
-    setIsAuthenticated(true);
-    return navigate('/');
+  const handleGoogleLogin = async () => {
+    window.open('http://localhost:5000/auth/google', '_self');
   };
-
-  const handleErrorResponse = (error) => {
-    console.log('Login Failed');
-    setIsAuthenticated(true);
-    return navigate('/login');
-  };
-
-  useEffect(() => {
-    checkAuthentication();
-  }, []);
 
   return (
     <div className="login">
@@ -82,17 +70,30 @@ const Login = () => {
       <h1 className="loginTitle">Choose a Login Method</h1>
       <div className="wrapper">
         <div className="left">
-          {/* <div className="loginButton google" onClick={signInWithGoogle}>
+          <div className="loginButton google" onClick={handleGoogleLogin}>
             <img src={google} alt="" className="icon" />
-          </div> */}
-          <GoogleLogin
-            onSuccess={(credentialResponse) => {
-              handleSuccessResponse(credentialResponse);
-            }}
-            onError={(error) => {
-              handleErrorResponse(error);
-            }}
-          />
+          </div>
+          {isLoading && (
+            <Space
+              direction="vertical"
+              style={{
+                width: '100%',
+              }}
+            >
+              <Spin tip="Loading" size="small">
+                <div className="content" />
+              </Spin>
+            </Space>
+          )}
+          {/* <GoogleLogin
+            clientId="43002333952-1r210l702o69enm56gb1nh33l27guvhf.apps.googleusercontent.com"
+            buttonText="Login with Google"
+            onSuccess={onSuccess}
+            onFailure={onFailure}
+            cookiePolicy={'single_host_origin'}
+            isSignedIn={true}
+            fetchBasicProfile={true}
+          /> */}
         </div>
         <div className="center">
           <div className="line" />
