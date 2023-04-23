@@ -9,7 +9,7 @@ const Receiver = ({ payload, type, topic }) => {
     if (payload.topic) {
       setMessages((messages) => [...messages, payload]);
     }
-    // console.log('payload message', parseInt(payload.message));
+    console.log('payload message', { ...payload });
   }, [payload]);
 
   const refresh = () => {
@@ -27,6 +27,7 @@ const Receiver = ({ payload, type, topic }) => {
         {type === 'sensor' ? (
           <>
             <Space wrap>
+              <p>Message{payload.message}</p>
               <Progress
                 type="circle"
                 size={120}

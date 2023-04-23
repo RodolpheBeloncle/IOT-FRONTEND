@@ -21,8 +21,8 @@ const CardDevice = ({ controllersIOT }) => {
         ? "Orange"
         : "Red"
     );
-    // console.log("connectstatus from cardevice", connectStatus);
-    // console.log("backgroundcol", backgroundCol);
+    console.log("connectstatus from cardevice", connectStatus);
+    console.log("backgroundcol", backgroundCol);
   }, [connectStatus, backgroundCol]);
   return (
     <div className="card">
