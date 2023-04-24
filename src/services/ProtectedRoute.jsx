@@ -6,6 +6,7 @@ import {
   useNavigate,
   useSearchParams,
 } from 'react-router-dom';
+import { message } from 'antd';
 import jwtDecode from 'jwt-decode';
 import Navbar from '../components/Navbar';
 import BreadCrumb from '../components/breadCrumb/BreadCrumb';
@@ -28,6 +29,7 @@ const ProtectedRoute = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+
     // checkAuthentication();
     // console.log('token protected route', tokenAuth);
     // console.log('protected route', isAuthenticated);
@@ -45,12 +47,10 @@ const ProtectedRoute = () => {
       setTokenAuth(token);
       setIsAuthenticated(true);
       navigate('/');
-    }else{
-       setIsAuthenticated(false);
-    navigate('/login');
-
+    } else {
+      setIsAuthenticated(false);
+      navigate('/login');
     }
-   
   }, []);
 
   // return tokenAuth ? (

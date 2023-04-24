@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Space, Spin } from 'antd';
+import { Space, Spin, message } from 'antd';
 import axios from '../services/axiosInterceptor';
 // import axios from 'axios';
 import jwtDecode from 'jwt-decode';
@@ -9,7 +9,7 @@ import google from '../img/google.png';
 import { UserContext } from '../context/UserContextProvider';
 
 const Login = () => {
-  const { setIsAuthenticated, login, tokenAuth, setTokenAuth,setCookie } =
+  const { setIsAuthenticated, login, tokenAuth, setTokenAuth, setCookie } =
     useContext(UserContext);
   const [isLoading, setIsLoading] = useState(null);
   const navigate = useNavigate();
@@ -21,15 +21,16 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      setIsLoading(true);
       const response = await axios.post('/api/auth/users/login', input, {
         widthCredentials: true,
       });
-      alert(response.data.message);
-      console.log('token from userlogin', response.data.token);
+
       // login(response.data.token, response.data.username);
 
       if (!response.data.token) {
         setIsAuthenticated(false);
+        setIsLoading(false);
         navigate('/login');
       }
 
@@ -39,21 +40,42 @@ const Login = () => {
       if (decodedToken.exp < currentTime) {
         setIsAuthenticated(false);
         // Cookies.remove('token');
+        setIsLoading(false);
         navigate('/login');
       }
 
-      setCookie('token', response.data.token);
+      console.log('token from userlogin', response.data.token);
       setIsAuthenticated(true);
+      setIsLoading(false);
+      message.success('Login successfull!', 3);
+      setCookie('token', response.data.token);
       navigate('/');
     } catch (error) {
       console.log('message error : ', error);
-      alert(error);
+      setIsLoading(false);
+      message.error(error, 3);
     }
   };
 
   const handleGoogleLogin = async () => {
     window.open('http://localhost:5000/auth/google', '_self');
   };
+
+  // !TODO ALTERNATIVE TO GET GOOGLE LOGIN TRUE FROMWINDOWOPEN
+
+  // function handleAuthentication() {
+  //   console.log('Authentication successful!');
+  //   // Do something else...
+  // }
+  // useEffect(() => {
+  //   const handleAuthenticationResult = () => {
+  //     if (window.location.search.includes('success=true')) {
+  //       handleAuthentication();
+  //     }
+  //   };
+  //   window.addEventListener('load', handleAuthenticationResult);
+  //   return () => window.removeEventListener('load', handleAuthenticationResult);
+  // }, []);
 
   return (
     <div className="login">

@@ -10,7 +10,7 @@ const Receiver = ({ payload, type, topic }) => {
       setMessages((messages) => [...messages, payload]);
     }
     console.log('payload message', { ...payload });
-  }, [payload]);
+  }, [payload.topic]);
 
   const refresh = () => {
     setMessages([]);

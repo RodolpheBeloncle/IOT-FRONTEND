@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
+import { Space, Spin, message } from 'antd';
 import Connection from './Connection';
 import Publisher from './Publisher';
 import Subscriber from './Subscriber';
@@ -22,6 +23,7 @@ const qosOption = [
 ];
 
 const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [client, setClient] = useState(null);
   const [isSubed, setIsSub] = useState(false);
   const [payload, setPayload] = useState({});
@@ -35,9 +37,13 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
       };
       const { topic, qos, payload } = context;
       client.publish(topic, payload, options, (error) => {
-        if (error) {
-          console.log('Publish error: ', error);
+        try {
+        } catch (error) {
+          message.error(error, 3);
         }
+        // if (error) {
+        //   console.log('Publish error: ', error);
+        // }
       });
     }
   };
@@ -114,20 +120,29 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
     if (client) {
       client.end(() => {
         setConnectStatus('connect');
+        message.warning('disconnected', 3);
+        setIsLoading(false);
       });
     }
   };
 
   useEffect(() => {
     if (client) {
+      connectStatus === 'connecting' ? setIsLoading(true) : setIsLoading(false);
+
       client.on('connect', () => {
         setConnectStatus('connected');
+        message.success('connected', 3);
+        setIsLoading(false);
       });
       client.on('error', (err) => {
+        message.error(err, 3);
         console.error('Connection error: ', err);
+        setIsLoading(false);
         client.end();
       });
       client.on('reconnect', () => {
+        setIsLoading(true);
         setConnectStatus('reconnecting');
       });
       client.on('message', (topic, message, packet) => {
@@ -139,6 +154,18 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
 
   return (
     <>
+      {isLoading && (
+        <Space
+          direction="vertical"
+          style={{
+            width: '100%',
+          }}
+        >
+          <Spin tip="Loading" size="small">
+            <div className="content" />
+          </Spin>
+        </Space>
+      )}
       <Connection
         deviceId={controllersIOT.id}
         connect={mqttConnect}
@@ -147,12 +174,12 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
         setConnectStatus={setConnectStatus}
       />
       <QosOption.Provider value={qosOption}>
-        <Subscriber
+        {/* <Subscriber
           sub={mqttSub}
           unSub={mqttUnSub}
           showUnsub={isSubed}
           topic={controllersIOT.topic}
-        />
+        /> */}
         {controllersIOT.type === 'switch' ? (
           <Publisher
             publish={mqttPublish}
@@ -164,9 +191,19 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
       {controllersIOT.type === 'sensor' ? (
         <Receiver
           payload={payload}
+          sub={mqttSub}
           type={controllersIOT.type}
           topic={controllersIOT.topic}
         />
+      ) : ""}
+      {controllersIOT.type === 'sensor' ? (
+           <Subscriber
+          sub={mqttSub}
+          unSub={mqttUnSub}
+          showUnsub={isSubed}
+          topic={controllersIOT.topic}
+        />
+       
       ) : null}
     </>
   );
