@@ -23,13 +23,14 @@ const ProtectedRoute = () => {
     // setCookie,
     tokenAuth,
     setTokenAuth,
+    userInfo,
+    setUserInfo,
   } = useContext(UserContext);
   // let [searchParams, setSearchParams] = useSearchParams();
   // const token = searchParams.get('token');
   const navigate = useNavigate();
 
   useEffect(() => {
-
     // checkAuthentication();
     // console.log('token protected route', tokenAuth);
     // console.log('protected route', isAuthenticated);
@@ -44,6 +45,14 @@ const ProtectedRoute = () => {
     if (tokenCookie) {
       const token = tokenCookie.split('=')[1];
       console.log('token', jwtDecode(token));
+      const { username, email, role, picture } = jwtDecode(token);
+      setUserInfo({
+        email: email,
+        role: role,
+        username: username,
+        picture: picture,
+      });
+      console.log('Username', username);
       setTokenAuth(token);
       setIsAuthenticated(true);
       navigate('/');

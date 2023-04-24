@@ -2,21 +2,25 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Space, Spin, message } from 'antd';
 import axios from '../services/axiosInterceptor';
 // import axios from 'axios';
+import Cookies from "js-cookie";
 import jwtDecode from 'jwt-decode';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link} from 'react-router-dom';
 import shareVideo from '../assets/share.mp4';
 import google from '../img/google.png';
 import { UserContext } from '../context/UserContextProvider';
 
 const Login = () => {
-  const { setIsAuthenticated, login, tokenAuth, setTokenAuth, setCookie } =
-    useContext(UserContext);
+  const { setIsAuthenticated, setCookie } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(null);
   const navigate = useNavigate();
   const [input, setInput] = useState({
     email: '',
     password: '',
   });
+
+  const [messageApi, contextHolder] = message.useMessage();
+
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -61,6 +65,21 @@ const Login = () => {
     window.open('http://localhost:5000/auth/google', '_self');
   };
 
+  const googleLogin = () => {
+    messageApi
+      .open({
+        type: 'loading',
+        content: 'google login process..',
+        duration: 2.5,
+      })
+      .then(() =>
+        message.success(
+          'if you are new user an email have been sent \n to your email adress',
+          3
+        )
+      )
+      .then(() => handleGoogleLogin());
+  };
   // !TODO ALTERNATIVE TO GET GOOGLE LOGIN TRUE FROMWINDOWOPEN
 
   // function handleAuthentication() {
@@ -76,6 +95,8 @@ const Login = () => {
   //   window.addEventListener('load', handleAuthenticationResult);
   //   return () => window.removeEventListener('load', handleAuthenticationResult);
   // }, []);
+ 
+  useEffect(() => {}, []);
 
   return (
     <div className="login">
@@ -89,10 +110,11 @@ const Login = () => {
           autoPlay
         />
       </div>
+      {contextHolder}
       <h1 className="loginTitle">Choose a Login Method</h1>
       <div className="wrapper">
         <div className="left">
-          <div className="loginButton google" onClick={handleGoogleLogin}>
+          <div className="loginButton google" onClick={googleLogin}>
             <img src={google} alt="" className="icon" />
           </div>
           {isLoading && (

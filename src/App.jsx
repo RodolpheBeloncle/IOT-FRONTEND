@@ -28,7 +28,8 @@ const App = () => {
           <BrowserRouter>
             <UserContextProvider>
               <Routes>
-                <Route path="/login" element={<Login />} />
+                <Route path="/login/" element={<Login />} />
+                <Route path="/login/:token" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/reset-password" element={<ForgetPassword />} />
                 <Route

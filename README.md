@@ -10,3 +10,9 @@
 
 # kill process listenning on port 8000 : lsof -i:8000 
 # sudo kill -9 <pid>
+
+# launch mosquitto
+#  /usr/local/sbin/mosquitto -v -c /usr/local/etc/mosquitto/mosquitto.conf
+
+# launch ngrok
+#  ngrok tcp 9001    

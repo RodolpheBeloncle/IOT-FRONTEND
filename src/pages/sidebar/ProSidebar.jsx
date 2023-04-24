@@ -1,9 +1,10 @@
 // docs https://github.com/azouaoui-med/react-pro-sidebar
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Menu, Sidebar, MenuItem } from 'react-pro-sidebar';
 import { useProSidebar } from 'react-pro-sidebar';
 
 import { useSidebarContext } from './sidebarContext';
+import { UserContext } from '../../context/UserContextProvider';
 
 import { Link } from 'react-router-dom';
 import { tokens } from '../../theme';
@@ -41,6 +42,7 @@ const MyProSidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [selected, setSelected] = useState('Dashboard');
   const { sidebarRTL, setSidebarRTL, sidebarImage } = useSidebarContext();
+  const { userInfo } = useContext(UserContext);
   const { collapseSidebar, toggleSidebar, collapsed, broken } = useProSidebar();
   return (
     <Box
@@ -108,8 +110,8 @@ const MyProSidebar = () => {
                 alignItems="center"
                 ml="15px"
               >
-                <Typography variant="h3" color={colors.grey[100]}>
-                  ADMINIS
+                <Typography variant="h8" color={colors.grey[100]}>
+                  {userInfo.role === 'user' ? userInfo.username : userInfo.role}
                 </Typography>
                 <IconButton
                   onClick={
@@ -138,7 +140,11 @@ const MyProSidebar = () => {
                   alt="profile user"
                   width="100px"
                   height="100px"
-                  src="https://www.pikpng.com/pngl/m/80-805068_my-profile-icon-blank-profile-picture-circle-clipart.png"
+                  src={
+                    userInfo.picture
+                      ? userInfo.picture
+                      : 'https://www.pikpng.com/pngl/m/80-805068_my-profile-icon-blank-profile-picture-circle-clipart.png'
+                  }
                   style={{ cursor: 'pointer', borderRadius: '50%' }}
                 />
               </Box>
@@ -149,7 +155,7 @@ const MyProSidebar = () => {
                   fontWeight="bold"
                   sx={{ m: '10px 0 0 0' }}
                 >
-                  Harun Jeylan
+               
                 </Typography>
               </Box>
             </Box>

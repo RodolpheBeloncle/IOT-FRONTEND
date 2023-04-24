@@ -7,6 +7,12 @@ export const UserContext = createContext();
 export const UserContextProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [tokenAuth, setTokenAuth] = useState(null);
+  const [userInfo, setUserInfo] = useState({
+    email: '',
+    role: '',
+    username: '',
+    picture: '',
+  });
   const navigate = useNavigate();
 
   const getCookie = (key) => {
@@ -103,8 +109,6 @@ export const UserContextProvider = ({ children }) => {
     }
   };
 
-
-
   return (
     <UserContext.Provider
       value={{
@@ -117,8 +121,9 @@ export const UserContextProvider = ({ children }) => {
         removeCookie,
         checkAuthentication,
         tokenAuth,
-        setTokenAuth
-     
+        setTokenAuth,
+        userInfo,
+        setUserInfo,
       }}
     >
       {children}
