@@ -1,16 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import './receiver.css';
 import { Card, List, Progress, Space, Row } from 'antd';
+import { QosOption } from './index';
 
-const Receiver = ({ payload, type, topic }) => {
+const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
   const [messages, setMessages] = useState([]);
+  const qosOptions = useContext(QosOption);
+
+  const record = {
+    topic: topic,
+    qos: 0,
+  };
+
+  const onFinish = (values) => {
+    console.log('values', values);
+    console.log('record', record);
+    sub(values);
+  };
+
+  // !todo set possiblity to unsubscribe in the recever
+  const handleUnsub = () => {
+    const values = form.getFieldsValue();
+    console.log('unsub', values);
+    unSub(values);
+  };
 
   useEffect(() => {
+   
     if (payload.topic) {
       setMessages((messages) => [...messages, payload]);
     }
     console.log('payload message', { ...payload });
-  }, [payload.topic]);
+  }, [payload]);
 
   const refresh = () => {
     setMessages([]);

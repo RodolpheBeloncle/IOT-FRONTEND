@@ -29,6 +29,26 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
   const [payload, setPayload] = useState({});
   // const [connectStatus, setConnectStatus] = useState("Connect");
 
+  const [messageApi, contextHolder] = message.useMessage();
+  const success = (message) => {
+    messageApi.open({
+      type: 'success',
+      content: message,
+    });
+  };
+  const messageerror = (error) => {
+    messageApi.open({
+      type: 'error',
+      content: error,
+    });
+  };
+  const warning = (message) => {
+    messageApi.open({
+      type: 'warning',
+      content: message,
+    });
+  };
+
   const mqttPublish = (context) => {
     if (client) {
       var options = {
@@ -37,13 +57,10 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
       };
       const { topic, qos, payload } = context;
       client.publish(topic, payload, options, (error) => {
-        try {
-        } catch (error) {
-          message.error(error, 3);
+        if (error) {
+          console.log('Publish error: ', error.message);
+          // !! handle this error warning(error.message);
         }
-        // if (error) {
-        //   console.log('Publish error: ', error);
-        // }
       });
     }
   };
@@ -84,10 +101,11 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
       const { topic, qos } = record;
       client.subscribe(topic, { qos }, (error) => {
         if (error) {
-          console.log('Subscribe to topics error', error);
-          return;
+          console.log('Subscribe to topics error', error.message);
+          // !! handle this error warning(error.message);
         }
         setIsSub(true);
+        success(`subscribed to topic : ${controllersIOT.topic}`);
       });
     }
   };
@@ -101,42 +119,43 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
       const { topic } = record;
       client.unsubscribe(topic, (error) => {
         if (error) {
-          console.log('Unsubscribe error', error);
-          return;
+          console.log('Unsubscribe error', error.message);
+          warning(error.message);
         }
         setIsSub(false);
+        success(`unsubscribed to topic : ${controllersIOT.topic}`);
       });
     }
   };
 
   const mqttConnect = (host, mqttOption) => {
-    mqttUnSub();
-    mqttSub();
     setConnectStatus('connecting');
     setClient(mqtt.connect(host, mqttOption));
+    success(`connected to device`);
+ 
   };
 
   const mqttDisconnect = () => {
     if (client) {
       client.end(() => {
         setConnectStatus('connect');
-        message.warning('disconnected', 3);
+        mqttUnSub();
         setIsLoading(false);
+        success(`disconnected to device ! `);
       });
     }
   };
 
   useEffect(() => {
-    if (client) {
-      connectStatus === 'connecting' ? setIsLoading(true) : setIsLoading(false);
+    connectStatus === 'connecting' ? setIsLoading(true) : setIsLoading(false);
 
+    if (client) {
       client.on('connect', () => {
         setConnectStatus('connected');
-        message.success('connected', 3);
+        mqttSub();
         setIsLoading(false);
       });
       client.on('error', (err) => {
-        message.error(err, 3);
         console.error('Connection error: ', err);
         setIsLoading(false);
         client.end();
@@ -166,6 +185,8 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
           </Spin>
         </Space>
       )}
+
+      {contextHolder}
       <Connection
         deviceId={controllersIOT.id}
         connect={mqttConnect}
@@ -192,18 +213,21 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
         <Receiver
           payload={payload}
           sub={mqttSub}
+          unSub={mqttUnSub}
+          showUnsub={isSubed}
           type={controllersIOT.type}
           topic={controllersIOT.topic}
         />
-      ) : ""}
+      ) : (
+        ''
+      )}
       {controllersIOT.type === 'sensor' ? (
-           <Subscriber
+        <Subscriber
           sub={mqttSub}
           unSub={mqttUnSub}
           showUnsub={isSubed}
           topic={controllersIOT.topic}
         />
-       
       ) : null}
     </>
   );

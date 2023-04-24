@@ -1,6 +1,6 @@
-
 #include <WiFi.h>
-#include "WiFiClientSecure.h"
+// #include "WiFiClientSecure.h"
+#include "WiFiClient.h"
 #include <PubSubClient.h>
 #include <Arduino.h>
 #include "credentials.h"
@@ -34,8 +34,12 @@ const char *root_ca = CA_CRT;
 const char *server_cert = SERVER_CERT;
 const char *server_key = SERVER_KEY;
 
-WiFiClientSecure espClient;
+// WiFiClientSecure espClient;
+WiFiClient espClient;
 PubSubClient client(espClient);
+
+unsigned long lastPublish = 0;
+const unsigned long PUBLISH_INTERVAL = 5000; // publish interval in milliseconds
 
 void setup()
 {
@@ -65,9 +69,9 @@ void setup()
   Serial.println(WiFi.localIP());
 
   // Connecting to a mqtt broker width ssl certification
-  espClient.setCACert(root_ca);
-  espClient.setCertificate(server_cert); // for client verification
-  espClient.setPrivateKey(server_key);   // for client verification
+  //  espClient.setCACert(root_ca);
+  //  espClient.setCertificate(server_cert);  // for client verification
+  //  espClient.setPrivateKey(server_key);    // for client verification
   client.setServer(mqtt_broker, mqtt_port);
   client.setCallback(callback);
 
@@ -102,12 +106,11 @@ void setup()
   Serial.printf("Message: %.2f \n", t);
 
   // Publish an MQTT message on topic esp32/dht/humidity
-  // float h = dht.readHumidity();
-  // uint16_t packetIdPub2 = client.publish(topichum, String(h).c_str());
-  // Serial.printf("Publishing on topic %s at QoS 1, packetId %i: ", topichum, packetIdPub2);
-  // Serial.printf("Message: %.2f \n", h);
+  float h = dht.readHumidity();
+  uint16_t packetIdPub2 = client.publish(topichum, String(h).c_str());
+  Serial.printf("Publishing on topic %s at QoS 1, packetId %i: ", topichum, packetIdPub2);
+  Serial.printf("Message: %.2f \n", h);
 
-  // client.subscribe(topic);
   // Initialize DHT sensor
   dht.begin();
 }
@@ -125,17 +128,7 @@ void callback(char *topic, byte *payload, unsigned int length)
   }
   Serial.println();
   Serial.println("-----------------------");
-
-  // if (String(topic) == "home/light") {
-  //  if (messageTemp == "on") {
-  //     Serial.println("on");
-  //     digitalWrite(led, HIGH);
-  //   } else if (messageTemp == "off") {
-  //     Serial.println("off");
-  //     digitalWrite(led, LOW);
-  //   }
-  // }
-
+  // callback event listener when message arrive do so
   if (String(topic) == "home/light")
   {
     if (messageTemp == "on")
@@ -150,18 +143,6 @@ void callback(char *topic, byte *payload, unsigned int length)
       ledState = LOW;
       Serial.println("LED off");
     }
-  }
-
-  if (String(topic) == "home/temp")
-  {
-    sensorUpdate();
-    Serial.print("Changing output to ");
-  }
-
-  if (String(topic) == "home/hum")
-  {
-    sensorUpdate();
-    Serial.print("Changing output to ");
   }
 }
 
@@ -202,6 +183,7 @@ void sensorUpdate()
   Serial.print(t);
   Serial.print(F("C  ,"));
 
+  // publish every 5 seconds
   delay(5000);
 }
 
@@ -236,10 +218,38 @@ void loop()
   {
     reconnect();
   }
+
+  unsigned long currentMillis = millis();
+  if (currentMillis - lastPublish >= PUBLISH_INTERVAL)
+  {
+    float temperature = dht.readTemperature();
+    float humidity = dht.readHumidity();
+    if (isnan(temperature) || isnan(humidity))
+    {
+      Serial.println("Failed to read data from DHT sensor");
+      return;
+    }
+    Serial.print("Temperature: ");
+    Serial.print(temperature);
+    Serial.print(" *C  Humidity: ");
+    Serial.print(humidity);
+    Serial.println(" %");
+
+    char tempStr[6];
+    char humStr[6];
+    dtostrf(temperature, 5, 2, tempStr);
+    dtostrf(humidity, 5, 2, humStr);
+
+    client.publish(topictemp, tempStr);
+    client.publish(topichum, humStr);
+
+    lastPublish = currentMillis;
+  }
+
   client.loop();
+
   long now = millis();
   if (now - lastMsg > 5000)
   {
     lastMsg = now;
   }
-}
