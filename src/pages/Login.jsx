@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import './styles/login.css';
+import { ReactComponent as IotLogo } from '../img/iot_logo.svg';
 import { Space, Spin, message } from 'antd';
 import axios from '../services/axiosInterceptor';
 
@@ -85,9 +86,9 @@ const Login = () => {
 
   return (
     <div className="login">
-      <div class="video-wrapper">
+      <div className="video-wrapper">
         <video
-          src={shareVideo}
+          src="https://cdn.dribbble.com/userupload/6114976/file/original-2f26522549d6167c4d3223c384fce5f4.mp4"
           type="video/mp4"
           loop
           controls={false}
@@ -96,21 +97,21 @@ const Login = () => {
         />
       </div>
       {contextHolder}
-      <h1 className="loginTitle">Choose a Login Method</h1>
+      {/* <h1 className="loginTitle">Choose a Login Method</h1> */}
       <div className="wrapper">
         <div className="left">
-          {/* <div className="loginButton google" onClick={googleLogin}>
-            <img src={google} alt="" className="icon" />
+          {/* <div classNameName="loginButton google" onClick={googleLogin}>
+            <img src={google} alt="" classNameName="icon" />
           </div> */}
 
-          <div class="google-btn" onClick={googleLogin}>
-            <div class="google-icon-wrapper">
+          <div className="google-btn" onClick={googleLogin}>
+            <div className="google-icon-wrapper">
               <img
-                class="google-icon"
+                className="google-icon"
                 src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
               />
             </div>
-            <p class="btn-text">
+            <p className="btn-text">
               <b>Sign in with google</b>
             </p>
           </div>
@@ -133,22 +134,28 @@ const Login = () => {
         </div>
         <div className="right">
           <form onSubmit={handleLogin}>
-            <div class="d-flex align-items-center mb-3 pb-1">
+            <div className="d-flex align-items-center mb-3 pb-1">
+              <IotLogo />
               <i
-                class="fas fa-cubes fa-2x me-3"
+                className="fas fa-cubes fa-2x me-3"
                 style={{ color: ' #ff6219' }}
               ></i>
-              <span class="h1 fw-bold mb-0">Logo</span>
+              {/* <span className="h1 fw-bold mb-0">
+                <IotLogo />
+              </span> */}
             </div>
-            <h5 class="fw-normal mb-3 pb-3" style={{ letterSpacing: '1px' }}>
+            <h5
+              className="fw-normal mb-3 pb-3"
+              style={{ letterSpacing: '1px' }}
+            >
               Sign into your account
             </h5>
-            <div class="form-outline mb-4">
+            <div className="form-outline mb-4">
               <input
                 type="email"
                 id=""
                 placeholder="Enter Email"
-                class="form-control form-control-lg"
+                className="form-control form-control-lg"
                 name="email"
                 value={input.email}
                 onChange={(e) =>
@@ -159,12 +166,12 @@ const Login = () => {
                 }
               />
             </div>
-            <div class="form-outline mb-4">
+            <div className="form-outline mb-4">
               <input
                 placeholder="Enter Password"
                 type="password"
                 id="form2Example27"
-                class="form-control form-control-lg"
+                className="form-control form-control-lg"
                 name="password"
                 value={input.password}
                 onChange={(e) =>
@@ -175,15 +182,39 @@ const Login = () => {
                 }
               />
             </div>
-            <div class="pt-1 mb-4">
-              <button class="btn btn-dark btn-lg btn-block" type="submit">
+            <div
+              className="pt-1 mb-4"
+              style={{
+                fontWeight: 'bolder',
+              }}
+            >
+              <button
+                className="btn btn-dark btn-lg btn-block"
+                style={{
+                  background: '#3ee09a',
+                  border: 'solid 1px #fff',
+                }}
+                type="submit"
+              >
                 Login
               </button>
             </div>
-            Forget Password ?<Link to={'/reset-password'}>Click Here</Link>
-            <p class="mb-5 pb-lg-2" style={{ color: '#393f81' }}>
+
+            <p
+              className="mb-5 pb-lg-2"
+              style={{ color: '#fff', fontWeight: 'bolder' }}
+            >
+              Forget Password ?<Link to={'/reset-password'}>Click Here</Link>
+            </p>
+            <p
+              className="mb-5 pb-lg-2"
+              style={{ color: '#fff', fontWeight: 'bolder' }}
+            >
               Don't have an account?{' '}
-              <Link to="/register" style={{ color: '#393f81' }}>
+              <Link
+                to="/register"
+                style={{ color: '#0d6efd', fontWeight: 'bolder' }}
+              >
                 Register here
               </Link>
             </p>

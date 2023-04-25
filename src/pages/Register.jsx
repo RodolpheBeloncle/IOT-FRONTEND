@@ -1,165 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { ExclamationCircleFilled } from '@ant-design/icons';
-import { Button, Modal, Space, message, Form, Input } from 'antd';
+import React, { useState } from 'react';
+import { Button, Modal, message, Form, Input } from 'antd';
 import './styles/register.css';
 import axios from '../services/axiosInterceptor';
 import { useNavigate, Link } from 'react-router-dom';
-import * as yup from 'yup';
 
 const Register = () => {
   const navigate = useNavigate();
-  const [input, setInput] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-
-  const [validationErrors, setValidationErrors] = useState({});
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(null);
-
-  // const checkoutSchema = yup.object().shape({
-  //   username: yup.string().required('Please provide username'),
-  //   email: yup
-  //     .string()
-  //     .email('Invalid email!')
-  //     .required('Please provide an email'),
-  //   password: yup
-  //     .string()
-  //     .min(8, 'Password is too short - should be 8 chars minimum.')
-  //     .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
-  //     .required('No password provided.'),
-  //   confirmPassword: yup
-  //     .string()
-  //     .oneOf([yup.ref('password'), null], 'Passwords must match')
-  //     .required('Please confirm your password'),
-  // });
-  // const schema = yup.object().shape({
-  //   username: yup.string()
-  //     .required('Username is required'),
-  //   email: yup.string()
-  //     .email('Invalid email')
-  //     .required('Email is required'),
-  //   password: yup.string()
-  //     .min(6, 'Password must be at least 6 characters')
-  //     .required('Password is required'),
-  //   confirmPassword: yup.string()
-  //     .oneOf([yup.ref('password'), null], 'Passwords must match')
-  //     .required('Confirm password is required'),
-  // });
 
   const handleRegister = (form) => {
-    // ====
-
     axios
       .post('api/auth/users/register', form)
-      .then((response) => {})
+      .then((response) => {
+        console.log(response);
+        alert(response.data);
+        navigate('/login');
+      })
       .catch((error) => {
+        console.log(error);
+        alert(error.message);
         console.log(error);
       });
   };
 
-  const { confirm } = Modal;
-
-  const showConfirm = () => {
-    confirm({
-      title: 'Registration',
-      icon: <ExclamationCircleFilled />,
-      content: 'Confirm Registration',
-      onOk() {
-        handleRegister();
-      },
-      onCancel() {
-        console.log('Cancel');
-        setInput({
-          username: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-        });
-      },
-    });
-  };
-  // const showPromiseConfirm = () => {
-  //   confirm({
-  //     title: 'Do you want to delete these items?',
-  //     icon: <ExclamationCircleFilled />,
-  //     content:
-  //       'When clicked the OK button, this dialog will be closed after 1 second',
-  //     onOk() {
-  //       return new Promise((resolve, reject) => {
-  //         setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
-  //       }).catch(() => console.log('Oops errors!'));
-  //     },
-  //     onCancel() {},
-  //   });
-  // };
-
-  const handleChangeField = (e) => {
-    const { name, value } = e.target;
-    console.log(`${name}: ${value}`);
-    setInput({
-      ...input,
-      [name]: value,
-    });
-  };
-
-  // const handleOk = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     setConfirmLoading(true);
-  //     await checkoutSchema.validate(input, { abortEarly: false });
-  //     console.log('Form data is valid:', input);
-  //     const { response } = await axios.post('api/auth/users/register', input);
-  //     console.log(response.message);
-  //     setOpen(false);
-  //     setConfirmLoading(false);
-  //     message.success(response.message, 3);
-  //     navigate('/');
-  //   } catch (error) {
-  //     // If validation fails, set the validation errors
-  //     console.log(error);
-  //     const errors = {};
-
-  //     error.inner.forEach((err) => {
-  //       errors[err.path] = err.message;
-  //     });
-
-  //     setValidationErrors(errors);
-  //     setOpen(false);
-  //     setConfirmLoading(false);
-  //   }
-  // };
-
-  // const handleOk = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     setConfirmLoading(true);
-  //     await checkoutSchema.validate(input, { abortEarly: false });
-  //     console.log('Form data is valid:', input);
-  //     const { response } = await axios.post('api/auth/users/register', input);
-  //     console.log(response.message);
-  //     setOpen(false);
-  //     setConfirmLoading(false);
-  //     message.success(response.message, 3);
-  //     navigate('/');
-  //   } catch (error) {
-  //     // If validation fails, set the validation errors
-  //     console.log(error);
-  //     const errors = {};
-
-  //     error.inner.forEach((err) => {
-  //       errors[err.path] = err.message;
-  //     });
-
-  //     setValidationErrors(errors);
-  //     setOpen(false);
-  //     setConfirmLoading(false);
-  //   }
-  // };
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [form] = Form.useForm();
 
@@ -182,109 +44,119 @@ const Register = () => {
   };
 
   return (
-    <section className="vh-100" style={{ backgroundColor: '#9A616D' }}>
+    <section className="vh-100">
       <div className="container py-5 h-100">
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col col-xl-10">
             <div className="card" style={{ borderRadius: '1rem' }}>
-              <Form
-                form={form}
-                name="register"
-                onFinish={onFinish}
-                layout="vertical"
-                initialValues={{
-                  remember: true,
-                }}
-                autoComplete="off"
-              >
-                <Form.Item
-                  label="Username"
-                  name="username"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please input your username!',
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
+              <div className="col-md-6 col-lg-7 d-flex align-items-center">
+                <div className="card-body p-4 p-lg-5 text-black">
+                  <Form
+                    form={form}
+                    name="register"
+                    onFinish={onFinish}
+                    layout="vertical"
+                    initialValues={{
+                      remember: true,
+                    }}
+                    autoComplete="off"
+                  >
+                    <Form.Item
+                      label="Username"
+                      name="username"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please input your username!',
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
 
-                <Form.Item
-                  label="Email"
-                  name="email"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please input your email!',
-                    },
-                    {
-                      type: 'email',
-                      message: 'Please enter a valid email address',
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
+                    <Form.Item
+                      label="Email"
+                      name="email"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please input your email!',
+                        },
+                        {
+                          type: 'email',
+                          message: 'Please enter a valid email address',
+                        },
+                      ]}
+                    >
+                      <Input />
+                    </Form.Item>
 
-                <Form.Item
-                  label="Password"
-                  name="password"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please input your password!',
-                    },
-                    {
-                      min: 6,
-                      message: 'Password must be at least 6 characters',
-                    },
-                  ]}
-                >
-                  <Input.Password />
-                </Form.Item>
+                    <Form.Item
+                      label="Password"
+                      name="password"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please input your password!',
+                        },
+                        {
+                          min: 6,
+                          message: 'Password must be at least 6 characters',
+                        },
+                      ]}
+                    >
+                      <Input.Password />
+                    </Form.Item>
 
-                <Form.Item
-                  label="Confirm Password"
-                  name="confirmPassword"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'Please confirm your password!',
-                    },
-                    ({ getFieldValue }) => ({
-                      validator(_, value) {
-                        if (!value || getFieldValue('password') === value) {
-                          return Promise.resolve();
-                        }
-                        return Promise.reject(
-                          new Error('Passwords must match')
-                        );
-                      },
-                    }),
-                  ]}
-                >
-                  <Input.Password />
-                </Form.Item>
+                    <Form.Item
+                      label="Confirm Password"
+                      name="confirmPassword"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Please confirm your password!',
+                        },
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            if (!value || getFieldValue('password') === value) {
+                              return Promise.resolve();
+                            }
+                            return Promise.reject(
+                              new Error('Passwords must match')
+                            );
+                          },
+                        }),
+                      ]}
+                    >
+                      <Input.Password />
+                    </Form.Item>
 
-                <Form.Item>
-                  <Button type="primary" htmlType="submit">
-                    Register
-                  </Button>
-                </Form.Item>
-              </Form>
+                    <Form.Item>
+                      <Button type="primary" htmlType="submit">
+                        Register
+                      </Button>
+                    </Form.Item>
 
-              <Modal
-                title="Confirm Registration"
-                open={isModalVisible}
-                onOk={handleModalOk}
-                onCancel={handleModalCancel}
-                input={input}
-              >
-                <p>Are you sure you want to register with these details?</p>
-                <p>Username: {form.getFieldValue('username')}</p>
-                <p>Email: {form.getFieldValue('email')}</p>
-              </Modal>
+                    <p className="mb-5 pb-lg-2" style={{ color: '#393f81' }}>
+                      Already Have an Account?
+                      <Link to="/login" style={{ color: '#393f81' }}>
+                        Login Here
+                      </Link>
+                    </p>
+                  </Form>
+
+                  <Modal
+                    title="Confirm Registration"
+                    open={isModalVisible}
+                    onOk={handleModalOk}
+                    onCancel={handleModalCancel}
+                  >
+                    <p>Are you sure you want to register with these details?</p>
+                    <p>Username: {form.getFieldValue('username')}</p>
+                    <p>Email: {form.getFieldValue('email')}</p>
+                  </Modal>
+                </div>
+              </div>
             </div>
           </div>
         </div>

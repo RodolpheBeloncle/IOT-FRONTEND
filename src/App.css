@@ -269,6 +269,7 @@ video {
   display: flex;
   align-items: center;
   justify-content: center;
+
 }
 
 
@@ -281,7 +282,7 @@ video {
 
   .wrapper {
     width: 65%;
-    height: 90%;
+    height: 100%;
     flex-direction: column;
   }
 
