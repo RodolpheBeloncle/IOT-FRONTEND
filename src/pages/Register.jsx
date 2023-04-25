@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { ExclamationCircleFilled } from '@ant-design/icons';
+import { Button, Modal, Space, message } from 'antd';
+import './styles/register.css';
 import axios from '../services/axiosInterceptor';
 import { useNavigate, Link } from 'react-router-dom';
+import * as yup from 'yup';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -8,21 +12,171 @@ const Register = () => {
     username: '',
     email: '',
     password: '',
+    confirmPassword: '',
+  });
+
+  const [validationErrors, setValidationErrors] = useState({});
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
+
+  const checkoutSchema = yup.object().shape({
+    username: yup.string().required('Please provide username'),
+    email: yup
+      .string()
+      .email('Invalid email!')
+      .required('Please provide an email'),
+    password: yup
+      .string()
+      .min(8, 'Password is too short - should be 8 chars minimum.')
+      .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
+      .required('No password provided.'),
+    confirmPassword: yup
+      .string()
+      .oneOf([yup.ref('password'), null], 'Passwords must match')
+      .required('Please confirm your password'),
   });
 
   const handleRegister = async (e) => {
     e.preventDefault();
-
+    // ====
     try {
-      const response = await axios.post('api/auth/users/register', input);
-      if (response.status === 201) {
-        alert(response.data.message);
-        navigate('/login');
-      }
-    } catch (error) {
-      alert(error.response.data.message);
+      setIsLoading(true);
+      const data = { ...input, confirmPassword: input.confirmPassword };
+      await checkoutSchema.validate(data, { abortEarly: false });
+
+      const { response } = await axios.post('api/auth/users/register', input);
+      setData(response);
+      setIsLoading(false);
+      console.log(response.status);
+      response &&
+        setValidationErrors({}) &&
+        setInput({
+          username: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+        });
+      // return navigate('/register');
+    } catch ({ response }) {
+      setIsLoading(false);
+      // If validation fails, set the validation errors
+      console.log('catch error', response.status);
+      const errors = {};
+
+      response.inner.forEach((err) => {
+        errors[err.path] = err.message;
+      });
+
+      setValidationErrors(errors);
+      setIsLoading(false);
     }
   };
+
+  const { confirm } = Modal;
+
+  const showConfirm = (e) => {
+    confirm({
+      title: 'Registration',
+      icon: <ExclamationCircleFilled />,
+      content: 'Confirm Registration',
+      onOk() {
+        handleRegister(e);
+      },
+      onCancel() {
+        console.log('Cancel');
+        setInput({
+          username: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+        });
+      },
+    });
+  };
+  // const showPromiseConfirm = () => {
+  //   confirm({
+  //     title: 'Do you want to delete these items?',
+  //     icon: <ExclamationCircleFilled />,
+  //     content:
+  //       'When clicked the OK button, this dialog will be closed after 1 second',
+  //     onOk() {
+  //       return new Promise((resolve, reject) => {
+  //         setTimeout(Math.random() > 0.5 ? resolve : reject, 1000);
+  //       }).catch(() => console.log('Oops errors!'));
+  //     },
+  //     onCancel() {},
+  //   });
+  // };
+
+  const handleChangeField = (e) => {
+    const { name, value } = e.target;
+    console.log(`${name}: ${value}`);
+    setInput({
+      ...input,
+      [name]: value,
+    });
+  };
+
+  // const handleOk = async (e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     setConfirmLoading(true);
+  //     await checkoutSchema.validate(input, { abortEarly: false });
+  //     console.log('Form data is valid:', input);
+  //     const { response } = await axios.post('api/auth/users/register', input);
+  //     console.log(response.message);
+  //     setOpen(false);
+  //     setConfirmLoading(false);
+  //     message.success(response.message, 3);
+  //     navigate('/');
+  //   } catch (error) {
+  //     // If validation fails, set the validation errors
+  //     console.log(error);
+  //     const errors = {};
+
+  //     error.inner.forEach((err) => {
+  //       errors[err.path] = err.message;
+  //     });
+
+  //     setValidationErrors(errors);
+  //     setOpen(false);
+  //     setConfirmLoading(false);
+  //   }
+  // };
+
+  // const handleOk = async (e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     setConfirmLoading(true);
+  //     await checkoutSchema.validate(input, { abortEarly: false });
+  //     console.log('Form data is valid:', input);
+  //     const { response } = await axios.post('api/auth/users/register', input);
+  //     console.log(response.message);
+  //     setOpen(false);
+  //     setConfirmLoading(false);
+  //     message.success(response.message, 3);
+  //     navigate('/');
+  //   } catch (error) {
+  //     // If validation fails, set the validation errors
+  //     console.log(error);
+  //     const errors = {};
+
+  //     error.inner.forEach((err) => {
+  //       errors[err.path] = err.message;
+  //     });
+
+  //     setValidationErrors(errors);
+  //     setOpen(false);
+  //     setConfirmLoading(false);
+  //   }
+  // };
+
+  useEffect(() => {
+    console.log('data', data);
+  });
+
   return (
     <section className="vh-100" style={{ backgroundColor: '#9A616D' }}>
       <div className="container py-5 h-100">
@@ -40,7 +194,7 @@ const Register = () => {
                 </div>
                 <div className="col-md-6 col-lg-7 d-flex align-items-center">
                   <div className="card-body p-4 p-lg-5 text-black">
-                    <form onSubmit={handleRegister}>
+                    <form onSubmit>
                       <div className="d-flex align-items-center mb-3 pb-1">
                         <i
                           className="fas fa-cubes fa-2x me-3"
@@ -63,13 +217,13 @@ const Register = () => {
                           className="form-control form-control-lg"
                           name="username"
                           value={input.username}
-                          onChange={(e) =>
-                            setInput({
-                              ...input,
-                              [e.target.name]: e.target.value,
-                            })
-                          }
+                          onChange={handleChangeField}
                         />
+                        {validationErrors.username && (
+                          <span className="error">
+                            {validationErrors.username}
+                          </span>
+                        )}
                       </div>
 
                       <div className="form-outline mb-4">
@@ -79,13 +233,13 @@ const Register = () => {
                           className="form-control form-control-lg"
                           name="email"
                           value={input.email}
-                          onChange={(e) =>
-                            setInput({
-                              ...input,
-                              [e.target.name]: e.target.value,
-                            })
-                          }
+                          onChange={handleChangeField}
                         />
+                        {validationErrors.email && (
+                          <span className="error">
+                            {validationErrors.email}
+                          </span>
+                        )}
                       </div>
                       <div className="form-outline mb-4">
                         <input
@@ -94,23 +248,40 @@ const Register = () => {
                           className="form-control form-control-lg"
                           name="password"
                           value={input.password}
-                          onChange={(e) =>
-                            setInput({
-                              ...input,
-                              [e.target.name]: e.target.value,
-                            })
-                          }
+                          onChange={handleChangeField}
                         />
+                        {validationErrors.password && (
+                          <span className="error">
+                            {validationErrors.password}
+                          </span>
+                        )}
                       </div>
 
-                      <div className="pt-1 mb-4">
-                        <button
-                          className="btn btn-dark btn-lg btn-block"
-                          type="submit"
-                        >
-                          Register
-                        </button>
+                      <div className="form-outline mb-4">
+                        <input
+                          placeholder="Confirm Password"
+                          type="password"
+                          className="form-control form-control-lg"
+                          name="confirmPassword"
+                          value={input.confirmPassword}
+                          onChange={handleChangeField}
+                        />
+                        {validationErrors.confirmPassword && (
+                          <span className="error">
+                            {validationErrors.confirmPassword}
+                          </span>
+                        )}
                       </div>
+
+                      <Space wrap>
+                        <Button onClick={(e) => showConfirm(e)}>
+                          Register
+                          {isLoading && <span>...</span>}
+                        </Button>
+                        {/* <Button onClick={showPromiseConfirm}>
+                          With promise
+                        </Button> */}
+                      </Space>
 
                       <p className="mb-5 pb-lg-2" style={{ color: '#393f81' }}>
                         Already Have an Account?

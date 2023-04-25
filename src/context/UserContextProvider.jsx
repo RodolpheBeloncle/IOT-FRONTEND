@@ -29,10 +29,7 @@ export const UserContextProvider = ({ children }) => {
     Cookies.set(key, value, { expires: 7 });
   }
 
-  // const login = (token, username) => {
-  //   setTokenAuth(token);
-  //   setIsAuthenticated(true);
-  // };
+
 
   const handleLogout = async () => {
     try {

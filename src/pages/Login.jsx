@@ -1,6 +1,8 @@
-import React, { useState, useContext} from 'react';
+import React, { useState, useContext } from 'react';
+import './styles/login.css';
 import { Space, Spin, message } from 'antd';
 import axios from '../services/axiosInterceptor';
+
 // import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import { useNavigate, Link } from 'react-router-dom';
@@ -97,8 +99,20 @@ const Login = () => {
       <h1 className="loginTitle">Choose a Login Method</h1>
       <div className="wrapper">
         <div className="left">
-          <div className="loginButton google" onClick={googleLogin}>
+          {/* <div className="loginButton google" onClick={googleLogin}>
             <img src={google} alt="" className="icon" />
+          </div> */}
+
+          <div class="google-btn" onClick={googleLogin}>
+            <div class="google-icon-wrapper">
+              <img
+                class="google-icon"
+                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+              />
+            </div>
+            <p class="btn-text">
+              <b>Sign in with google</b>
+            </p>
           </div>
           {isLoading && (
             <Space
@@ -112,15 +126,6 @@ const Login = () => {
               </Spin>
             </Space>
           )}
-          {/* <GoogleLogin
-            clientId="43002333952-1r210l702o69enm56gb1nh33l27guvhf.apps.googleusercontent.com"
-            buttonText="Login with Google"
-            onSuccess={onSuccess}
-            onFailure={onFailure}
-            cookiePolicy={'single_host_origin'}
-            isSignedIn={true}
-            fetchBasicProfile={true}
-          /> */}
         </div>
         <div className="center">
           <div className="line" />

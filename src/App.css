@@ -1,7 +1,7 @@
 /** Dashboard css **/
 
 @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap");
-
+@import url("https://fonts.googleapis.com/css?family=Roboto:500");
 html,
 body,
 #root,
@@ -35,14 +35,6 @@ body,
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-
-
-
-
-
-
-
-
 
 
 /** global css **/
