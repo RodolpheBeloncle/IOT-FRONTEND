@@ -1,16 +1,11 @@
 import React from 'react';
 import { Alert, Breadcrumb, Row } from 'antd';
-import './styles/breadCrumb.css';
+import './breadCrumb.css';
 import { HashRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 
 const breadcrumbNameMap = {
-  // '/apps': 'Application List',
-  // '/apps/1': 'Application1',
-  // '/apps/2': 'Application2',
-  // '/apps/1/detail': 'Detail',
-  // '/apps/2/detail': 'Detail',
-  '/manage': 'Manage',
-  '/manage/profil': 'Profil',
+  '/manageTeam': 'Team',
+  '/manageDevice': 'Devices',
 };
 
 const BreadCrumb = () => {
@@ -28,20 +23,21 @@ const BreadCrumb = () => {
       title: <Link to="/">Dashboard</Link>,
       key: 'Dashboard',
     },
-  ].concat(extraBreadcrumbItems);
+  ];
   return (
     <div className="demo">
       <div className="demo-nav">
         <Link to="/">Dashboard</Link>
-        <Link to="/manage">Manage</Link>
-        <Link to="/manage/profil">Profil</Link>
+        <Link to="/manageTeam">Team</Link>
+        <Link to="/manageDevice">Devices</Link>
       </div>
       <Routes>
-        <Route path="*" element={<span>Dashboard</span>} />
-        <Route path="/manage" element={<span>Manage</span>} />
+        <Route path="/" element={<span>Dashboard</span>} />
+        <Route path="/manageTeam" element={<span>Team</span>} />
+        <Route path="/manageDevice" element={<span>Devices</span>} />
         <Route path="/profil" element={<span>Profil</span>} />
       </Routes>
-      <Breadcrumb items={breadcrumbItems} />
+      {/* <Breadcrumb items={breadcrumbItems} /> */}
     </div>
   );
 };

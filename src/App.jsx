@@ -42,8 +42,8 @@ const App = () => {
                   <Route path="/profil" element={<Profil />} />
                   <Route path="/form" element={<FormUser />} />
                   <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/team" element={<Team />} />
-                  <Route path="/controllersiot" element={<ControllersIoT />} />
+                  <Route path="/manageTeam" element={<Team />} />
+                  <Route path="/manageDevice" element={<ControllersIoT />} />
                   <Route path="/faq" element={<FAQ />} />
                 </Route>
               </Routes>

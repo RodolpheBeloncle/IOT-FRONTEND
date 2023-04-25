@@ -1,13 +1,15 @@
-import { Box, IconButton, useTheme } from "@mui/material";
-import { useContext } from "react";
-import { ColorModeContext, tokens } from "../../theme";
-import InputBase from "@mui/material/InputBase";
-import LightModeOutlinedIcon from "@mui/icons-material/LightModeOutlined";
-import DarkModeOutlinedIcon from "@mui/icons-material/DarkModeOutlined";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import SearchIcon from "@mui/icons-material/Search";
+import { useContext } from 'react';
+import './topbar.css';
+import { Box, IconButton, useTheme } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { ColorModeContext, tokens } from '../../theme';
+import InputBase from '@mui/material/InputBase';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import SearchIcon from '@mui/icons-material/Search';
 
 const Topbar = () => {
   const theme = useTheme();
@@ -31,7 +33,7 @@ const Topbar = () => {
       {/* ICONS */}
       <Box display="flex">
         <IconButton onClick={colorMode.toggleColorMode}>
-          {theme.palette.mode === "dark" ? (
+          {theme.palette.mode === 'dark' ? (
             <DarkModeOutlinedIcon />
           ) : (
             <LightModeOutlinedIcon />
@@ -44,7 +46,9 @@ const Topbar = () => {
           <SettingsOutlinedIcon />
         </IconButton>
         <IconButton>
-          <PersonOutlinedIcon />
+          <Link to="/profil">
+            <PersonOutlinedIcon />
+          </Link>
         </IconButton>
       </Box>
     </Box>

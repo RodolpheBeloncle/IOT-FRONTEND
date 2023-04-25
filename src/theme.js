@@ -141,7 +141,8 @@ export const themeSettings = (mode) => {
               light: colors.grey[100],
             },
             background: {
-              default: colors.blueAccent[900],
+              // default: colors.blueAccent[900],
+              default: "#152521"
             },
           }
         : {

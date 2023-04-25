@@ -154,9 +154,7 @@ const MyProSidebar = () => {
                   color={colors.grey[100]}
                   fontWeight="bold"
                   sx={{ m: '10px 0 0 0' }}
-                >
-               
-                </Typography>
+                ></Typography>
               </Box>
             </Box>
           )}
@@ -178,14 +176,14 @@ const MyProSidebar = () => {
             </Typography>
             <Item
               title="Manage Team"
-              to="/team"
+              to="/manageTeam"
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="Manage Devices"
-              to="/controllersiot"
+              to="/manageDevice"
               icon={<DevicesOtherIcon />}
               selected={selected}
               setSelected={setSelected}

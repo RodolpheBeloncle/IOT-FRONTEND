@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from '../services/axiosInterceptor';
 // import axios from 'axios';
 import { useNavigate, Navigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContextProvider';
 // import axios from '../Services/axiosInterceptor';
 const Profil = () => {
+  const { userInfo } = useContext(UserContext);
   const navigate = useNavigate();
   // !!  === TODO setname in cookie too   ===
-  const username = Cookies.get('username');
+
   const [input, setInput] = useState({
     newpassword: '',
     confirmpassword: '',
-    username: username,
+    username: userInfo.username,
   });
 
   const handleLogout = () => {
@@ -39,14 +41,14 @@ const Profil = () => {
       });
   };
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:3000/`)
-      .then((res) => {
-        console.log('GOOGLE AUTH', res);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:3000/`)
+  //     .then((res) => {
+  //       console.log('GOOGLE AUTH', res);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
 
   return (
     <section class="vh-100" style={{ backgroundColor: '#9A616D' }}>
@@ -69,7 +71,9 @@ const Profil = () => {
                     <form onSubmit={handleChangePassword}>
                       <div class="d-flex align-items-center mb-3 pb-1">
                         <h2>Welcome</h2>
-                        <span class="h3 fw-bold mb-0 mx-3">{username}</span>
+                        <span class="h3 fw-bold mb-0 mx-3">
+                          {userInfo.username}
+                        </span>
                         <button
                           onClick={handleLogout}
                           className="btn btn-primary"
