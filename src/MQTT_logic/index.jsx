@@ -168,7 +168,7 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
         setPayload({ topic, message: message.toString() });
       });
     }
-    console.log('Received message:', payload);
+    // console.log('Received message:', payload);
   }, [client, connectStatus]);
 
   return (

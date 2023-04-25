@@ -1,12 +1,7 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { UserContext } from '../context/UserContextProvider';
-import {
-  Navigate,
-  Outlet,
-  useNavigate,
-  useSearchParams,
-} from 'react-router-dom';
-import { message } from 'antd';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { message, Button } from 'antd';
 import jwtDecode from 'jwt-decode';
 import Navbar from '../components/Navbar';
 import BreadCrumb from '../components/breadCrumb/BreadCrumb';
@@ -14,26 +9,25 @@ import Topbar from '../components/topbar/Topbar';
 import { MyProSidebarProvider } from '../pages/sidebar/sidebarContext';
 
 const ProtectedRoute = () => {
-  const {
-    isAuthenticated,
-    setIsAuthenticated,
-    getCookie,
-    removeCookie,
-    checkAuthentication,
-    // setCookie,
-    tokenAuth,
-    setTokenAuth,
-    userInfo,
-    setUserInfo,
-  } = useContext(UserContext);
-  // let [searchParams, setSearchParams] = useSearchParams();
-  // const token = searchParams.get('token');
+  const { setIsAuthenticated, setTokenAuth, setUserInfo, getCookie } =
+    useContext(UserContext);
   const navigate = useNavigate();
 
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: 'This is a success message',
+    });
+  };
+
+  let googleAuth = getCookie('googleAuth');
+  let tokencookie = getCookie('token');
+  // console.log('googleAuth', googleAuth);
+  // console.log('cookietoken', tokencookie);
+
   useEffect(() => {
-    // checkAuthentication();
-    // console.log('token protected route', tokenAuth);
-    // console.log('protected route', isAuthenticated);
     const cookieString = document.cookie; // Get the cookie string
     const cookieArray = cookieString.split(';'); // Split the cookie string into an array of individual cookies
     // Find the cookie with the name 'token' and extract its value
@@ -41,10 +35,10 @@ const ProtectedRoute = () => {
       cookie.trim().startsWith('token=')
     );
 
-    console.log('token', tokenCookie);
+    // console.log('token', tokenCookie);
     if (tokenCookie) {
       const token = tokenCookie.split('=')[1];
-      console.log('token', jwtDecode(token));
+      // console.log('token', jwtDecode(token));
       const { username, email, role, picture } = jwtDecode(token);
       setUserInfo({
         email: email,
@@ -52,37 +46,26 @@ const ProtectedRoute = () => {
         username: username,
         picture: picture,
       });
-      console.log('Username', username);
       setTokenAuth(token);
       setIsAuthenticated(true);
+
       navigate('/');
     } else {
       setIsAuthenticated(false);
+
       navigate('/login');
     }
   }, []);
 
-  // return tokenAuth ? (
-  //   <>
-  //     <MyProSidebarProvider>
-  //       <div className="app">
-  //         <div style={{ height: '100%', width: '100%' }}>
-  //           <main>
-  //             <Topbar />
-  //             <Navbar />
-  //             <BreadCrumb />
-  //             <Outlet />
-  //           </main>
-  //         </div>
-  //       </div>
-  //     </MyProSidebarProvider>
-  //   </>
-  // ) : (
-  //   <Navigate to="/login" />
-  // );
+  useEffect(() => {
+    console.log('googleauth', googleAuth);
+    success();
+  }, []);
+
   return (
     <>
       <MyProSidebarProvider>
+        {googleAuth && contextHolder}
         <div className="app">
           <div style={{ height: '100%', width: '100%' }}>
             <main>

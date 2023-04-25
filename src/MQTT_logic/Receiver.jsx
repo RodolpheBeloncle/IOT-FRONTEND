@@ -12,26 +12,26 @@ const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
     qos: 0,
   };
 
-  const onFinish = (values) => {
-    console.log('values', values);
-    console.log('record', record);
-    sub(values);
-  };
+  // const onFinish = (values) => {
+  //   console.log('values', values);
+  //   console.log('record', record);
+  //   sub(values);
+  // };
 
   // !todo set possiblity to unsubscribe in the recever
-  const handleUnsub = () => {
-    const values = form.getFieldsValue();
-    console.log('unsub', values);
-    unSub(values);
-  };
+  // const handleUnsub = () => {
+  //   const values = form.getFieldsValue();
+  //   console.log('unsub', values);
+  //   unSub(values);
+  // };
 
   useEffect(() => {
    
     if (payload.topic) {
       setMessages((messages) => [...messages, payload]);
     }
-    console.log('payload message', { ...payload });
-  }, [payload]);
+  
+  }, []);
 
   const refresh = () => {
     setMessages([]);

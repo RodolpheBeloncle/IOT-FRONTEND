@@ -1,16 +1,16 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { Space, Spin, message } from 'antd';
 import axios from '../services/axiosInterceptor';
 // import axios from 'axios';
-import Cookies from "js-cookie";
 import jwtDecode from 'jwt-decode';
-import { useNavigate, Link} from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import shareVideo from '../assets/share.mp4';
 import google from '../img/google.png';
 import { UserContext } from '../context/UserContextProvider';
 
 const Login = () => {
-  const { setIsAuthenticated, setCookie } = useContext(UserContext);
+  const { setIsAuthenticated, getCookie, setCookie, clearCookie } =
+    useContext(UserContext);
   const [isLoading, setIsLoading] = useState(null);
   const navigate = useNavigate();
   const [input, setInput] = useState({
@@ -18,9 +18,12 @@ const Login = () => {
     password: '',
   });
 
+  let googleAuth = getCookie('googleAuth');
+  let tokencookie = getCookie('token');
+  console.log('googleAuth', googleAuth);
+  console.log('cookietoken', tokencookie);
+
   const [messageApi, contextHolder] = message.useMessage();
-
-
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -29,8 +32,6 @@ const Login = () => {
       const response = await axios.post('/api/auth/users/login', input, {
         widthCredentials: true,
       });
-
-      // login(response.data.token, response.data.username);
 
       if (!response.data.token) {
         setIsAuthenticated(false);
@@ -51,11 +52,10 @@ const Login = () => {
       console.log('token from userlogin', response.data.token);
       setIsAuthenticated(true);
       setIsLoading(false);
-      message.success('Login successfull!', 3);
       setCookie('token', response.data.token);
       navigate('/');
     } catch (error) {
-      console.log('message error : ', error);
+      // console.log('message error : ', error);
       setIsLoading(false);
       message.error(error, 3);
     }
@@ -72,31 +72,8 @@ const Login = () => {
         content: 'google login process..',
         duration: 2.5,
       })
-      .then(() =>
-        message.success(
-          'if you are new user an email have been sent \n to your email adress',
-          3
-        )
-      )
       .then(() => handleGoogleLogin());
   };
-  // !TODO ALTERNATIVE TO GET GOOGLE LOGIN TRUE FROMWINDOWOPEN
-
-  // function handleAuthentication() {
-  //   console.log('Authentication successful!');
-  //   // Do something else...
-  // }
-  // useEffect(() => {
-  //   const handleAuthenticationResult = () => {
-  //     if (window.location.search.includes('success=true')) {
-  //       handleAuthentication();
-  //     }
-  //   };
-  //   window.addEventListener('load', handleAuthenticationResult);
-  //   return () => window.removeEventListener('load', handleAuthenticationResult);
-  // }, []);
- 
-  useEffect(() => {}, []);
 
   return (
     <div className="login">

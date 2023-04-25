@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import '../pages/styles/devices.css';
 import { Row } from 'antd';
 import axios from 'axios';
@@ -9,7 +9,17 @@ const Devices = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [devices, setDevices] = useState([]);
 
-  useEffect(() => {
+  // const getDevicesList = async () => {
+  //   axios
+  //     .get(import.meta.env.VITE_REACT_APP_API_DEVICES)
+  //     .then((res) => {
+  //       console.log('Devices : ', res.data);
+  //       setDevices(res.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // };
+
+  const getDevicesList = useCallback(() => {
     axios
       .get(import.meta.env.VITE_REACT_APP_API_DEVICES)
       .then((res) => {
@@ -17,28 +27,29 @@ const Devices = () => {
         setDevices(res.data);
       })
       .catch((err) => console.log(err));
-  }, [isOpenModal]);
+  }, []);
+
+  useEffect(() => {
+    getDevicesList();
+  }, []);
   return (
     <>
-      <>
-        <Row className="row" span={4}>
-          <CustomFormModal
-            isOpenModal={isOpenModal}
-            setIsOpenModal={setIsOpenModal}
-          />
-        </Row>
-        <div className="home">
-          {devices.length > 0 ? (
-            devices.map((controller, index) => (
-              <Row key={index} className="row" span={4}>
-                <CardDevice key={controller.id} controllersIOT={controller} />
-              </Row>
-            ))
-          ) : (
-            <span>No Devices to display</span>
-          )}
-        </div>
-      </>
+      <Row className="row" span={4}>
+        <CustomFormModal
+          isOpenModal={isOpenModal}
+          setIsOpenModal={setIsOpenModal}
+        />
+      </Row>
+      <div className="home">
+        {devices &&
+          devices.map((controller, index) => (
+            <Row key={index} className="row" span={4}>
+              <CardDevice key={controller.id} controllersIOT={controller} />
+            </Row>
+          ))}
+
+        {devices.length < 0 && <span>No Devices to display</span>}
+      </div>
     </>
   );
 };
