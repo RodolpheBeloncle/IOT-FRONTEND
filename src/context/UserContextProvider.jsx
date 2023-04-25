@@ -15,7 +15,7 @@ export const UserContextProvider = ({ children }) => {
   });
 
   function clearCookie(cookie) {
-    Cookies.remove(cookie);
+    return Cookies.remove(cookie);
   }
 
   function getCookie(cookie) {
@@ -41,7 +41,6 @@ export const UserContextProvider = ({ children }) => {
 
   const checkAuthentication = async () => {
     try {
-   
       const cookieString = await document.cookie; // Get the cookie string
       const cookieArray = await cookieString.split(';'); // Split the cookie string into an array of individual cookies
       // Find the cookie with the name 'token' and extract its value
@@ -56,7 +55,6 @@ export const UserContextProvider = ({ children }) => {
       }
     } catch (error) {
       console.log('message error : ', error);
-    
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Space, Spin, message } from 'antd';
 import axios from '../services/axiosInterceptor';
 // import axios from 'axios';
@@ -27,15 +27,17 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     try {
       setIsLoading(true);
-      const response = await axios.post('/api/auth/users/login', input, {
+      const { response } = await axios.post('/api/auth/users/login', input, {
         widthCredentials: true,
       });
 
       if (!response.data.token) {
         setIsAuthenticated(false);
         setIsLoading(false);
+        message.error(response.data, 2);
         navigate('/login');
       }
 
@@ -44,20 +46,24 @@ const Login = () => {
 
       if (decodedToken.exp < currentTime) {
         setIsAuthenticated(false);
-        // Cookies.remove('token');
+        clearCookie('token');
         setIsLoading(false);
+        alert(response.data.message);
         navigate('/login');
       }
 
       console.log('token from userlogin', response.data.token);
+      console.log('responsedatamessage', response.data.message);
+      alert(response.data.message);
       setIsAuthenticated(true);
       setIsLoading(false);
       setCookie('token', response.data.token);
       navigate('/');
-    } catch (error) {
-      // console.log('message error : ', error);
+    } catch ({ response }) {
       setIsLoading(false);
-      message.error(error, 3);
+      console.log('error', response.data);
+      message.error(response.data, 2);
+      message.info("Don't have an account? click on link below", 2);
     }
   };
 

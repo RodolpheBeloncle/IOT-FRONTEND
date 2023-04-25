@@ -1,71 +1,67 @@
 import React, { useEffect, useContext } from 'react';
 import { UserContext } from '../context/UserContextProvider';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { message, Button } from 'antd';
+import { message } from 'antd';
 import jwtDecode from 'jwt-decode';
 import Navbar from '../components/Navbar';
 import BreadCrumb from '../components/breadCrumb/BreadCrumb';
 import Topbar from '../components/topbar/Topbar';
 import { MyProSidebarProvider } from '../pages/sidebar/sidebarContext';
+import { userInfo } from 'os';
 
 const ProtectedRoute = () => {
-  const { setIsAuthenticated, setTokenAuth, setUserInfo, getCookie } =
-    useContext(UserContext);
+  const {
+    isAuthenticated,
+    setIsAuthenticated,
+    setTokenAuth,
+    getCookie,
+    clearCookie,
+    setUserInfo,
+  } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const [messageApi, contextHolder] = message.useMessage();
-
-  const success = () => {
-    messageApi.open({
-      type: 'success',
-      content: 'This is a success message',
-    });
-  };
-
-  let googleAuth = getCookie('googleAuth');
-  let tokencookie = getCookie('token');
-  // console.log('googleAuth', googleAuth);
-  // console.log('cookietoken', tokencookie);
-
   useEffect(() => {
-    const cookieString = document.cookie; // Get the cookie string
-    const cookieArray = cookieString.split(';'); // Split the cookie string into an array of individual cookies
-    // Find the cookie with the name 'token' and extract its value
-    const tokenCookie = cookieArray.find((cookie) =>
-      cookie.trim().startsWith('token=')
-    );
+    const token = getCookie('token');
+    const googleAuth = getCookie('googleAuth');
 
-    // console.log('token', tokenCookie);
-    if (tokenCookie) {
-      const token = tokenCookie.split('=')[1];
-      // console.log('token', jwtDecode(token));
-      const { username, email, role, picture } = jwtDecode(token);
-      setUserInfo({
-        email: email,
-        role: role,
-        username: username,
-        picture: picture,
-      });
-      setTokenAuth(token);
-      setIsAuthenticated(true);
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
 
-      navigate('/');
+      if (decodedToken.exp < currentTime) {
+        setIsAuthenticated(false);
+        clearCookie('token');
+        clearCookie('googleAuth');
+        navigate('/login');
+      } else {
+        const { username, email, role, picture } = jwtDecode(token);
+        setUserInfo({
+          email: email,
+          role: role,
+          username: username,
+          picture: picture,
+        });
+        setTokenAuth(token);
+        setIsAuthenticated(true);
+        navigate('/');
+      }
     } else {
       setIsAuthenticated(false);
-
+      clearCookie('token');
+      clearCookie('googleAuth');
       navigate('/login');
     }
-  }, []);
-
-  useEffect(() => {
-    console.log('googleauth', googleAuth);
-    success();
-  }, []);
+    isAuthenticated &&
+      googleAuth &&
+      message.success('google authenticated successfully!', 2);
+    isAuthenticated &&
+      !googleAuth &&
+      message.success('successfully logged in !', 2);
+  }, [isAuthenticated]);
 
   return (
     <>
       <MyProSidebarProvider>
-        {googleAuth && contextHolder}
         <div className="app">
           <div style={{ height: '100%', width: '100%' }}>
             <main>
