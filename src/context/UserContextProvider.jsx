@@ -1,4 +1,6 @@
 import React, { createContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 import jwtDecode from 'jwt-decode';
 import Cookies from 'js-cookie';
 
@@ -13,6 +15,7 @@ export const UserContextProvider = ({ children }) => {
     username: '',
     picture: '',
   });
+  const navigate = useNavigate();
 
   function clearCookie(cookie) {
     return Cookies.remove(cookie);
@@ -26,16 +29,21 @@ export const UserContextProvider = ({ children }) => {
     Cookies.set(key, value, { expires: 7 });
   }
 
-  const login = (token, username) => {
-    setTokenAuth(token);
-    setIsAuthenticated(true);
-  };
+  // const login = (token, username) => {
+  //   setTokenAuth(token);
+  //   setIsAuthenticated(true);
+  // };
 
-  const logout = async () => {
+  const handleLogout = async () => {
     try {
+      clearCookie('token');
+      clearCookie('googleAuth');
       setIsAuthenticated(false);
+      message.success('successfully logout !', 2);
+      navigate('/login');
     } catch (error) {
       console.log('logout error : ', error);
+      message.error(error, 2);
     }
   };
 
@@ -63,8 +71,7 @@ export const UserContextProvider = ({ children }) => {
       value={{
         isAuthenticated,
         setIsAuthenticated,
-        login,
-        logout,
+        handleLogout,
         getCookie,
         setCookie,
         clearCookie,

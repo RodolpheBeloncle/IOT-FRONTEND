@@ -1,25 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContextProvider';
 
 const Navbar = () => {
-  const { logout, isAuthenticated } = useAuth();
-
-  const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   isAuthenticated && navigate('/');
-  //   console.log('navbar', isAuthenticated);
-  // }, []);
-
-  const handleLogout = async () => {
-    try {
-      logout();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { handleLogout, userInfo } = useContext(UserContext);
 
   return (
     <div className="navbar">
@@ -41,7 +25,7 @@ const Navbar = () => {
               className="avatar"
             /> */}
           </li>
-          <li className="listItem">username</li>
+          <li className="listItem">{userInfo.username}</li>
           <li className="listItem" onClick={handleLogout}>
             Logout
           </li>

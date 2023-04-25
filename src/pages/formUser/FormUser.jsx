@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import {
   Box,
@@ -16,8 +16,10 @@ import ImgCrop from 'antd-img-crop';
 import * as yup from 'yup';
 import { useMediaQuery } from '@mui/material';
 import Header from '../../components/Header';
+import { UserContext } from '../../context/UserContextProvider';
 
 const Form = () => {
+  const { userInfo } = useContext(UserContext);
   const [inputsField, setInputsField] = useState({
     username: '',
     email: '',
@@ -28,7 +30,7 @@ const Form = () => {
         uid: '-1',
         name: 'image.png',
         status: 'done',
-        url: emptyAvatar,
+        url: userInfo.picture ? userInfo.picture : emptyAvatar,
       },
     ],
 

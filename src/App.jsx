@@ -25,8 +25,9 @@ const App = () => {
       <ColorModeContext.Provider value={colorMode}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <UserContextProvider>
-            <BrowserRouter>
+
+          <BrowserRouter>
+            <UserContextProvider>
               <Routes>
                 <Route path="/login/" element={<Login />} />
                 <Route path="/login/:token" element={<Login />} />
@@ -46,8 +47,8 @@ const App = () => {
                   <Route path="/faq" element={<FAQ />} />
                 </Route>
               </Routes>
-            </BrowserRouter>
-          </UserContextProvider>
+            </UserContextProvider>
+          </BrowserRouter>
         </ThemeProvider>
       </ColorModeContext.Provider>
     </>
