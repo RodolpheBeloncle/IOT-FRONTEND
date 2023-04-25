@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Typography, useTheme } from '@mui/material';
+import { Box, Typography, useTheme, IconButton, Tooltip } from '@mui/material';
 import { UserContext } from '../../context/UserContextProvider';
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
@@ -11,6 +11,7 @@ import Header from '../../components/Header';
 
 const Team = () => {
   const { isAuthenticated } = useContext(UserContext);
+  const [selectedRow, setSelectedRow] = useState(null);
   console.log('auth MANAGE TEAM ', isAuthenticated);
   const [users, setUsers] = useState([]);
 
@@ -26,6 +27,7 @@ const Team = () => {
 
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
   const columns = [
     { field: 'id', headerName: 'Id' },
     {
@@ -71,7 +73,60 @@ const Team = () => {
         );
       },
     },
+    {
+      field: 'actions',
+      headerName: 'Actions',
+      width: 120,
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      renderCell: (params) => {
+        return (
+          <>
+            <Tooltip title="Edit">
+              <IconButton
+                aria-label="edit"
+                onClick={() => handleEdit(params.row)}
+              >
+                +
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete">
+              <IconButton
+                aria-label="delete"
+                onClick={() => handleDelete(params.row.id)}
+              >
+                X
+              </IconButton>
+            </Tooltip>
+          </>
+        );
+      },
+    },
   ];
+
+  const handleEdit = (row) => {
+    setSelectedRow(row);
+    // open a modal or dialog to edit the selected row
+  };
+
+  const handleDelete = (id) => {
+    const updatedRows = rows.filter((row) => row.id !== id);
+    setRows(updatedRows);
+  };
+
+  const handleSave = (editedRow) => {
+    const updatedRows = rows.map((row) => {
+      if (row.id === editedRow.id) {
+        return editedRow;
+      } else {
+        return row;
+      }
+    });
+    setRows(updatedRows);
+    setSelectedRow(null);
+  };
+
   return (
     <Box m="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">

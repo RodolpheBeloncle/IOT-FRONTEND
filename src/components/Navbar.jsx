@@ -14,17 +14,7 @@ const Navbar = () => {
       </span>
       {true ? (
         <ul className="list">
-          <li className="listItem">
-            {/* <img
-              src={
-                user
-                  ? user.picture
-                  : 'https://www.pikpng.com/pngl/m/80-805068_my-profile-icon-blank-profile-picture-circle-clipart.png'
-              }
-              alt="profil_pic"
-              className="avatar"
-            /> */}
-          </li>
+      
           <li className="listItem">{userInfo.username}</li>
           <li className="listItem" onClick={handleLogout}>
             Logout

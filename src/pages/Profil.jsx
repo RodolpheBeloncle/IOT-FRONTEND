@@ -41,103 +41,142 @@ const Profil = () => {
       });
   };
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:3000/`)
-  //     .then((res) => {
-  //       console.log('GOOGLE AUTH', res);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
-
   return (
-    <section class="vh-100" style={{ backgroundColor: '#9A616D' }}>
-      <div class="container py-5 h-100">
-        <div class="row d-flex justify-content-center align-items-center h-100">
-          <div class="col col-xl-10">
-            <div class="card" style={{ borderRadius: '1rem' }}>
-              <div class="row g-0">
-                <div class="col-md-6 col-lg-5 d-none d-md-block">
-                  <img
-                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp"
-                    alt="login form"
-                    class="img-fluid"
-                    style={{ borderRadius: '1rem 0 0 1rem' }}
-                  />
-                </div>
-                <div class="col-md-6 col-lg-7 d-flex align-items-center">
-                  <div class="card-body p-4 p-lg-5 text-black">
-                    <h1 className="h1 text-center">Profil Page</h1>
-                    <form onSubmit={handleChangePassword}>
-                      <div class="d-flex align-items-center mb-3 pb-1">
-                        <h2>Welcome</h2>
-                        <span class="h3 fw-bold mb-0 mx-3">
-                          {userInfo.username}
-                        </span>
-                        <button
-                          onClick={handleLogout}
-                          className="btn btn-primary"
-                        >
-                          Logout
-                        </button>
-                      </div>
+    <div class="container">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <img
+              src={
+                userInfo.picture
+                  ? userInfo.picture
+                  : 'https://www.pikpng.com/pngl/m/80-805068_my-profile-icon-blank-profile-picture-circle-clipart.png'
+              }
+              alt="profil_pic"
+              className="img-fluid"
+              style={{ borderRadius: '1rem 0 0 1rem' }}
+            />
+          </div>
+          <div class="col-md-8">
+            <form>
+              <div class="form-group">
+                <label for="username">Username</label>
 
-                      <h5
-                        class="fw-normal mb-3 pb-3"
-                        style={{ letterSpacing: '1px' }}
-                      >
-                        Change your Password
-                      </h5>
-
-                      <div class="form-outline mb-4">
-                        <input
-                          placeholder="Enter New Password"
-                          name="newpassword"
-                          type="password"
-                          class="form-control form-control-lg"
-                          value={input.newpassword}
-                          onChange={(e) =>
-                            setInput({
-                              ...input,
-                              [e.target.name]: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-
-                      <div class="form-outline mb-4">
-                        <input
-                          placeholder="Confirm Your Password"
-                          type="password"
-                          name="confirmpassword"
-                          class="form-control form-control-lg"
-                          value={input.confirmpassword}
-                          onChange={(e) =>
-                            setInput({
-                              ...input,
-                              [e.target.name]: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-
-                      <div class="pt-1 mb-4">
-                        <button
-                          class="btn btn-dark btn-lg btn-block"
-                          type="submit"
-                        >
-                          Change Password
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="username"
+                  placeholder={userInfo.username}
+                />
               </div>
-            </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  placeholder="Enter your password"
+                />
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Submit
+              </button>
+            </form>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+    // <section className="vh-100" style={{ backgroundColor: '#9A616D' }}>
+    //   <div className="container py-5 h-100">
+    //     <div className="row d-flex justify-content-center align-items-center h-100">
+    //       <div className="col col-xl-10">
+    //         <div className="card" style={{ borderRadius: '1rem' }}>
+    //           <div className="row g-0">
+    //             <div className="col-md-6 col-lg-5 d-none d-md-block">
+    //               <img
+    //                 src={
+    //                   userInfo.picture
+    //                     ? userInfo.picture
+    //                     : 'https://www.pikpng.com/pngl/m/80-805068_my-profile-icon-blank-profile-picture-circle-clipart.png'
+    //                 }
+    //                 alt="profil_pic"
+    //                 className="img-fluid"
+    //                 style={{ borderRadius: '1rem 0 0 1rem' }}
+    //               />
+    //             </div>
+    //             <div className="col-md-6 col-lg-7 d-flex align-items-center">
+    //               <div className="card-body p-4 p-lg-5 text-black">
+    //                 <h1 className="h1 text-center">Profil Page</h1>
+    //                 <form onSubmit={handleChangePassword}>
+    //                   <div className="d-flex align-items-center mb-3 pb-1">
+    //                     <h2>Welcome</h2>
+    //                     <span className="h3 fw-bold mb-0 mx-3">
+    //                       {userInfo.username}
+    //                     </span>
+    //                     <button
+    //                       onClick={handleLogout}
+    //                       className="btn btn-primary"
+    //                     >
+    //                       Logout
+    //                     </button>
+    //                   </div>
+
+    //                   <h5
+    //                     className="fw-normal mb-3 pb-3"
+    //                     style={{ letterSpacing: '1px' }}
+    //                   >
+    //                     Change your Password
+    //                   </h5>
+
+    //                   <div className="form-outline mb-4">
+    //                     <input
+    //                       placeholder="Enter New Password"
+    //                       name="newpassword"
+    //                       type="password"
+    //                       className="form-control form-control-lg"
+    //                       value={input.newpassword}
+    //                       onChange={(e) =>
+    //                         setInput({
+    //                           ...input,
+    //                           [e.target.name]: e.target.value,
+    //                         })
+    //                       }
+    //                     />
+    //                   </div>
+
+    //                   <div className="form-outline mb-4">
+    //                     <input
+    //                       placeholder="Confirm Your Password"
+    //                       type="password"
+    //                       name="confirmpassword"
+    //                       className="form-control form-control-lg"
+    //                       value={input.confirmpassword}
+    //                       onChange={(e) =>
+    //                         setInput({
+    //                           ...input,
+    //                           [e.target.name]: e.target.value,
+    //                         })
+    //                       }
+    //                     />
+    //                   </div>
+
+    //                   <div className="pt-1 mb-4">
+    //                     <button
+    //                       className="btn btn-dark btn-lg btn-block"
+    //                       type="submit"
+    //                     >
+    //                       Change Password
+    //                     </button>
+    //                   </div>
+    //                 </form>
+    //               </div>
+    //             </div>
+    //           </div>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </section>
   );
 };
 

@@ -9,9 +9,12 @@ import {
   MenuItem,
   FormControl,
   FormControlLabel,
+  Button,
+  useTheme,
 } from '@mui/material';
+import { ColorModeContext, tokens } from '../../theme';
 import emptyAvatar from '../../assets/profile.png';
-import { Upload, message, Modal, Button } from 'antd';
+import { Upload, message, Modal } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import * as yup from 'yup';
 import { useMediaQuery } from '@mui/material';
@@ -20,6 +23,9 @@ import { UserContext } from '../../context/UserContextProvider';
 
 const Form = () => {
   const { userInfo } = useContext(UserContext);
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const colorMode = useContext(ColorModeContext);
   const [inputsField, setInputsField] = useState({
     username: '',
     email: '',
@@ -214,8 +220,10 @@ const Form = () => {
           <Button
             type="submit"
             onClick={(e) => handleSubmit(e)}
-            color="secondary"
             variant="contained"
+            style={{
+              backgroundColor: colors.greenAccent[600],
+            }}
           >
             Create New User
           </Button>

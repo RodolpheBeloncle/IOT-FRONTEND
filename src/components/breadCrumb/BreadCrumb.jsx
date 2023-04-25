@@ -30,12 +30,14 @@ const BreadCrumb = () => {
         <Link to="/">Dashboard</Link>
         <Link to="/manageTeam">Team</Link>
         <Link to="/manageDevice">Devices</Link>
+        <Link to="/form">New User</Link>
       </div>
       <Routes>
         <Route path="/" element={<span>Dashboard</span>} />
         <Route path="/manageTeam" element={<span>Team</span>} />
         <Route path="/manageDevice" element={<span>Devices</span>} />
         <Route path="/profil" element={<span>Profil</span>} />
+        <Route path="/form" element={<span>New User</span>} />
       </Routes>
       {/* <Breadcrumb items={breadcrumbItems} /> */}
     </div>
