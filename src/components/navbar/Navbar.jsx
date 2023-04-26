@@ -1,9 +1,12 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import './navbar.css';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../context/UserContextProvider';
+
+import { UserContext } from '../../context/UserContextProvider';
 
 const Navbar = () => {
   const { handleLogout, userInfo } = useContext(UserContext);
+  const [showMenu, setShowMenu] = useState(null);
 
   return (
     <div className="navbar">
@@ -14,7 +17,6 @@ const Navbar = () => {
       </span>
       {true ? (
         <ul className="list">
-      
           <li className="listItem">{userInfo.username}</li>
           <li className="listItem" onClick={handleLogout}>
             Logout

@@ -3,6 +3,7 @@ import svgr from '@svgr/rollup';
 import nodePolyfills from 'vite-plugin-node-stdlib-browser';
 import notifier from 'vite-plugin-notifier';
 import dotenv from 'dotenv';
+
 dotenv.config();
 import { Buffer } from 'buffer/';
 

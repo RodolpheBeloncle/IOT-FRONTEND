@@ -41,14 +41,15 @@ const Devices = () => {
         />
       </Row>
       <div className="home">
-        {devices &&
+        {devices?.length > 0 ? (
           devices.map((controller, index) => (
             <Row key={index} className="row" span={4}>
               <CardDevice key={controller.id} controllersIOT={controller} />
             </Row>
-          ))}
-
-        {devices.length < 0 && <span>No Devices to display</span>}
+          ))
+        ) : (
+          <span>No Devices to display</span>
+        )}
       </div>
     </>
   );

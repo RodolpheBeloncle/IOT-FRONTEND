@@ -17,12 +17,15 @@ const Topbar = () => {
   const colorMode = useContext(ColorModeContext);
 
   return (
+  
     <Box display="flex" justifyContent="space-between" p={2}>
       {/* SEARCH BAR */}
       <Box
         display="flex"
         backgroundColor={colors.primary[400]}
         borderRadius="3px"
+        boxShadow="0px 4px 16px rgba(0, 0, 0, 0.1)" // Add box-shadow property for floating effect
+        zIndex={3} // Increase z-index to ensure component floats above other content
       >
         <InputBase sx={{ ml: 2, flex: 1 }} placeholder="Search" />
         <IconButton type="button" sx={{ p: 1 }}>

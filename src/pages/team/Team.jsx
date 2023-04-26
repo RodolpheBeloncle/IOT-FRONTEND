@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Typography, useTheme, IconButton, Tooltip } from '@mui/material';
+import { Box, Typography, useTheme, Button } from '@mui/material';
 import { UserContext } from '../../context/UserContextProvider';
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
@@ -12,15 +12,15 @@ import Header from '../../components/Header';
 const Team = () => {
   const { isAuthenticated } = useContext(UserContext);
   const [selectedRow, setSelectedRow] = useState(null);
+  const [gridRows, setGridRows] = useState([]);
   console.log('auth MANAGE TEAM ', isAuthenticated);
-  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     axios
       .get(import.meta.env.VITE_REACT_APP_API_USERS)
       .then((res) => {
         console.log('users', res.data);
-        setUsers(res.data);
+        setGridRows(res.data);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -66,6 +66,7 @@ const Team = () => {
             {role === 'admin' && <AdminPanelSettingsOutlinedIcon />}
             {role === 'manager' && <SecurityOutlinedIcon />}
             {role === 'user' && <LockOpenOutlinedIcon />}
+            {role === '' && <span>No rôle</span>}
             <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
               {role}
             </Typography>
@@ -76,32 +77,27 @@ const Team = () => {
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 120,
-      sortable: false,
-      filterable: false,
-      disableColumnMenu: true,
-      renderCell: (params) => {
-        return (
-          <>
-            <Tooltip title="Edit">
-              <IconButton
-                aria-label="edit"
-                onClick={() => handleEdit(params.row)}
-              >
-                +
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Delete">
-              <IconButton
-                aria-label="delete"
-                onClick={() => handleDelete(params.row.id)}
-              >
-                X
-              </IconButton>
-            </Tooltip>
-          </>
-        );
-      },
+      width: 130,
+      renderCell: (params) => (
+        <>
+          <Button
+            variant="contained"
+            color="primary"
+            size="small"
+            onClick={() => handleEdit(params.row)}
+          >
+            Edit
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            size="small"
+            onClick={() => handleDelete(params.row.id)}
+          >
+            Delete
+          </Button>
+        </>
+      ),
     },
   ];
 
@@ -111,11 +107,14 @@ const Team = () => {
   };
 
   const handleDelete = (id) => {
-    const updatedRows = rows.filter((row) => row.id !== id);
-    setRows(updatedRows);
+    console.log('handledelete id :', id);
+    const updatedRows = gridRows.filter((row) => row.id !== id);
+    setGridRows(updatedRows);
+    setSelectedRow(null);
   };
 
-  const handleSave = (editedRow) => {
+  const handleModifyRow = (editedRow) => {
+    console.log('handleModify id :', editedRow.id);
     const updatedRows = rows.map((row) => {
       if (row.id === editedRow.id) {
         return editedRow;
@@ -123,7 +122,7 @@ const Team = () => {
         return row;
       }
     });
-    setRows(updatedRows);
+    setGridRows(updatedRows);
     setSelectedRow(null);
   };
 
@@ -161,7 +160,21 @@ const Team = () => {
           },
         }}
       >
-        <DataGrid rows={users} columns={columns} />
+        <DataGrid
+          rows={gridRows}
+          columns={columns}
+          pageSize={5}
+          checkboxSelection
+          onRowSelected={(row) => console.log(row)}
+          onCellDoubleClick={(params) => console.log(params)}
+          onCellClick={(params) => console.log(params)}
+          onRowDoubleClick={(params) => console.log(params)}
+          onRowClick={(params) => console.log(params)}
+          onEditCellChangeCommitted={(params) => handleModifyRow(params)}
+          onDeleteRows={(params) =>
+            params.rowIds.forEach((id) => handleDeleteRow(id))
+          }
+        />
       </Box>
     </Box>
   );

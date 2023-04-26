@@ -3,7 +3,7 @@ import { UserContext } from '../context/UserContextProvider';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import jwtDecode from 'jwt-decode';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/navbar/Navbar';
 import BreadCrumb from '../components/breadCrumb/BreadCrumb';
 import Topbar from '../components/topbar/Topbar';
 import { MyProSidebarProvider } from '../pages/sidebar/sidebarContext';
