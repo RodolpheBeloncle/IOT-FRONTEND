@@ -81,16 +81,16 @@ const Subscriber = ({ sub, unSub, showUnsub, topic }) => {
           </Form.Item>
         </Col>
         <Col xs={24}>
-          <Row justify="end">
-            <Col xs={24} sm={8}>
+          <Row justify="center">
+            <Row xs={24} sm={8}>
               <Form.Item>
                 <Button type="primary" htmlType="submit" block>
                   Sub
                 </Button>
               </Form.Item>
-            </Col>
+            </Row>
             {showUnsub && (
-              <Col
+              <Row
                 xs={24}
                 sm={8}
                 style={{ marginTop: '16px', textAlign: 'right' }}
@@ -98,7 +98,7 @@ const Subscriber = ({ sub, unSub, showUnsub, topic }) => {
                 <Button type="danger" onClick={handleUnsub} block>
                   Unsubscribe
                 </Button>
-              </Col>
+              </Row>
             )}
           </Row>
         </Col>

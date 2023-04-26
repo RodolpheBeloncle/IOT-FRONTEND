@@ -16,3 +16,6 @@
 
 # launch ngrok
 #  ngrok tcp 9001    
+
+# kill mosquitto process server
+# pkill mosquitto

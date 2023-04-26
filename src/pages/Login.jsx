@@ -7,8 +7,6 @@ import axios from '../services/axiosInterceptor';
 // import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import { useNavigate, Link } from 'react-router-dom';
-import shareVideo from '../assets/share.mp4';
-import google from '../img/google.png';
 import { UserContext } from '../context/UserContextProvider';
 
 const Login = () => {
@@ -189,7 +187,7 @@ const Login = () => {
               }}
             >
               <button
-                className="btn btn-dark btn-lg btn-block"
+                className="btn btn-dark btn-lg btn-block login-btn"
                 style={{
                   background: '#3ee09a',
                   border: 'solid 1px #fff',
@@ -204,7 +202,7 @@ const Login = () => {
               className="mb-5 pb-lg-2"
               style={{ color: '#fff', fontWeight: 'bolder' }}
             >
-              Forget Password ?<Link to={'/reset-password'}>Click Here</Link>
+              Forget Password ?<Link style={{ color: '#3ee09a', fontWeight: 'bolder' }} to={'/reset-password'}>Click Here</Link>
             </p>
             <p
               className="mb-5 pb-lg-2"
@@ -213,7 +211,7 @@ const Login = () => {
               Don't have an account?{' '}
               <Link
                 to="/register"
-                style={{ color: '#0d6efd', fontWeight: 'bolder' }}
+                style={{ color: '#3ee09a', fontWeight: 'bolder' }}
               >
                 Register here
               </Link>

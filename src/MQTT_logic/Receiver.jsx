@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import './receiver.css';
-import { Card, List, Progress, Space, Row } from 'antd';
+import { Card, List, Progress, Space, Row, Col } from 'antd';
 import { QosOption } from './index';
 
 const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
@@ -26,11 +26,9 @@ const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
   // };
 
   useEffect(() => {
-   
     if (payload.topic) {
       setMessages((messages) => [...messages, payload]);
     }
-  
   }, []);
 
   const refresh = () => {
@@ -40,33 +38,39 @@ const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
   return (
     <>
       <Card title="Receiver">
-        <Row gutter={20}>
-          <span> device topic : {topic}</span>
-          <span> controller type : {type}</span>
-        </Row>
-
-        {type === 'sensor' ? (
-          <>
-            <Space wrap>
-              <p>Message{payload.message}</p>
-              <Progress
-                type="circle"
-                size={120}
-                percent={(parseInt(messages.payload) * 100) / 50}
-                format={(percent) =>
-                  messages.payload === undefined
-                    ? 'no temp'
-                    : parseInt(messages.payload)
-                }
-                strokeColor={{
-                  '15%': '#7cb2de',
-                  '28%': 'orange',
-                  '70%': '#d93027',
-                }}
-              />
-            </Space>
-          </>
-        ) : null}
+        {type === 'sensor' && (
+          <Col xs={24} sm={12} style={{ padding: '18px' }}>
+            <Col gutter={[16, 16]}>
+              <Row xs={50}>
+                <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                  Topic:
+                </span>
+              </Row>
+              <Row xs={50}>
+                <span style={{ fontSize: '1.2rem' }}>{topic}</span>
+              </Row>
+            </Col>
+            <Col xs={24} sm={12}>
+              <Space wrap>
+                <Progress
+                  type="circle"
+                  size={{ xs: 80, sm: 120 }}
+                  percent={(parseInt(payload?.payload) * 100) / 50 || 0}
+                  format={(percent) =>
+                    payload?.payload === undefined
+                      ? 'No temp'
+                      : parseInt(payload?.message)
+                  }
+                  strokeColor={{
+                    '15%': '#7cb2de',
+                    '28%': 'orange',
+                    '70%': '#d93027',
+                  }}
+                />
+              </Space>
+            </Col>
+          </Col>
+        )}
       </Card>
       {/* <button onClick={() => refresh()}>refresh</button> */}
     </>

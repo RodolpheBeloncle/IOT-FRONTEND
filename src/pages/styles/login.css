@@ -44,4 +44,10 @@ cursor: pointer;
 background: #1669F2;
 }
 
+.login-btn:hover{
+  box-shadow: 0 0 6px #3ee09a;
+  cursor: pointer;
+
+}
+
 

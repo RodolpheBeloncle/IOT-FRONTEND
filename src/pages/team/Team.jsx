@@ -8,6 +8,7 @@ import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettin
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
 import Header from '../../components/Header';
+import { message } from 'antd';
 
 const Team = () => {
   const { isAuthenticated } = useContext(UserContext);
@@ -107,6 +108,15 @@ const Team = () => {
   };
 
   const handleDelete = (id) => {
+    console.log(import.meta.env.VITE_REACT_APP_API_USERS + `/${id}`);
+    axios
+      .delete(import.meta.env.VITE_REACT_APP_API_USERS + `/${id}`)
+      .then((res) => {
+        console.log('users', res.data);
+      })
+      .catch((err) => console.log(err));
+    message.success('row deleted', 2);
+
     console.log('handledelete id :', id);
     const updatedRows = gridRows.filter((row) => row.id !== id);
     setGridRows(updatedRows);

@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Card, Form, Row, Col, Button, Space } from 'antd';
+import { Card, Form, Row, Col, Button} from 'antd';
 import { PoweroffOutlined } from '@ant-design/icons';
 import { QosOption } from './index';
 
@@ -25,26 +25,32 @@ const Publisher = ({ publish, topic, type }) => {
 
   const PublishForm = (
     <>
-      <Row gutter={20}>
-        <span> device topic : {topic}</span>
-        <span> controller type : {type}</span>
-      </Row>
-      <Form
-        layout="vertical"
-        name="basic"
-        form={form}
-        initialValues={record}
-        onFinish={onFinish}
-      >
-        <Row gutter={20}>
-          <Col span={12}>
-            <Space direction="vertical">
+      <div style={{ padding: '25px' }}>
+        <Col gutter={[16, 16]}>
+          <Row xs={50}>
+            <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+              Topic:
+            </span>
+          </Row>
+          <Row xs={50}>
+            <span style={{ fontSize: '1.2rem' }}>{topic}</span>
+          </Row>
+        </Col>
+        <Row gutter={[16, 16]}>
+          <Col xs={24}>
+            <Form
+              layout="vertical"
+              name="basic"
+              form={form}
+              initialValues={record}
+              onFinish={onFinish}
+            >
               <Form.Item name="payload">
                 <Button
                   htmlType="submit"
                   danger
                   style={{
-                    width: '100px',
+                    width: '100%',
                     height: '100px',
                     borderRadius: '50px',
                     background: color,
@@ -60,24 +66,10 @@ const Publisher = ({ publish, topic, type }) => {
                   }}
                 />
               </Form.Item>
-              <p>State running</p>
-            </Space>
+            </Form>
           </Col>
-          {/* <Col span={12}>
-            <Form.Item label="QoS" name="qos">
-              <Select options={qosOptions} />
-            </Form.Item>
-          </Col> */}
-          {/*
-    <Col span={8} offset={16} style={{ textAlign: 'right' }}>
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Publish
-        </Button>
-      </Form.Item>
-    </Col> */}
         </Row>
-      </Form>
+      </div>
     </>
   );
 
