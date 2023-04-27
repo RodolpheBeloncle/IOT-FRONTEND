@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 import {
   Form,
   Input,
@@ -11,38 +11,38 @@ import {
   Divider,
   Popconfirm,
   notification,
-} from 'antd';
+} from "antd";
 import {
   PoweroffOutlined,
   LineChartOutlined,
   InfoCircleOutlined,
-} from '@ant-design/icons';
+} from "@ant-design/icons";
 
 const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
   const [form] = Form.useForm();
-  const [formWidget, setFormWidget] = useState('switch');
+  const [formWidget, setFormWidget] = useState("switch");
   const [formInputs, setFormInputs] = useState({
     type: formWidget,
-    widgetName: '',
-    topic: '',
-    initValue: '',
-    on: '',
-    off: '',
-    maxValue: '',
-    unit: '',
+    widgetName: "",
+    topic: "",
+    initValue: "",
+    on: "",
+    off: "",
+    maxValue: "",
+    unit: "",
   });
 
   const openNotification = (type) => {
     notification.success({
-      message: 'device Created',
+      message: "device Created",
       description: `Your device type ${type} has been successfully created!`,
-      placement: 'bottomRight',
+      placement: "bottomRight",
     });
   };
 
   const onFormInputsChange = (values) => {
     setFormInputs((prevState) => ({ ...prevState, ...values }));
-    console.log('onChange target value  : ', values);
+    console.log("onChange target value  : ", values);
   };
 
   const showModal = () => {
@@ -58,14 +58,15 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
 
   const onFinish = async () => {
+
     await axios
-      .post(process.env.REACT_APP_API_URL_DEVICES, formInputs)
+      .post("http://localhost:8000/devices", formInputs)
       .then((res) => {
-        console.log('add controllers', res);
+        console.log("add controllers", res);
         openNotification(res.data.type);
         handleOk();
         form.resetFields();
@@ -98,10 +99,10 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                 ...prevState,
                 type: e.target.value,
               }));
-              console.log('type', e.target.value);
+              console.log("type", e.target.value);
             }}
           >
-            {' '}
+            {" "}
             <LineChartOutlined />
             Sensor
           </Radio.Button>
@@ -114,10 +115,10 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                 ...prevState,
                 type: e.target.value,
               }));
-              console.log('type', e.target.value);
+              console.log("type", e.target.value);
             }}
           >
-            {' '}
+            {" "}
             <PoweroffOutlined />
             Switch
           </Radio.Button>
@@ -134,11 +135,11 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
             maxWidth: 600,
           }}
         >
-          {formWidget === 'sensor' ? (
+          {formWidget === "sensor" ? (
             <>
               <Divider orientation="left" plain>
                 {formWidget[0].toUpperCase() +
-                  formWidget.slice(1).toLowerCase()}{' '}
+                  formWidget.slice(1).toLowerCase()}{" "}
                 Widget
               </Divider>
               <Row gutter={[16, 16]}>
@@ -147,11 +148,11 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                     label="Widget Name"
                     name="widgetName"
                     rules={[
-                      { required: true, message: 'please set a widget name' },
+                      { required: true, message: "please set a widget name" },
                       {
                         pattern: /^.{1,25}$/, // Change the range {1,25} as per your requirement
                         message:
-                          'String length must be between 1 to 25 characters.',
+                          "String length must be between 1 to 25 characters.",
                       },
                     ]}
                   >
@@ -164,16 +165,16 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                   <Form.Item
                     label="MQTT Topic Name"
                     tooltip={{
-                      title: 'Name of the associated mqtt topic to connected',
+                      title: "Name of the associated mqtt topic to connected",
                       icon: <InfoCircleOutlined />,
                     }}
                     name="topic"
                     rules={[
-                      { required: true, message: 'Please input a topic!' },
+                      { required: true, message: "Please input a topic!" },
                       {
                         pattern: /^.{1,50}$/, // Change the range {1,50} as per your requirement
                         message:
-                          'String length must be between 1 to 50 characters.',
+                          "String length must be between 1 to 50 characters.",
                       },
                     ]}
                   >
@@ -185,7 +186,7 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                     rules={[
                       {
                         required: true,
-                        message: 'Please set a initial value!',
+                        message: "Please set a initial value!",
                       },
                       {
                         pattern: /^-?\d*(\.\d+)?$/,
@@ -195,7 +196,7 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                             return Promise.resolve();
                           }
                           return Promise.reject(
-                            'Number must be less than or equal to 10.'
+                            "Number must be less than or equal to 10."
                           ); // Change the error message as per your requirement
                         },
                       },
@@ -207,10 +208,10 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                     label="Unit"
                     name="unit"
                     rules={[
-                      { required: true, message: 'Please set a unit value!' },
+                      { required: true, message: "Please set a unit value!" },
                       {
                         pattern: /^[A-Za-z]+$/,
-                        message: 'Input must contain only letters.',
+                        message: "Input must contain only letters.",
                       },
                     ]}
                   >
@@ -220,7 +221,7 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                     label="Max Value"
                     name="maxValue"
                     rules={[
-                      { required: true, message: 'Please set a max value!' },
+                      { required: true, message: "Please set a max value!" },
                       {
                         pattern: /^-?\d*(\.\d+)?$/,
                         validator: (rule, value) => {
@@ -229,7 +230,7 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                             return Promise.resolve();
                           }
                           return Promise.reject(
-                            'Number must be less than or equal to 1000.'
+                            "Number must be less than or equal to 1000."
                           ); // Change the error message as per your requirement
                         },
                       },
@@ -243,7 +244,7 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                       title="Confirm Creation"
                       description="Are you sur to create new widget ?"
                       onConfirm={onFinish}
-                      onOpenChange={() => console.log('open change')}
+                      onOpenChange={() => console.log("open change")}
                     >
                       <Button type="primary" htmlType="submit">
                         Submit
@@ -255,11 +256,11 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
             </>
           ) : null}
 
-          {formWidget === 'switch' ? (
+          {formWidget === "switch" ? (
             <>
               <Divider orientation="left" plain>
                 {formWidget[0].toUpperCase() +
-                  formWidget.slice(1).toLowerCase()}{' '}
+                  formWidget.slice(1).toLowerCase()}{" "}
                 Widget
               </Divider>
               <Row gutter={[16, 16]}>
@@ -270,12 +271,12 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                     rules={[
                       {
                         required: true,
-                        message: 'Please input a widget name!',
+                        message: "Please input a widget name!",
                       },
                       {
                         pattern: /^.{1,25}$/, // Change the range {1,25} as per your requirement
                         message:
-                          'String length must be between 1 to 25 characters.',
+                          "String length must be between 1 to 25 characters.",
                       },
                     ]}
                   >
@@ -285,16 +286,16 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                   <Form.Item
                     label="MQTT Topic Name"
                     tooltip={{
-                      title: 'Name of the associated mqtt topic to connected',
+                      title: "Name of the associated mqtt topic to connected",
                       icon: <InfoCircleOutlined />,
                     }}
                     name="topic"
                     rules={[
-                      { required: true, message: 'Please input a topic!' },
+                      { required: true, message: "Please input a topic!" },
                       {
                         pattern: /^.{1,50}$/, // Change the range {1,25} as per your requirement
                         message:
-                          'String length must be between 1 to 50 characters.',
+                          "String length must be between 1 to 50 characters.",
                       },
                     ]}
                   >
@@ -306,15 +307,15 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                     rules={[
                       {
                         required: true,
-                        message: 'Please input a initial value!',
+                        message: "Please input a initial value!",
                       },
                       {
                         min: 0,
-                        message: 'value have to be between 0 and 1',
+                        message: "value have to be between 0 and 1",
                       },
                       {
                         max: 1,
-                        message: 'value have to be between 0 and 1',
+                        message: "value have to be between 0 and 1",
                       },
                     ]}
                   >
@@ -324,16 +325,16 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                   <Form.Item
                     label="ON Text"
                     tooltip={{
-                      title: 'The text to display when the switch is on',
+                      title: "The text to display when the switch is on",
                       icon: <InfoCircleOutlined />,
                     }}
                     name="on"
                     rules={[
-                      { required: true, message: 'Please input an ON text!' },
+                      { required: true, message: "Please input an ON text!" },
                       {
                         pattern: /^.{1,25}$/, // Change the range {1,25} as per your requirement
                         message:
-                          'String length must be between 1 to 25 characters.',
+                          "String length must be between 1 to 25 characters.",
                       },
                     ]}
                   >
@@ -343,16 +344,16 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                   <Form.Item
                     label="OFF Text"
                     tooltip={{
-                      title: 'The text to display when the switch is off',
+                      title: "The text to display when the switch is off",
                       icon: <InfoCircleOutlined />,
                     }}
                     name="off"
                     rules={[
-                      { required: true, message: 'Please input an OFF text!' },
+                      { required: true, message: "Please input an OFF text!" },
                       {
                         pattern: /^.{1,25}$/, // Change the range {1,25} as per your requirement
                         message:
-                          'String length must be between 1 to 25 characters.',
+                          "String length must be between 1 to 25 characters.",
                       },
                     ]}
                   >
@@ -364,7 +365,7 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
                       title="Confirm Creation"
                       description="Are you sur to create new widget ?"
                       onConfirm={onFinish}
-                      onOpenChange={() => console.log('open change')}
+                      onOpenChange={() => console.log("open change")}
                     >
                       <Button type="primary" htmlType="submit">
                         Submit

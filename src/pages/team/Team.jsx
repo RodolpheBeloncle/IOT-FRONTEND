@@ -1,26 +1,26 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Box, Typography, useTheme, Button } from '@mui/material';
-import { UserContext } from '../../context/UserContextProvider';
-import axios from 'axios';
-import { DataGrid } from '@mui/x-data-grid';
-import { tokens } from '../../theme';
-import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
-import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
-import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
-import Header from '../../components/Header';
-import { message } from 'antd';
+import React, { useState, useEffect, useContext } from "react";
+import { Box, Typography, useTheme, Button } from "@mui/material";
+import { UserContext } from "../../context/UserContextProvider";
+import axios from "axios";
+import { DataGrid } from "@mui/x-data-grid";
+import { tokens } from "../../theme";
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
+import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
+import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
+import Header from "../../components/Header";
+import { message } from "antd";
 
 const Team = () => {
   const { isAuthenticated } = useContext(UserContext);
   const [selectedRow, setSelectedRow] = useState(null);
   const [gridRows, setGridRows] = useState([]);
-  console.log('auth MANAGE TEAM ', isAuthenticated);
+  console.log("auth MANAGE TEAM ", isAuthenticated);
 
   useEffect(() => {
     axios
-      .get(import.meta.env.VITE_REACT_APP_API_USERS)
+      .get("http://localhost:8000/users")
       .then((res) => {
-        console.log('users', res.data);
+        console.log("users", res.data);
         setGridRows(res.data);
       })
       .catch((err) => console.log(err));
@@ -30,24 +30,24 @@ const Team = () => {
   const colors = tokens(theme.palette.mode);
 
   const columns = [
-    { field: 'id', headerName: 'Id' },
+    { field: "id", headerName: "Id" },
     {
-      field: 'username',
-      headerName: 'Name',
+      field: "username",
+      headerName: "Name",
       width: 200,
-      cellClassName: 'name-column--cell',
+      cellClassName: "name-column--cell",
     },
     {
-      field: 'isVerified',
-      headerName: 'isVerified',
-      type: 'boolean',
-      headerAlign: 'left',
-      align: 'left',
+      field: "isVerified",
+      headerName: "isVerified",
+      type: "boolean",
+      headerAlign: "left",
+      align: "left",
     },
-    { field: 'email', headerName: 'Email', width: 200 },
+    { field: "email", headerName: "Email", width: 200 },
     {
-      field: 'Role',
-      headerName: 'Role Llvel',
+      field: "Role",
+      headerName: "Role Llvel",
       width: 100,
       renderCell: ({ row: { role } }) => {
         return (
@@ -58,17 +58,17 @@ const Team = () => {
             display="flex"
             justifyContent="center"
             backgroundColor={
-              role === 'admin'
+              role === "admin"
                 ? colors.greenAccent[600]
                 : colors.greenAccent[800]
             }
             borderRadius="4px"
           >
-            {role === 'admin' && <AdminPanelSettingsOutlinedIcon />}
-            {role === 'manager' && <SecurityOutlinedIcon />}
-            {role === 'user' && <LockOpenOutlinedIcon />}
-            {role === '' && <span>No rôle</span>}
-            <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
+            {role === "admin" && <AdminPanelSettingsOutlinedIcon />}
+            {role === "manager" && <SecurityOutlinedIcon />}
+            {role === "user" && <LockOpenOutlinedIcon />}
+            {role === "" && <span>No rôle</span>}
+            <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
               {role}
             </Typography>
           </Box>
@@ -76,8 +76,8 @@ const Team = () => {
       },
     },
     {
-      field: 'actions',
-      headerName: 'Actions',
+      field: "actions",
+      headerName: "Actions",
       width: 130,
       renderCell: (params) => (
         <>
@@ -112,19 +112,19 @@ const Team = () => {
     axios
       .delete(import.meta.env.VITE_REACT_APP_API_USERS + `/${id}`)
       .then((res) => {
-        console.log('users', res.data);
+        console.log("users", res.data);
       })
       .catch((err) => console.log(err));
-    message.success('row deleted', 2);
+    message.success("row deleted", 2);
 
-    console.log('handledelete id :', id);
+    console.log("handledelete id :", id);
     const updatedRows = gridRows.filter((row) => row.id !== id);
     setGridRows(updatedRows);
     setSelectedRow(null);
   };
 
   const handleModifyRow = (editedRow) => {
-    console.log('handleModify id :', editedRow.id);
+    console.log("handleModify id :", editedRow.id);
     const updatedRows = rows.map((row) => {
       if (row.id === editedRow.id) {
         return editedRow;
@@ -145,27 +145,27 @@ const Team = () => {
         m="8px 0 0 0"
         height="80vh"
         sx={{
-          '& .MuiDataGrid-root': {
-            border: 'none',
+          "& .MuiDataGrid-root": {
+            border: "none",
           },
-          '& .MuiDataGrid-cell': {
-            borderBottom: 'none',
+          "& .MuiDataGrid-cell": {
+            borderBottom: "none",
           },
-          '& .name-column--cell': {
+          "& .name-column--cell": {
             color: colors.greenAccent[300],
           },
-          '& .MuiDataGrid-columnHeaders': {
+          "& .MuiDataGrid-columnHeaders": {
             backgroundColor: colors.blueAccent[700],
-            borderBottom: 'none',
+            borderBottom: "none",
           },
-          '& .MuiDataGrid-virtualScroller': {
+          "& .MuiDataGrid-virtualScroller": {
             backgroundColor: colors.primary[400],
           },
-          '& .MuiDataGrid-footerContainer': {
-            borderTop: 'none',
+          "& .MuiDataGrid-footerContainer": {
+            borderTop: "none",
             backgroundColor: colors.blueAccent[700],
           },
-          '& .MuiCheckbox-root': {
+          "& .MuiCheckbox-root": {
             color: `${colors.greenAccent[200]} !important`,
           },
         }}

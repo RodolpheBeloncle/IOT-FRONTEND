@@ -46,6 +46,7 @@ const App = () => {
                   <Route path="/manageDevice" element={<ControllersIoT />} />
                   <Route path="/faq" element={<FAQ />} />
                 </Route>
+                
               </Routes>
             </UserContextProvider>
           </BrowserRouter>

@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import '../pages/styles/devices.css';
-import { Row } from 'antd';
-import axios from 'axios';
-import CardDevice from '../components/CardDevice';
-import CustomFormModal from '../components/CustomFormModal';
+import React, { useState, useEffect, useCallback } from "react";
+import "../pages/styles/devices.css";
+import { Row } from "antd";
+import axios from "axios";
+import CardDevice from "../components/CardDevice";
+import CustomFormModal from "../components/CustomFormModal";
 
 const Devices = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -21,9 +21,9 @@ const Devices = () => {
 
   const getDevicesList = useCallback(() => {
     axios
-      .get(import.meta.env.VITE_REACT_APP_API_DEVICES)
+      .get("http://localhost:8000/devices")
       .then((res) => {
-        console.log('Devices : ', res.data);
+        console.log("Devices : ", res.data);
         setDevices(res.data);
       })
       .catch((err) => console.log(err));

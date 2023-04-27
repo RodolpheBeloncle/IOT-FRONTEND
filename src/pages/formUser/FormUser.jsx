@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import axios from 'axios';
+import React, { useState, useContext } from "react";
+import axios from "axios";
 import {
   Box,
   Checkbox,
@@ -11,54 +11,54 @@ import {
   FormControlLabel,
   Button,
   useTheme,
-} from '@mui/material';
-import { ColorModeContext, tokens } from '../../theme';
-import emptyAvatar from '../../assets/profile.png';
-import { Upload, message, Modal } from 'antd';
-import ImgCrop from 'antd-img-crop';
-import * as yup from 'yup';
-import { useMediaQuery } from '@mui/material';
-import Header from '../../components/Header';
-import { UserContext } from '../../context/UserContextProvider';
+} from "@mui/material";
+import { ColorModeContext, tokens } from "../../theme";
+import emptyAvatar from "../../assets/profile.png";
+import { Upload, message, Modal } from "antd";
+import ImgCrop from "antd-img-crop";
+import * as yup from "yup";
+import { useMediaQuery } from "@mui/material";
+import Header from "../../components/Header";
+import { UserContext } from "../../context/UserContextProvider";
 
 const Form = () => {
   const { userInfo } = useContext(UserContext);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
+  const [colorTarget, setColorTarget] = useState("");
   const [inputsField, setInputsField] = useState({
-    username: '',
-    email: '',
-    password: '',
+    username: "",
+    email: "",
+    password: "",
     isVerified: false,
     picture: [
       {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
+        uid: "-1",
+        name: "image.png",
+        status: "done",
         url: userInfo.picture ? userInfo.picture : emptyAvatar,
       },
     ],
-
-    role: 'user',
-    color: '#ffffff',
+    role: "user",
+    color: "#ffffff",
   });
 
   const checkoutSchema = yup.object().shape({
-    username: yup.string().required('Required'),
-    email: yup.string().email('Invalid email!').required('Required'),
+    username: yup.string().required("Required"),
+    email: yup.string().email("Invalid email!").required("Required"),
     password: yup
       .string()
-      .required('No password provided.')
-      .min(8, 'Password is too short - should be 8 chars minimum.')
-      .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
-    role: yup.string().oneOf(['admin', 'manager', 'user']).required(),
+      .required("No password provided.")
+      .min(8, "Password is too short - should be 8 chars minimum.")
+      .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
+    role: yup.string().oneOf(["admin", "manager", "user"]).required(),
     isVerified: yup.boolean(),
     picture: yup.array(),
     color: yup
       .string()
-      .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'Invalid color value')
-      .required('Color is required'),
+      .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid color value")
+      .required("Color is required"),
   });
   const [errors, setErrors] = useState({});
 
@@ -67,17 +67,26 @@ const Form = () => {
     const { name, value, type, checked } = e.target;
     setInputsField((prevData) => ({
       ...prevData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleChangeColor = (e) => {
+    setColorTarget(e.target.value);
+
+    setInputsField((prevState) => ({
+      ...prevState,
+      color: colorTarget,
     }));
   };
 
   const handleSubmit = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
 
     try {
-      await axios.post(import.meta.env.VITE_REACT_APP_API_USERS, inputsField);
-      console.log('Form data is valid:', inputsField);
-      await checkoutSchema.validate(inputsField, { abortEarly: false });
+      axios.post("http://localhost:8000/user", inputsField);
+      console.log("Form data is valid:", inputsField);
+      checkoutSchema.validate(inputsField, { abortEarly: false });
       // form data is valid, proceed with submission
 
       // await axios.post(import.meta.env.VITE_REACT_APP_API_USERS, inputsField);
@@ -90,7 +99,7 @@ const Form = () => {
   };
 
   const onChangeFile = ({ file, fileList }) => {
-    if ((file.status = 'removed')) {
+    if ((file.status = "removed")) {
       inputsField.picture = [];
       setInputsField((prevState) => ({
         ...prevState,
@@ -118,7 +127,7 @@ const Form = () => {
     imgWindow?.document.write(image.outerHTML);
   };
 
-  const isNonMobile = useMediaQuery('(min-width:600px)');
+  const isNonMobile = useMediaQuery("(min-width:600px)");
   return (
     <Box m="20px">
       <Header title="CREATE USER" subtitle="Create a New User Profile" />
@@ -129,7 +138,7 @@ const Form = () => {
           gap="30px"
           gridTemplateColumns="repeat(4, minmax(0, 1fr))"
           sx={{
-            '& > div': { gridColumn: isNonMobile ? undefined : 'span 4' },
+            "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
           }}
         >
           <ImgCrop rotationSlider>
@@ -140,7 +149,7 @@ const Form = () => {
               onChange={onChangeFile}
               onPreview={onPreview}
             >
-              {inputsField.picture.length < 1 && '+ Upload'}
+              {inputsField.picture.length < 1 && "+ Upload"}
             </Upload>
           </ImgCrop>
 
@@ -186,28 +195,26 @@ const Form = () => {
             helperText={errors.isVerified}
           />
 
-          <FormControl>
-            <InputLabel id="role-label">Role</InputLabel>
-            <Select
-              labelId="role-label"
-              id="role"
-              value={inputsField.role}
-              onChange={handleChange}
-            >
-              <MenuItem value="">
-                <em>-- Select a role --</em>
-              </MenuItem>
-              <MenuItem value="admin">Admin</MenuItem>
-              <MenuItem value="user">User</MenuItem>
-            </Select>
-            {errors?.role && <span role="alert">{errors.role.message}</span>}
-          </FormControl>
+          <InputLabel id="role-label">Role</InputLabel>
+          <Select
+            labelId="role-label"
+            id="role"
+            value={inputsField.role}
+            onChange={handleChange}
+          >
+            <MenuItem value="">
+              <em>-- Select a role --</em>
+            </MenuItem>
+            <MenuItem value="admin">Admin</MenuItem>
+            <MenuItem value="user">User</MenuItem>
+          </Select>
+          {errors?.role && <span role="alert">{errors.role.message}</span>}
 
           <TextField
-            onChange={handleChange}
+            onChange={handleChangeColor}
             label="Color"
             type="color"
-            value={inputsField.color}
+            value={colorTarget}
             InputLabelProps={{
               shrink: true,
             }}
