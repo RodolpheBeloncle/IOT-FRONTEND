@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Box, Typography, useTheme, Button } from "@mui/material";
+import { Box, Typography, useTheme, Checkbox } from "@mui/material";
+import { Button, message, Popconfirm } from "antd";
 import { UserContext } from "../../context/UserContextProvider";
 import axios from "axios";
 import { DataGrid } from "@mui/x-data-grid";
@@ -8,13 +9,30 @@ import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettin
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import Header from "../../components/Header";
-import { message } from "antd";
 
 const Team = () => {
   const { isAuthenticated } = useContext(UserContext);
   const [selectedRow, setSelectedRow] = useState(null);
   const [gridRows, setGridRows] = useState([]);
   console.log("auth MANAGE TEAM ", isAuthenticated);
+
+  const text = "Are you sure to delete this task?";
+  const description = "Delete the task";
+
+  const handleDelete = (id) => {
+    axios
+      .delete("http://localhost:8000/users" + `/${id}`)
+      .then((res) => {
+        console.log("users", res.data);
+      })
+      .catch((err) => console.log(err));
+    message.success("row deleted", 2);
+
+    console.log("handledelete id :", id);
+    const updatedRows = gridRows.filter((row) => row.id !== id);
+    setGridRows(updatedRows);
+    setSelectedRow(null);
+  };
 
   useEffect(() => {
     axios
@@ -30,7 +48,27 @@ const Team = () => {
   const colors = tokens(theme.palette.mode);
 
   const columns = [
+    {
+      field: "checkbox",
+      headerName: " ",
+      width: 50,
+      sortable: false,
+      renderCell: (params) => (
+        <Checkbox
+          color="primary"
+          checked={selectedRow === params.row.id}
+          onChange={(event) => {
+            if (event.target.checked) {
+              setSelectedRow(params.row.id);
+            } else {
+              setSelectedRow(null);
+            }
+          }}
+        />
+      ),
+    },
     { field: "id", headerName: "Id" },
+
     {
       field: "username",
       headerName: "Name",
@@ -78,6 +116,7 @@ const Team = () => {
     {
       field: "actions",
       headerName: "Actions",
+      sortable: false,
       width: 130,
       renderCell: (params) => (
         <>
@@ -89,14 +128,31 @@ const Team = () => {
           >
             Edit
           </Button>
-          <Button
+          {/* <Button
             variant="contained"
             color="secondary"
-            size="small"
-            onClick={() => handleDelete(params.row.id)}
+            onClick={() => {
+              // handleDelete(params.row.id)
+              if (selectedRow === params.row.id) {
+                // Show popup validation
+              } else {
+                setSelectedRow(params.row.id);
+              }
+            }}
           >
             Delete
-          </Button>
+          </Button> */}
+
+          <Popconfirm
+            placement="top"
+            title={text}
+            description={description}
+            onConfirm={() => handleDelete(params.row.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button>Delete</Button>
+          </Popconfirm>
         </>
       ),
     },
@@ -105,22 +161,6 @@ const Team = () => {
   const handleEdit = (row) => {
     setSelectedRow(row);
     // open a modal or dialog to edit the selected row
-  };
-
-  const handleDelete = (id) => {
-    console.log(import.meta.env.VITE_REACT_APP_API_USERS + `/${id}`);
-    axios
-      .delete(import.meta.env.VITE_REACT_APP_API_USERS + `/${id}`)
-      .then((res) => {
-        console.log("users", res.data);
-      })
-      .catch((err) => console.log(err));
-    message.success("row deleted", 2);
-
-    console.log("handledelete id :", id);
-    const updatedRows = gridRows.filter((row) => row.id !== id);
-    setGridRows(updatedRows);
-    setSelectedRow(null);
   };
 
   const handleModifyRow = (editedRow) => {
@@ -174,7 +214,7 @@ const Team = () => {
           rows={gridRows}
           columns={columns}
           pageSize={5}
-          checkboxSelection
+          // checkboxSelection
           onRowSelected={(row) => console.log(row)}
           onCellDoubleClick={(params) => console.log(params)}
           onCellClick={(params) => console.log(params)}

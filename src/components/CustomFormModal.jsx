@@ -69,7 +69,7 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
         console.log("add controllers", res);
         openNotification(res.data.type);
         handleOk();
-        form.resetFields();
+        // form.resetFields();
       })
       .catch((err) => {
         onFinishFailed(err);

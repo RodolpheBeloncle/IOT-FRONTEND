@@ -7,11 +7,12 @@ import {
   Select,
   InputLabel,
   MenuItem,
-  FormControl,
   FormControlLabel,
   Button,
   useTheme,
 } from "@mui/material";
+
+import { Popconfirm, notification } from "antd";
 import { ColorModeContext, tokens } from "../../theme";
 import emptyAvatar from "../../assets/profile.png";
 import { Upload, message, Modal } from "antd";
@@ -27,6 +28,7 @@ const Form = () => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const [colorTarget, setColorTarget] = useState("");
+  const [userRole, setUserRole] = useState("");
   const [inputsField, setInputsField] = useState({
     username: "",
     email: "",
@@ -62,21 +64,30 @@ const Form = () => {
   });
   const [errors, setErrors] = useState({});
 
+  const openNotification = () => {
+    notification.success({
+      message: "device Created",
+      description: `User has been successfully created!`,
+      placement: "top",
+    });
+  };
+
   const handleChange = (e) => {
     console.log(e.target.value);
     const { name, value, type, checked } = e.target;
     setInputsField((prevData) => ({
       ...prevData,
+      color: colorTarget,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleChangeColor = (e) => {
-    setColorTarget(e.target.value);
+  const handleChangeUser = (e) => {
+    setUserRole(e.target.value);
 
     setInputsField((prevState) => ({
       ...prevState,
-      color: colorTarget,
+      role: userRole,
     }));
   };
 
@@ -84,9 +95,26 @@ const Form = () => {
     e.preventDefault();
 
     try {
-      axios.post("http://localhost:8000/user", inputsField);
+      axios.post("http://localhost:8000/users", inputsField);
       console.log("Form data is valid:", inputsField);
       checkoutSchema.validate(inputsField, { abortEarly: false });
+      openNotification();
+      setInputsField({
+        username: "",
+        email: "",
+        password: "",
+        isVerified: false,
+        picture: [
+          {
+            uid: "-1",
+            name: "image.png",
+            status: "done",
+            url: userInfo.picture ? userInfo.picture : emptyAvatar,
+          },
+        ],
+        role: "user",
+        color: "#ffffff",
+      });
       // form data is valid, proceed with submission
 
       // await axios.post(import.meta.env.VITE_REACT_APP_API_USERS, inputsField);
@@ -195,12 +223,12 @@ const Form = () => {
             helperText={errors.isVerified}
           />
 
-          <InputLabel id="role-label">Role</InputLabel>
+          <InputLabel id="role">Role</InputLabel>
           <Select
-            labelId="role-label"
+            labelId="role"
             id="role"
-            value={inputsField.role}
-            onChange={handleChange}
+            value={userRole}
+            onChange={handleChangeUser}
           >
             <MenuItem value="">
               <em>-- Select a role --</em>
@@ -211,7 +239,7 @@ const Form = () => {
           {errors?.role && <span role="alert">{errors.role.message}</span>}
 
           <TextField
-            onChange={handleChangeColor}
+            onChange={(e) => setColorTarget(e.target.value)}
             label="Color"
             type="color"
             value={colorTarget}
@@ -224,16 +252,23 @@ const Form = () => {
         </Box>
 
         <Box display="flex" justifyContent="end" mt="20px">
-          <Button
-            type="submit"
-            onClick={(e) => handleSubmit(e)}
-            variant="contained"
-            style={{
-              backgroundColor: colors.greenAccent[600],
-            }}
+          <Popconfirm
+            title="Confirm Creation"
+            description="Are you sur to create this new user ?"
+            onConfirm={handleSubmit}
+            onOpenChange={() => console.log("open change")}
           >
-            Create New User
-          </Button>
+            <Button
+              // type="submit"
+              // onClick={(e) => handleSubmit(e)}
+              variant="contained"
+              style={{
+                backgroundColor: colors.greenAccent[600],
+              }}
+            >
+              Create New User
+            </Button>
+          </Popconfirm>
         </Box>
       </form>
     </Box>
