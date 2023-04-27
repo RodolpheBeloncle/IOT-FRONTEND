@@ -37,7 +37,7 @@ const App = () => {
                   path="/user/reset/:id/:token"
                   element={<ChangePassword />}
                 />
-                <Route path="/" element={<ProtectedRoute />}>
+                {/* <Route path="/" element={<ProtectedRoute />}>
                   <Route index element={<Devices />} />
                   <Route path="/profil" element={<Profil />} />
                   <Route path="/form" element={<FormUser />} />
@@ -45,7 +45,14 @@ const App = () => {
                   <Route path="/manageTeam" element={<Team />} />
                   <Route path="/manageDevice" element={<ControllersIoT />} />
                   <Route path="/faq" element={<FAQ />} />
-                </Route>
+                </Route> */}
+                <Route index element={<Devices />} />
+                <Route path="/profil" element={<Profil />} />
+                <Route path="/form" element={<FormUser />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/manageTeam" element={<Team />} />
+                <Route path="/manageDevice" element={<ControllersIoT />} />
+                <Route path="/faq" element={<FAQ />} />
               </Routes>
             </UserContextProvider>
           </BrowserRouter>

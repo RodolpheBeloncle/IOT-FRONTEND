@@ -62,8 +62,8 @@ const Login = () => {
       navigate('/');
     } catch ({ response }) {
       setIsLoading(false);
-      console.log('error', response.data);
-      message.error(response.data, 2);
+      // console.log('error', response.data);
+      // message.error(response.data, 2);
       message.info("Don't have an account? click on link below", 2);
     }
   };
