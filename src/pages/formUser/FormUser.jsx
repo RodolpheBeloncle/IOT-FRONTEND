@@ -1,5 +1,6 @@
-import React, { useState, useContext } from "react";
-import axios from "axios";
+import React, { useState, useContext, useEffect, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import {
   Box,
   Checkbox,
@@ -10,65 +11,68 @@ import {
   FormControlLabel,
   Button,
   useTheme,
-} from "@mui/material";
+} from '@mui/material';
 
-import { Popconfirm, notification } from "antd";
-import { ColorModeContext, tokens } from "../../theme";
-import emptyAvatar from "../../assets/profile.png";
-import { Upload, message, Modal } from "antd";
-import ImgCrop from "antd-img-crop";
-import * as yup from "yup";
-import { useMediaQuery } from "@mui/material";
-import Header from "../../components/Header";
-import { UserContext } from "../../context/UserContextProvider";
+import { Popconfirm, notification } from 'antd';
+import { ColorModeContext, tokens } from '../../theme';
+import emptyAvatar from '../../assets/profile.png';
+import { Upload } from 'antd';
+import ImgCrop from 'antd-img-crop';
+import * as yup from 'yup';
+import { useMediaQuery } from '@mui/material';
+import Header from '../../components/Header';
+import { UserContext } from '../../context/UserContextProvider';
+// import newUser from '../../interface/NewUser';
 
-const Form = () => {
+const Form = ({ newUser }) => {
   const { userInfo } = useContext(UserContext);
+  const { id } = useParams();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
-  const [colorTarget, setColorTarget] = useState("");
-  const [userRole, setUserRole] = useState("");
-  const [inputsField, setInputsField] = useState({
-    username: "",
-    email: "",
-    password: "",
-    isVerified: false,
-    picture: [
-      {
-        uid: "-1",
-        name: "image.png",
-        status: "done",
-        url: userInfo.picture ? userInfo.picture : emptyAvatar,
-      },
-    ],
-    role: "user",
-    color: "#ffffff",
-  });
+  const [colorTarget, setColorTarget] = useState('');
+  const [userRole, setUserRole] = useState('');
+  // const [inputsField, setInputsField] = useState({
+  //   username: '',
+  //   email: '',
+  //   password: '',
+  //   isVerified: false,
+  //   picture: [
+  //     {
+  //       uid: '-1',
+  //       name: 'image.png',
+  //       status: 'done',
+  //       url: userInfo.picture ? userInfo.picture : emptyAvatar,
+  //     },
+  //   ],
+  //   role: 'user',
+  //   color: '#ffffff',
+  // });
+  const [inputsField, setInputsField] = useState({});
 
   const checkoutSchema = yup.object().shape({
-    username: yup.string().required("Required"),
-    email: yup.string().email("Invalid email!").required("Required"),
+    username: yup.string().required('Required'),
+    email: yup.string().email('Invalid email!').required('Required'),
     password: yup
       .string()
-      .required("No password provided.")
-      .min(8, "Password is too short - should be 8 chars minimum.")
-      .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
-    role: yup.string().oneOf(["admin", "manager", "user"]).required(),
+      .required('No password provided.')
+      .min(8, 'Password is too short - should be 8 chars minimum.')
+      .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
+    role: yup.string().oneOf(['admin', 'manager', 'user']).required(),
     isVerified: yup.boolean(),
     picture: yup.array(),
     color: yup
       .string()
-      .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid color value")
-      .required("Color is required"),
+      .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'Invalid color value')
+      .required('Color is required'),
   });
   const [errors, setErrors] = useState({});
 
   const openNotification = () => {
     notification.success({
-      message: "device Created",
+      message: 'device Created',
       description: `User has been successfully created!`,
-      placement: "top",
+      placement: 'top',
     });
   };
 
@@ -78,7 +82,7 @@ const Form = () => {
     setInputsField((prevData) => ({
       ...prevData,
       color: colorTarget,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -95,25 +99,25 @@ const Form = () => {
     e.preventDefault();
 
     try {
-      axios.post("http://localhost:8000/users", inputsField);
-      console.log("Form data is valid:", inputsField);
+      axios.post('http://localhost:8000/users', inputsField);
+      console.log('Form data is valid:', inputsField);
       checkoutSchema.validate(inputsField, { abortEarly: false });
       openNotification();
       setInputsField({
-        username: "",
-        email: "",
-        password: "",
+        username: '',
+        email: '',
+        password: '',
         isVerified: false,
         picture: [
           {
-            uid: "-1",
-            name: "image.png",
-            status: "done",
+            uid: '-1',
+            name: 'image.png',
+            status: 'done',
             url: userInfo.picture ? userInfo.picture : emptyAvatar,
           },
         ],
-        role: "user",
-        color: "#ffffff",
+        role: 'user',
+        color: '#ffffff',
       });
       // form data is valid, proceed with submission
 
@@ -127,7 +131,7 @@ const Form = () => {
   };
 
   const onChangeFile = ({ file, fileList }) => {
-    if ((file.status = "removed")) {
+    if ((file.status = 'removed')) {
       inputsField.picture = [];
       setInputsField((prevState) => ({
         ...prevState,
@@ -155,7 +159,13 @@ const Form = () => {
     imgWindow?.document.write(image.outerHTML);
   };
 
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+  useEffect(async () => {
+    const response = await axios.get('http://localhost:8000/users' + `/${id}`);
+    console.log(response);
+    id ? setInputsField(response.data) : setInputsField(newUser);
+  }, [id, newUser]);
+
+  const isNonMobile = useMediaQuery('(min-width:600px)');
   return (
     <Box m="20px">
       <Header title="CREATE USER" subtitle="Create a New User Profile" />
@@ -166,7 +176,7 @@ const Form = () => {
           gap="30px"
           gridTemplateColumns="repeat(4, minmax(0, 1fr))"
           sx={{
-            "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+            '& > div': { gridColumn: isNonMobile ? undefined : 'span 4' },
           }}
         >
           <ImgCrop rotationSlider>
@@ -177,7 +187,7 @@ const Form = () => {
               onChange={onChangeFile}
               onPreview={onPreview}
             >
-              {inputsField.picture.length < 1 && "+ Upload"}
+              {'Upload'}
             </Upload>
           </ImgCrop>
 
@@ -253,10 +263,11 @@ const Form = () => {
 
         <Box display="flex" justifyContent="end" mt="20px">
           <Popconfirm
+            placement="topRight"
             title="Confirm Creation"
             description="Are you sur to create this new user ?"
             onConfirm={handleSubmit}
-            onOpenChange={() => console.log("open change")}
+            onOpenChange={() => console.log('open change')}
           >
             <Button
               // type="submit"

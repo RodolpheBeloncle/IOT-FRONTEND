@@ -15,6 +15,7 @@ import Dashboard from './pages/dashboard/Dashboard';
 import Team from './pages/team/Team';
 import ControllersIoT from './pages/controllersiot/ControllersIoT';
 import FormUser from './pages/formUser/FormUser';
+import { newUser } from './interface/NewUser';
 import FAQ from './pages/faq/Faq';
 
 const App = () => {
@@ -39,14 +40,18 @@ const App = () => {
                 />
                 <Route path="/" element={<ProtectedRoute />}>
                   <Route index element={<Devices />} />
+
                   <Route path="/profil" element={<Profil />} />
-                  <Route path="/form" element={<FormUser />} />
+                  <Route path="form">
+                    <Route index element={<FormUser newUser={newUser} />} />
+                    <Route path=":id" element={<FormUser />} />
+                  </Route>
+
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/manageTeam" element={<Team />} />
                   <Route path="/manageDevice" element={<ControllersIoT />} />
                   <Route path="/faq" element={<FAQ />} />
                 </Route>
-                
               </Routes>
             </UserContextProvider>
           </BrowserRouter>
