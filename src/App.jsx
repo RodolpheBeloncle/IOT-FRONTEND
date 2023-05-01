@@ -43,7 +43,7 @@ const App = () => {
 
                   <Route path="/profil" element={<Profil />} />
                   <Route path="form">
-                    <Route index element={<FormUser newUser={newUser} />} />
+                    <Route index element={<FormUser />} />
                     <Route path=":id" element={<FormUser />} />
                   </Route>
 

@@ -15,40 +15,22 @@ import {
 
 import { Popconfirm, notification } from 'antd';
 import { ColorModeContext, tokens } from '../../theme';
-import emptyAvatar from '../../assets/profile.png';
 import { Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import * as yup from 'yup';
 import { useMediaQuery } from '@mui/material';
 import Header from '../../components/Header';
-import { UserContext } from '../../context/UserContextProvider';
-// import newUser from '../../interface/NewUser';
 
-const Form = ({ newUser }) => {
-  const { userInfo } = useContext(UserContext);
+const Form = () => {
   const { id } = useParams();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const [colorTarget, setColorTarget] = useState('');
   const [userRole, setUserRole] = useState('');
-  // const [inputsField, setInputsField] = useState({
-  //   username: '',
-  //   email: '',
-  //   password: '',
-  //   isVerified: false,
-  //   picture: [
-  //     {
-  //       uid: '-1',
-  //       name: 'image.png',
-  //       status: 'done',
-  //       url: userInfo.picture ? userInfo.picture : emptyAvatar,
-  //     },
-  //   ],
-  //   role: 'user',
-  //   color: '#ffffff',
-  // });
-  const [inputsField, setInputsField] = useState(null);
+  const [fileList, setFileList] = useState([]);
+
+  const [inputsField, setInputsField] = useState({});
 
   const checkoutSchema = yup.object().shape({
     username: yup.string().required('Required'),
@@ -71,7 +53,11 @@ const Form = ({ newUser }) => {
   const openNotification = () => {
     notification.success({
       message: 'device Created',
-      description: `User has been successfully created!`,
+      description: `${
+        id
+          ? 'User has been successfully updated!'
+          : 'User has been successfully created!'
+      }`,
       placement: 'top',
     });
   };
@@ -82,6 +68,7 @@ const Form = ({ newUser }) => {
     setInputsField((prevData) => ({
       ...prevData,
       color: colorTarget,
+      role: userRole,
       [name]: type === 'checkbox' ? checked : value,
     }));
   };
@@ -99,7 +86,9 @@ const Form = ({ newUser }) => {
     e.preventDefault();
 
     try {
-      axios.post('http://localhost:8000/users', inputsField);
+      id
+        ? axios.put(`http://localhost:8000/users/${id}`, inputsField)
+        : axios.post('http://localhost:8000/users', inputsField);
       console.log('Form data is valid:', inputsField);
       checkoutSchema.validate(inputsField, { abortEarly: false });
       openNotification();
@@ -108,14 +97,7 @@ const Form = ({ newUser }) => {
         email: '',
         password: '',
         isVerified: false,
-        picture: [
-          {
-            uid: '-1',
-            name: 'image.png',
-            status: 'done',
-            url: userInfo.picture ? userInfo.picture : emptyAvatar,
-          },
-        ],
+        picture: [],
         role: 'user',
         color: '#ffffff',
       });
@@ -130,14 +112,15 @@ const Form = ({ newUser }) => {
     }
   };
 
-  const onChangeFile = ({ file, fileList }) => {
-    if ((file.status = 'removed')) {
-      inputsField.picture = [];
-      setInputsField((prevState) => ({
-        ...prevState,
-        picture: inputsField.picture,
-      }));
-    }
+  const onChangeFile = ({ fileList: newFileList }) => {
+    // if ((file.status = 'removed')) {
+    //   inputsField.picture = [];
+    //   setInputsField((prevState) => ({
+    //     ...prevState,
+    //     picture: inputsField.picture,
+    //   }));
+    // }
+    setFileList(newFileList);
     setInputsField((prevState) => ({
       ...prevState,
       picture: fileList,
@@ -167,13 +150,19 @@ const Form = ({ newUser }) => {
   }, []);
 
   useEffect(() => {
-    getUserById();
+    id && getUserById();
+    console.log('picture', inputsField?.picture);
+    //!! user role
+    console.log('role', inputsField.role);
   }, []);
 
   const isNonMobile = useMediaQuery('(min-width:600px)');
   return (
     <Box m="20px">
-      <Header title="CREATE USER" subtitle="Create a New User Profile" />
+      <Header
+        title={`${id ? 'UPDATE USER' : 'CREATE USER'}`}
+        subtitle={`${id ? 'Update User Profil' : 'Create a New User Profile'}`}
+      />
 
       <form onSubmit>
         <Box
@@ -188,14 +177,14 @@ const Form = ({ newUser }) => {
             <Upload
               // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
               listType="picture-card"
-              fileList={inputsField?.picture}
+              fileList={fileList}
               onChange={onChangeFile}
               onPreview={onPreview}
+              beforeUpload={() => false}
             >
-              {'Upload'}
+              {fileList.length < 1 && '+ Upload'}
             </Upload>
           </ImgCrop>
-
           <TextField
             label="Username"
             name="username"
@@ -224,7 +213,6 @@ const Form = ({ newUser }) => {
             helperText={errors.password}
             required
           />
-
           <FormControlLabel
             control={
               <Checkbox
@@ -237,22 +225,20 @@ const Form = ({ newUser }) => {
             error={!!errors.isVerified}
             helperText={errors.isVerified}
           />
-
           <InputLabel id="role">Role</InputLabel>
           <Select
             labelId="role"
             id="role"
-            value={userRole}
+            value={inputsField.role}
             onChange={handleChangeUser}
           >
             <MenuItem value="">
-              <em>-- Select a role --</em>
+              <em>-- {inputsField.role} --</em>
             </MenuItem>
             <MenuItem value="admin">Admin</MenuItem>
             <MenuItem value="user">User</MenuItem>
           </Select>
           {errors?.role && <span role="alert">{errors.role.message}</span>}
-
           <TextField
             onChange={(e) => setColorTarget(e.target.value)}
             label="Color"
@@ -270,7 +256,11 @@ const Form = ({ newUser }) => {
           <Popconfirm
             placement="topRight"
             title="Confirm Creation"
-            description="Are you sur to create this new user ?"
+            description={`${
+              id
+                ? 'Are you sur to update this user ?'
+                : 'Are you sur to create this new user ?'
+            }`}
             onConfirm={handleSubmit}
             onOpenChange={() => console.log('open change')}
           >
@@ -282,7 +272,7 @@ const Form = ({ newUser }) => {
                 backgroundColor: colors.greenAccent[600],
               }}
             >
-              Create New User
+              {`${id ? 'Update User' : 'Create New User'}`}
             </Button>
           </Popconfirm>
         </Box>
