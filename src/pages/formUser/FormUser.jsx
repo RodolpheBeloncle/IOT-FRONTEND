@@ -48,7 +48,7 @@ const Form = ({ newUser }) => {
   //   role: 'user',
   //   color: '#ffffff',
   // });
-  const [inputsField, setInputsField] = useState({});
+  const [inputsField, setInputsField] = useState(null);
 
   const checkoutSchema = yup.object().shape({
     username: yup.string().required('Required'),
@@ -159,11 +159,16 @@ const Form = ({ newUser }) => {
     imgWindow?.document.write(image.outerHTML);
   };
 
-  useEffect(async () => {
-    const response = await axios.get('http://localhost:8000/users' + `/${id}`);
-    console.log(response);
-    id ? setInputsField(response.data) : setInputsField(newUser);
-  }, [id, newUser]);
+  const getUserById = useCallback(async () => {
+    const response = await axios.get(`http://localhost:8000/users/${id}`);
+
+    console.log('getuser', response.data);
+    setInputsField(response.data);
+  }, []);
+
+  useEffect(() => {
+    getUserById();
+  }, []);
 
   const isNonMobile = useMediaQuery('(min-width:600px)');
   return (
@@ -183,7 +188,7 @@ const Form = ({ newUser }) => {
             <Upload
               // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
               listType="picture-card"
-              fileList={inputsField.picture}
+              fileList={inputsField?.picture}
               onChange={onChangeFile}
               onPreview={onPreview}
             >
@@ -194,7 +199,7 @@ const Form = ({ newUser }) => {
           <TextField
             label="Username"
             name="username"
-            value={inputsField.username}
+            value={inputsField?.username}
             onChange={handleChange}
             error={!!errors.username}
             helperText={errors.username}
@@ -203,7 +208,7 @@ const Form = ({ newUser }) => {
           <TextField
             label="Email"
             name="email"
-            value={inputsField.email}
+            value={inputsField?.email}
             onChange={handleChange}
             error={!!errors.email}
             helperText={errors.email}
@@ -213,7 +218,7 @@ const Form = ({ newUser }) => {
             label="Password"
             name="password"
             type="password"
-            value={inputsField.password}
+            value={inputsField?.password}
             onChange={handleChange}
             error={!!errors.password}
             helperText={errors.password}
@@ -223,7 +228,7 @@ const Form = ({ newUser }) => {
           <FormControlLabel
             control={
               <Checkbox
-                value={inputsField.isVerified}
+                value={inputsField?.isVerified}
                 onChange={handleChange}
                 name="isVerified"
               />

@@ -25,7 +25,7 @@ const BreadCrumb = () => {
     },
   ];
 
-  const isNonMobile = useMediaQuery('(min-width:600px)');
+  const isNonMobile = useMediaQuery('(min-width:760px)');
   return (
     <div className="demo">
       {!isNonMobile && (

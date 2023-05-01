@@ -128,7 +128,6 @@ const Team = () => {
             size="small"
             // onClick={() => handleEdit(params.row)}
             onClick={() => navigate(`/form/${params.row.id}`)}
-           
           >
             Edit
           </Button>
