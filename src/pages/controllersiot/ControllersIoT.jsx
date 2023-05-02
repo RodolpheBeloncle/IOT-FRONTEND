@@ -2,14 +2,17 @@ import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../context/UserContextProvider";
 import axios from "axios";
 import { Box, Typography, useTheme, Checkbox } from "@mui/material";
-import { Row } from "antd";
+import { Row, Button, message, Popconfirm } from "antd";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import CustomFormModal from "../../components/CustomFormModal";
+import UpdateFormModal from "../../components/UpdateFormModal";
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
+import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 
 import Header from "../../components/Header";
 
 const ControllersIoT = () => {
+  //!! SET USERINFO TO KNOW WHO CREATED OR UPDATD BY
   // const { isAuthenticated } = useContext(UserContext);
   // const [isOpenModal, setIsOpenModal] = useState(false);
   // console.log("auth MANAGE DEVICES ", isAuthenticated);
@@ -51,20 +54,21 @@ const ControllersIoT = () => {
   // ];
 
   const { isAuthenticated } = useContext(UserContext);
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [gridRows, setGridRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   console.log("auth MANAGE TEAM ", isAuthenticated);
 
-  const text = "Are you sure to delete this user?";
-  const description = "Delete the user";
+  const text = "Are you sure to delete this device?";
+  const description = "Delete this device";
 
   const handleDelete = (id) => {
     axios
       .delete("http://localhost:8000/devices" + `/${id}`)
       .then((res) => {
-        console.log("users", res.data);
+        console.log("devices", res.data);
       })
       .catch((err) => console.log(err));
     message.success("row deleted", 2);
@@ -79,7 +83,7 @@ const ControllersIoT = () => {
     axios
       .get("http://localhost:8000/devices")
       .then((res) => {
-        console.log("users", res.data);
+        console.log("devices", res.data);
         setGridRows(res.data);
       })
       .catch((err) => console.log(err));
@@ -116,40 +120,48 @@ const ControllersIoT = () => {
       cellClassName: "name-column--cell",
       width: 200,
     },
+    {
+      field: "type",
+      headerName: "Type",
+      type: "string",
+      headerAlign: "left",
+      align: "left",
+      width: 100,
+    },
 
     { field: "topic", headerName: "Topic", width: 100 },
     { field: "unit", headerName: "Unit", width: 100 },
     { field: "initValue", headerName: "init Value", width: 100 },
     { field: "maxValue", headerName: "max Value", width: 100 },
     { field: "createdBy", headerName: "Created By", width: 100 },
-    {
-      field: "Type",
-      headerName: "Type",
-      width: 100,
-      renderCell: ({ type: { type } }) => {
-        return (
-          <Box
-            width="100%"
-            m="0 auto"
-            p="5px"
-            display="flex"
-            justifyContent="center"
-            backgroundColor={
-              type === "sensor"
-                ? colors.greenAccent[600]
-                : colors.greenAccent[800]
-            }
-            borderRadius="4px"
-          >
-            {type === "switch" && <AdminPanelSettingsOutlinedIcon />}
-            {type === "sensor" && <SecurityOutlinedIcon />}
-            <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-              {type}
-            </Typography>
-          </Box>
-        );
-      },
-    },
+    // {
+    //   field: "type",
+    //   headerName: "type",
+    //   width: 100,
+    //   renderCell: ({ type: { type } }) => {
+    //     return (
+    //       <Box
+    //         width="100%"
+    //         m="0 auto"
+    //         p="5px"
+    //         display="flex"
+    //         justifyContent="center"
+    //         backgroundColor={
+    //           type === "sensor"
+    //             ? colors.greenAccent[600]
+    //             : colors.greenAccent[800]
+    //         }
+    //         borderRadius="4px"
+    //       >
+    //         {type === "switch" && <AdminPanelSettingsOutlinedIcon />}
+    //         {type === "sensor" && <SecurityOutlinedIcon />}
+    //         <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
+    //           {type}
+    //         </Typography>
+    //       </Box>
+    //     );
+    //   },
+    // },
     {
       field: "actions",
       headerName: "Actions",
@@ -157,12 +169,18 @@ const ControllersIoT = () => {
       width: 130,
       renderCell: (params) => (
         <>
-          <Row className="row" span={4}>
-            <CustomFormModal
-              isOpenModal={isOpenModal}
-              setIsOpenModal={setIsOpenModal}
-            />
-          </Row>
+          {selectedRow !== null && (
+            <Row className="row" span={2}>
+              <UpdateFormModal
+                gridRows={gridRows}
+                setGridRows={setGridRows}
+                device={selectedRow}
+                setDevice={setSelectedRow}
+                isOpenModal={isOpenModal}
+                setIsOpenModal={setIsOpenModal}
+              />
+            </Row>
+          )}
           {/* <Button
             variant="contained"
             color="secondary"
@@ -219,6 +237,7 @@ const ControllersIoT = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
   return (
     <>
       <Box m="20px">
@@ -271,7 +290,7 @@ const ControllersIoT = () => {
             onCellDoubleClick={(params) => console.log(params)}
             onCellClick={(params) => console.log(params)}
             onRowDoubleClick={(params) => console.log(params)}
-            onRowClick={(params) => console.log(params)}
+            onRowClick={(params) => setSelectedRow(params.row)}
             onEditCellChangeCommitted={(params) => handleModifyRow(params)}
             onDeleteRows={(params) =>
               params.rowIds.forEach((id) => handleDeleteRow(id))
