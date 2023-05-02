@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useContext } from "react";
-import { UserContext } from "../../context/UserContextProvider";
-import axios from "axios";
-import { Box, useTheme, Checkbox } from "@mui/material";
-import { Row, Button, message, Popconfirm } from "antd";
-import { DataGrid } from "@mui/x-data-grid";
-import { tokens } from "../../theme";
-import UpdateFormModal from "../../components/UpdateFormModal";
+import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../../context/UserContextProvider';
+import axios from 'axios';
+import { Box, useTheme, Checkbox } from '@mui/material';
+import { Row, Button, message, Popconfirm } from 'antd';
+import { DataGrid } from '@mui/x-data-grid';
+import { tokens } from '../../theme';
+import UpdateFormModal from '../../components/UpdateFormModal';
 
-
-import Header from "../../components/Header";
+import Header from '../../components/Header';
 
 const ControllersIoT = () => {
   //!! SET USERINFO TO KNOW WHO CREATED OR UPDATD BY
@@ -18,21 +17,21 @@ const ControllersIoT = () => {
   const [gridRows, setGridRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  console.log("auth MANAGE TEAM ", isAuthenticated);
+  console.log('auth MANAGE TEAM ', isAuthenticated);
 
-  const text = "Are you sure to delete this device?";
-  const description = "Delete this device";
+  const text = 'Are you sure to delete this device?';
+  const description = 'Delete this device';
 
   const handleDelete = (id) => {
     axios
-      .delete("http://localhost:8000/devices" + `/${id}`)
+      .delete('http://localhost:8000/devices' + `/${id}`)
       .then((res) => {
-        console.log("devices", res.data);
+        console.log('devices', res.data);
       })
       .catch((err) => console.log(err));
-    message.success("row deleted", 2);
+    message.success('row deleted', 2);
 
-    console.log("handledelete id :", id);
+    console.log('handledelete id :', id);
     const updatedRows = gridRows.filter((row) => row.id !== id);
     setGridRows(updatedRows);
     setSelectedRow(null);
@@ -40,9 +39,9 @@ const ControllersIoT = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/devices")
+      .get('http://localhost:8000/devices')
       .then((res) => {
-        console.log("devices", res.data);
+        console.log('devices', res.data);
         setGridRows(res.data);
       })
       .catch((err) => console.log(err));
@@ -53,8 +52,8 @@ const ControllersIoT = () => {
 
   const columns = [
     {
-      field: "checkbox",
-      headerName: " ",
+      field: 'checkbox',
+      headerName: ' ',
       width: 50,
       sortable: false,
       renderCell: (params) => (
@@ -71,28 +70,28 @@ const ControllersIoT = () => {
         />
       ),
     },
-    { field: "id", headerName: "Id" },
+    { field: 'id', headerName: 'Id' },
 
     {
-      field: "widgetName",
-      headerName: "Widget Name",
-      cellClassName: "name-column--cell",
+      field: 'widgetName',
+      headerName: 'Widget Name',
+      cellClassName: 'name-column--cell',
       width: 200,
     },
     {
-      field: "type",
-      headerName: "Type",
-      type: "string",
-      headerAlign: "left",
-      align: "left",
+      field: 'type',
+      headerName: 'Type',
+      type: 'string',
+      headerAlign: 'left',
+      align: 'left',
       width: 100,
     },
 
-    { field: "topic", headerName: "Topic", width: 100 },
-    { field: "unit", headerName: "Unit", width: 100 },
-    { field: "initValue", headerName: "init Value", width: 100 },
-    { field: "maxValue", headerName: "max Value", width: 100 },
-    { field: "createdBy", headerName: "Created By", width: 100 },
+    { field: 'topic', headerName: 'Topic', width: 100 },
+    { field: 'unit', headerName: 'Unit', width: 100 },
+    { field: 'initValue', headerName: 'init Value', width: 100 },
+    { field: 'maxValue', headerName: 'max Value', width: 100 },
+    { field: 'createdBy', headerName: 'Created By', width: 100 },
     // {
     //   field: "type",
     //   headerName: "type",
@@ -122,38 +121,22 @@ const ControllersIoT = () => {
     //   },
     // },
     {
-      field: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      headerName: 'Actions',
       sortable: false,
       width: 130,
       renderCell: (params) => (
         <>
-          {selectedRow !== null && (
-            <Row className="row" span={2}>
-              <UpdateFormModal
-                gridRows={gridRows}
-                setGridRows={setGridRows}
-                device={selectedRow}
-                setDevice={setSelectedRow}
-                isOpenModal={isOpenModal}
-                setIsOpenModal={setIsOpenModal}
-              />
-            </Row>
-          )}
-          {/* <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => {
-              // handleDelete(params.row.id)
-              if (selectedRow === params.row.id) {
-                // Show popup validation
-              } else {
-                setSelectedRow(params.row.id);
-              }
-            }}
-          >
-            Delete
-          </Button> */}
+          {
+            <UpdateFormModal
+              gridRows={gridRows}
+              setGridRows={setGridRows}
+              device={selectedRow}
+              setDevice={setSelectedRow}
+              isOpenModal={isOpenModal}
+              setIsOpenModal={setIsOpenModal}
+            />
+          }
 
           <Popconfirm
             placement="top"
@@ -170,13 +153,8 @@ const ControllersIoT = () => {
     },
   ];
 
-  const handleEdit = (row) => {
-    setSelectedRow(row);
-    // open a modal or dialog to edit the selected row
-  };
-
   const handleModifyRow = (editedRow) => {
-    console.log("handleModify id :", editedRow.id);
+    console.log('handleModify id :', editedRow.id);
     const updatedRows = rows.map((row) => {
       if (row.id === editedRow.id) {
         return editedRow;
@@ -208,30 +186,30 @@ const ControllersIoT = () => {
           width="100%"
           height="80vh"
           sx={{
-            "& .MuiDataGrid-root": {
-              border: "none",
+            '& .MuiDataGrid-root': {
+              border: 'none',
             },
-            "& .MuiDataGrid-cell": {
-              borderBottom: "none",
+            '& .MuiDataGrid-cell': {
+              borderBottom: 'none',
             },
-            "& .name-column--cell": {
+            '& .name-column--cell': {
               color: colors.greenAccent[300],
             },
-            "& .MuiDataGrid-columnHeaders": {
+            '& .MuiDataGrid-columnHeaders': {
               backgroundColor: colors.blueAccent[700],
-              borderBottom: "none",
+              borderBottom: 'none',
             },
-            "& .MuiDataGrid-virtualScroller": {
+            '& .MuiDataGrid-virtualScroller': {
               backgroundColor: colors.primary[400],
             },
-            "& .MuiDataGrid-footerContainer": {
-              borderTop: "none",
+            '& .MuiDataGrid-footerContainer': {
+              borderTop: 'none',
               backgroundColor: colors.blueAccent[700],
             },
-            "& .MuiCheckbox-root": {
+            '& .MuiCheckbox-root': {
               color: `${colors.greenAccent[200]} !important`,
             },
-            "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+            '& .MuiDataGrid-toolbarContainer .MuiButton-text': {
               color: `${colors.grey[100]} !important`,
             },
           }}
@@ -244,7 +222,6 @@ const ControllersIoT = () => {
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            // checkboxSelection
             onRowSelected={(row) => console.log(row)}
             onCellDoubleClick={(params) => console.log(params)}
             onCellClick={(params) => console.log(params)}
