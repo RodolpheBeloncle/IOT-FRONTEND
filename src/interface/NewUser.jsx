@@ -1,18 +1,18 @@
-import emptyAvatar from '../assets/profile.png';
+import emptyAvatar from "../assets/profile.png";
 
 export const newUser = {
-  username: '',
-  email: '',
-  password: '',
+  username: "",
+  email: "",
+  password: "",
   isVerified: false,
   picture: [
     {
-      uid: '-1',
-      name: 'image.png',
-      status: 'done',
+      uid: "-1",
+      name: "image.png",
+      status: "done",
       url: emptyAvatar,
     },
   ],
-  role: 'user',
-  color: '#ffffff',
+  role: "User",
+  color: "#ffffff",
 };

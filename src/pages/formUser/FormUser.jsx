@@ -1,6 +1,6 @@
-import React, { useState, useContext, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useContext, useEffect, useCallback } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import {
   Box,
   Checkbox,
@@ -12,55 +12,55 @@ import {
   FormControl,
   Button,
   useTheme,
-} from '@mui/material';
-import { newUser } from '../../interface/NewUser';
+} from "@mui/material";
+import { newUser } from "../../interface/NewUser";
 
-import { Popconfirm, notification } from 'antd';
-import { ColorModeContext, tokens } from '../../theme';
-import { Upload } from 'antd';
-import ImgCrop from 'antd-img-crop';
-import * as yup from 'yup';
-import { useMediaQuery } from '@mui/material';
-import Header from '../../components/Header';
+import { Popconfirm, notification } from "antd";
+import { ColorModeContext, tokens } from "../../theme";
+import { Upload } from "antd";
+import ImgCrop from "antd-img-crop";
+import * as yup from "yup";
+import { useMediaQuery } from "@mui/material";
+import Header from "../../components/Header";
 
 const Form = () => {
   const { id } = useParams();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
-  const [colorTarget, setColorTarget] = useState('');
-  const [userRole, setUserRole] = useState('user');
+  const [colorTarget, setColorTarget] = useState("");
+  const [userRole, setUserRole] = useState("User");
   const [fileList, setFileList] = useState([]);
 
   const [inputsField, setInputsField] = useState(newUser);
 
   const checkoutSchema = yup.object().shape({
-    username: yup.string().required('Required'),
-    email: yup.string().email('Invalid email!').required('Required'),
+    username: yup.string().required("Required"),
+    email: yup.string().email("Invalid email!").required("Required"),
     password: yup
       .string()
-      .required('No password provided.')
-      .min(8, 'Password is too short - should be 8 chars minimum.')
-      .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
-    role: yup.string().oneOf(['admin', 'manager', 'user']).required(),
+      .required("No password provided.")
+      .min(8, "Password is too short - should be 8 chars minimum.")
+      .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
+    role: yup.string().oneOf(["Admin", "User", "Guest"]).required(),
     isVerified: yup.boolean(),
     picture: yup.array(),
     color: yup
       .string()
-      .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'Invalid color value')
-      .required('Color is required'),
+      .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid color value")
+      .required("Color is required"),
   });
   const [errors, setErrors] = useState({});
 
   const openNotification = () => {
     notification.success({
-      message: 'User Created',
+      message: "User Created",
       description: `${
         id
-          ? 'User has been successfully updated!'
-          : 'User has been successfully created!'
+          ? "User has been successfully updated!"
+          : "User has been successfully created!"
       }`,
-      placement: 'top',
+      placement: "top",
     });
   };
 
@@ -69,8 +69,24 @@ const Form = () => {
     const { name, value, type, checked } = e.target;
     setInputsField((prevData) => ({
       ...prevData,
-      role: value,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleChangeRole = (e) => {
+    console.log("role: ", e.target.value);
+    setUserRole(e.target.value);
+    setInputsField((prevData) => ({
+      ...prevData,
+      role: e.target.value,
+    }));
+  };
+  const handleChangeColor = (e) => {
+    console.log("color: ", e.target.value);
+    setColorTarget(e.target.value);
+    setInputsField((prevData) => ({
+      ...prevData,
+      color: e.target.value,
     }));
   };
 
@@ -78,24 +94,35 @@ const Form = () => {
     e.preventDefault();
 
     try {
-      id
-        ? axios.put(`http://localhost:8000/users/${id}`, inputsField)
-        : axios.post('http://localhost:8000/users', inputsField);
-      console.log('Form data is valid:', inputsField);
-      checkoutSchema.validate(inputsField, { abortEarly: false });
-      openNotification();
-      setInputsField({
-        username: '',
-        email: '',
-        password: '',
-        isVerified: false,
-        picture: [],
-        role: 'user',
-        color: '#ffffff',
-      });
-      // form data is valid, proceed with submission
+      checkoutSchema
+        .validate(inputsField, { abortEarly: false })
+        .then(() => {
+          id
+            ? axios.put(`http://localhost:8000/users/${id}`, inputsField)
+            : axios.post("http://localhost:8000/users", inputsField);
+          console.log("Form data is valid:", inputsField);
 
-      // await axios.post(import.meta.env.VITE_REACT_APP_API_USERS, inputsField);
+          openNotification();
+          setInputsField({
+            username: "",
+            email: "",
+            password: "",
+            isVerified: false,
+            picture: [],
+            role: "user",
+            color: "#ffffff",
+          });
+          // form data is valid, proceed with submission
+
+          // await axios.post(import.meta.env.VITE_REACT_APP_API_USERS, inputsField);
+        })
+        .catch((error) => {
+          notification.error({
+            message: "Error input",
+            description: `please fix error : ${error}`,
+            placement: "top",
+          });
+        });
     } catch (err) {
       // validation errors occurred, update error state
       const validationErrors = {};
@@ -130,29 +157,31 @@ const Form = () => {
   const getUserById = useCallback(async () => {
     const response = await axios.get(`http://localhost:8000/users/${id}`);
 
-    console.log('getuser', response.data);
+    console.log("getuser", response.data);
     setInputsField(response.data);
   }, []);
 
   useEffect(() => {
     id && getUserById();
+    id && setColorTarget(inputsField.color);
+    id && setUserRole(inputsField.role);
   }, []);
 
-  const isNonMobile = useMediaQuery('(min-width:600px)');
+  const isNonMobile = useMediaQuery("(min-width:600px)");
   return (
     <Box m="20px">
       <Header
-        title={`${id ? 'UPDATE USER' : 'CREATE USER'}`}
-        subtitle={`${id ? 'Update User Profil' : 'Create a New User Profile'}`}
+        title={`${id ? "UPDATE USER" : "CREATE USER"}`}
+        subtitle={`${id ? "Update User Profil" : "Create a New User Profile"}`}
       />
 
-      <form onSubmit>
+      <form >
         <Box
           display="grid"
           gap="30px"
           gridTemplateColumns="repeat(4, minmax(0, 1fr))"
           sx={{
-            '& > div': { gridColumn: isNonMobile ? undefined : 'span 4' },
+            "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
           }}
         >
           <ImgCrop rotationSlider>
@@ -164,35 +193,35 @@ const Form = () => {
               onPreview={onPreview}
               beforeUpload={() => false}
             >
-              {fileList.length < 1 && '+ Upload'}
+              {fileList.length < 1 && "+ Upload"}
             </Upload>
           </ImgCrop>
           <TextField
-            label={id ? '' : 'Username'}
+            label={id ? "" : "Username"}
             name="username"
             value={inputsField?.username}
             onChange={handleChange}
             error={!!errors.username}
-            // helperText={errors.username}
+            helperText={errors.username}
             required
           />
           <TextField
-            label={id ? '' : 'Email'}
+            label={id ? "" : "Email"}
             name="email"
             value={inputsField?.email}
             onChange={handleChange}
             error={!!errors.email}
-            // helperText={errors.email}
+            helperText={errors.email}
             required
           />
           <TextField
-            label={id ? '' : 'Password'}
+            label={id ? "" : "Password"}
             name="password"
             type="password"
             value={inputsField?.password}
             onChange={handleChange}
             error={!!errors.password}
-            // helperText={errors.password}
+            helperText={errors.password}
             required
           />
           <FormControlLabel
@@ -212,20 +241,20 @@ const Form = () => {
             <InputLabel id="select-label">Select a role</InputLabel>
             <Select
               labelId="select-label"
-              value={inputsField?.role}
-              onChange={handleChange}
+              value={userRole}
+              onChange={handleChangeRole}
             >
-              <MenuItem value="admin">Admin</MenuItem>
-              <MenuItem value="user">User</MenuItem>
-              <MenuItem value="guest">Guest</MenuItem>
+              <MenuItem value="Admin">Admin</MenuItem>
+              <MenuItem value="User">User</MenuItem>
+              <MenuItem value="Guest">Guest</MenuItem>
             </Select>
           </FormControl>
           {errors?.role && <span role="alert">{errors.role.message}</span>}
           <TextField
-            onChange={handleChange}
+            onChange={handleChangeColor}
             label="Color"
             type="color"
-            value={inputsField.color}
+            value={colorTarget}
             InputLabelProps={{
               shrink: true,
             }}
@@ -240,11 +269,11 @@ const Form = () => {
             title="Confirm Creation"
             description={`${
               id
-                ? 'Are you sur to update this user ?'
-                : 'Are you sur to create this new user ?'
+                ? "Are you sur to update this user ?"
+                : "Are you sur to create this new user ?"
             }`}
             onConfirm={handleSubmit}
-            onOpenChange={() => console.log('open change')}
+            onOpenChange={() => console.log("open change")}
           >
             <Button
               // type="submit"
@@ -254,7 +283,7 @@ const Form = () => {
                 backgroundColor: colors.greenAccent[600],
               }}
             >
-              {`${id ? 'Update User' : 'Create New User'}`}
+              {`${id ? "Update User" : "Create New User"}`}
             </Button>
           </Popconfirm>
         </Box>
