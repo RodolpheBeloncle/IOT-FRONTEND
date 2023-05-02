@@ -1,18 +1,18 @@
-import React from 'react';
-import { Alert, Breadcrumb, Row } from 'antd';
-import './breadCrumb.css';
-import { HashRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
-import { useMediaQuery } from '@mui/material';
+import React from "react";
+import { Alert, Breadcrumb, Row } from "antd";
+import "./breadCrumb.css";
+import { HashRouter, Link, Route, Routes, useLocation } from "react-router-dom";
+import { useMediaQuery } from "@mui/material";
 const breadcrumbNameMap = {
-  '/manageTeam': 'Team',
-  '/manageDevice': 'Devices',
+  "/manageTeam": "Team",
+  "/manageDevice": "Devices",
 };
 
 const BreadCrumb = () => {
   const location = useLocation();
-  const pathSnippets = location.pathname.split('/').filter((i) => i);
+  const pathSnippets = location.pathname.split("/").filter((i) => i);
   const extraBreadcrumbItems = pathSnippets.map((_, index) => {
-    const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
+    const url = `/${pathSnippets.slice(0, index + 1).join("/")}`;
     return {
       key: url,
       title: <Link to={url}>{breadcrumbNameMap[url]}</Link>,
@@ -21,11 +21,11 @@ const BreadCrumb = () => {
   const breadcrumbItems = [
     {
       title: <Link to="/">Dashboard</Link>,
-      key: 'Dashboard',
+      key: "Dashboard",
     },
   ];
 
-  const isNonMobile = useMediaQuery('(min-width:760px)');
+  const isNonMobile = useMediaQuery("(min-width:760px)");
   return (
     <div className="demo">
       {!isNonMobile && (
@@ -33,7 +33,7 @@ const BreadCrumb = () => {
           <Link to="/">Dashboard</Link>
           <Link to="/manageTeam">Team</Link>
           <Link to="/manageDevice">Devices</Link>
-          <Link to="/form">New User</Link>
+          <Link to="/form/user">New User</Link>
         </div>
       )}
       <Routes>

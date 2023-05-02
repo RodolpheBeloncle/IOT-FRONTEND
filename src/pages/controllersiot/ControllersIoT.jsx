@@ -1,58 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../context/UserContextProvider";
 import axios from "axios";
-import { Box, Typography, useTheme, Checkbox } from "@mui/material";
+import { Box, useTheme, Checkbox } from "@mui/material";
 import { Row, Button, message, Popconfirm } from "antd";
-import { DataGrid, GridToolbar } from "@mui/x-data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import UpdateFormModal from "../../components/UpdateFormModal";
-import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
-import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
+
 
 import Header from "../../components/Header";
 
 const ControllersIoT = () => {
   //!! SET USERINFO TO KNOW WHO CREATED OR UPDATD BY
-  // const { isAuthenticated } = useContext(UserContext);
-  // const [isOpenModal, setIsOpenModal] = useState(false);
-  // console.log("auth MANAGE DEVICES ", isAuthenticated);
-  // const [devices, setDevices] = useState([]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(import.meta.env.VITE_REACT_APP_API_DEVICES)
-  //     .then((res) => {
-  //       console.log("Manage devices : ", res.data);
-  //       setDevices(res.data);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
-
-  // const theme = useTheme();
-  // const colors = tokens(theme.palette.mode);
-  // const columns = [
-  //   { field: "id", headerName: "device Id", width: 100 },
-  //   {
-  //     field: "widgetName",
-  //     headerName: "Widget Name",
-  //     cellClassName: "name-column--cell",
-  //     width: 200,
-  //   },
-  //   {
-  //     field: "type",
-  //     headerName: "Type",
-  //     type: "string",
-  //     headerAlign: "left",
-  //     align: "left",
-  //     width: 100,
-  //   },
-  //   { field: "topic", headerName: "Topic", width: 100 },
-  //   { field: "unit", headerName: "Unit", width: 100 },
-  //   { field: "initValue", headerName: "init Value", width: 100 },
-  //   { field: "maxValue", headerName: "max Value", width: 100 },
-  //   { field: "createdBy", headerName: "Created By", width: 100 },
-  // ];
-
   const { isAuthenticated } = useContext(UserContext);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
