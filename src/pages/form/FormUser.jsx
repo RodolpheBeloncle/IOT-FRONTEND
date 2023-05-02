@@ -23,7 +23,7 @@ import * as yup from "yup";
 import { useMediaQuery } from "@mui/material";
 import Header from "../../components/Header";
 
-const Form = () => {
+const FormUser = () => {
   const { id } = useParams();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -175,7 +175,7 @@ const Form = () => {
         subtitle={`${id ? "Update User Profil" : "Create a New User Profile"}`}
       />
 
-      <form >
+      <form>
         <Box
           display="grid"
           gap="30px"
@@ -202,7 +202,6 @@ const Form = () => {
             value={inputsField?.username}
             onChange={handleChange}
             error={!!errors.username}
-            helperText={errors.username}
             required
           />
           <TextField
@@ -211,7 +210,6 @@ const Form = () => {
             value={inputsField?.email}
             onChange={handleChange}
             error={!!errors.email}
-            helperText={errors.email}
             required
           />
           <TextField
@@ -221,7 +219,6 @@ const Form = () => {
             value={inputsField?.password}
             onChange={handleChange}
             error={!!errors.password}
-            helperText={errors.password}
             required
           />
           <FormControlLabel
@@ -234,7 +231,6 @@ const Form = () => {
             }
             label="isVerified"
             error={!!errors.isVerified}
-            helperText={errors.isVerified}
           />
 
           <FormControl>
@@ -259,7 +255,6 @@ const Form = () => {
               shrink: true,
             }}
             error={!!errors.color}
-            helperText={errors.color}
           />
         </Box>
 
@@ -292,4 +287,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default FormUser;

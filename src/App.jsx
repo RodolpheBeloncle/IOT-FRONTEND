@@ -14,7 +14,8 @@ import Profil from "./pages/Profil";
 import Dashboard from "./pages/dashboard/Dashboard";
 import Team from "./pages/team/Team";
 import ControllersIoT from "./pages/controllersiot/ControllersIoT";
-import FormUser from "./pages/formUser/FormUser";
+import FormUser from "./pages/form/FormUser";
+import NotFound from "./pages/notFound/NotFound";
 import { newUser } from "./interface/NewUser";
 import FAQ from "./pages/faq/Faq";
 
@@ -39,17 +40,18 @@ const App = () => {
                   element={<ChangePassword />}
                 />
                 <Route path="/" element={<ProtectedRoute />}>
-                <Route index element={<Devices />} />
-                <Route path="/profil" element={<Profil />} />
-                <Route path="form">
-                  <Route index element={<FormUser />} />
-                  <Route path=":id" element={<FormUser />} />
+                  <Route index element={<Devices />} />
+                  <Route path="/profil" element={<Profil />} />
+                  <Route path="form/user">
+                    <Route index element={<FormUser />} />
+                    <Route path=":id" element={<FormUser />} />
+                  </Route>
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/manageTeam" element={<Team />} />
+                  <Route path="/manageDevice" element={<ControllersIoT />} />
+                  <Route path="/faq" element={<FAQ />} />
                 </Route>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/manageTeam" element={<Team />} />
-                <Route path="/manageDevice" element={<ControllersIoT />} />
-                <Route path="/faq" element={<FAQ />} />
-                </Route>
+                <Route path="*" element={<NotFound />} />
               </Routes>
             </UserContextProvider>
           </BrowserRouter>
