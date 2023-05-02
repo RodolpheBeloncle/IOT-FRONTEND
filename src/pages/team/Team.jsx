@@ -15,11 +15,13 @@ const Team = () => {
   const { isAuthenticated } = useContext(UserContext);
   const [selectedRow, setSelectedRow] = useState(null);
   const [gridRows, setGridRows] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
   console.log('auth MANAGE TEAM ', isAuthenticated);
 
-  const text = 'Are you sure to delete this task?';
-  const description = 'Delete the task';
+  const text = 'Are you sure to delete this user?';
+  const description = 'Delete the user';
 
   const handleDelete = (id) => {
     axios
@@ -179,6 +181,15 @@ const Team = () => {
     setSelectedRow(null);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <Box m="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
@@ -216,7 +227,11 @@ const Team = () => {
         <DataGrid
           rows={gridRows}
           columns={columns}
-          pageSize={5}
+          rowsPerPage={rowsPerPage}
+          count={gridRows.length}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
           // checkboxSelection
           onRowSelected={(row) => console.log(row)}
           onCellDoubleClick={(params) => console.log(params)}

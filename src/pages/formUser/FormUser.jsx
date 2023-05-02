@@ -9,9 +9,11 @@ import {
   InputLabel,
   MenuItem,
   FormControlLabel,
+  FormControl,
   Button,
   useTheme,
 } from '@mui/material';
+import { newUser } from '../../interface/NewUser';
 
 import { Popconfirm, notification } from 'antd';
 import { ColorModeContext, tokens } from '../../theme';
@@ -27,10 +29,10 @@ const Form = () => {
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const [colorTarget, setColorTarget] = useState('');
-  const [userRole, setUserRole] = useState('');
+  const [userRole, setUserRole] = useState('user');
   const [fileList, setFileList] = useState([]);
 
-  const [inputsField, setInputsField] = useState({});
+  const [inputsField, setInputsField] = useState(newUser);
 
   const checkoutSchema = yup.object().shape({
     username: yup.string().required('Required'),
@@ -52,7 +54,7 @@ const Form = () => {
 
   const openNotification = () => {
     notification.success({
-      message: 'device Created',
+      message: 'User Created',
       description: `${
         id
           ? 'User has been successfully updated!'
@@ -67,18 +69,8 @@ const Form = () => {
     const { name, value, type, checked } = e.target;
     setInputsField((prevData) => ({
       ...prevData,
-      color: colorTarget,
-      role: userRole,
+      role: value,
       [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
-
-  const handleChangeUser = (e) => {
-    setUserRole(e.target.value);
-
-    setInputsField((prevState) => ({
-      ...prevState,
-      role: userRole,
     }));
   };
 
@@ -113,13 +105,6 @@ const Form = () => {
   };
 
   const onChangeFile = ({ fileList: newFileList }) => {
-    // if ((file.status = 'removed')) {
-    //   inputsField.picture = [];
-    //   setInputsField((prevState) => ({
-    //     ...prevState,
-    //     picture: inputsField.picture,
-    //   }));
-    // }
     setFileList(newFileList);
     setInputsField((prevState) => ({
       ...prevState,
@@ -151,9 +136,6 @@ const Form = () => {
 
   useEffect(() => {
     id && getUserById();
-    console.log('picture', inputsField?.picture);
-    //!! user role
-    console.log('role', inputsField.role);
   }, []);
 
   const isNonMobile = useMediaQuery('(min-width:600px)');
@@ -186,31 +168,31 @@ const Form = () => {
             </Upload>
           </ImgCrop>
           <TextField
-            label="Username"
+            label={id ? '' : 'Username'}
             name="username"
             value={inputsField?.username}
             onChange={handleChange}
             error={!!errors.username}
-            helperText={errors.username}
+            // helperText={errors.username}
             required
           />
           <TextField
-            label="Email"
+            label={id ? '' : 'Email'}
             name="email"
             value={inputsField?.email}
             onChange={handleChange}
             error={!!errors.email}
-            helperText={errors.email}
+            // helperText={errors.email}
             required
           />
           <TextField
-            label="Password"
+            label={id ? '' : 'Password'}
             name="password"
             type="password"
             value={inputsField?.password}
             onChange={handleChange}
             error={!!errors.password}
-            helperText={errors.password}
+            // helperText={errors.password}
             required
           />
           <FormControlLabel
@@ -225,25 +207,25 @@ const Form = () => {
             error={!!errors.isVerified}
             helperText={errors.isVerified}
           />
-          <InputLabel id="role">Role</InputLabel>
-          <Select
-            labelId="role"
-            id="role"
-            value={inputsField.role}
-            onChange={handleChangeUser}
-          >
-            <MenuItem value="">
-              <em>-- {inputsField.role} --</em>
-            </MenuItem>
-            <MenuItem value="admin">Admin</MenuItem>
-            <MenuItem value="user">User</MenuItem>
-          </Select>
+
+          <FormControl>
+            <InputLabel id="select-label">Select a role</InputLabel>
+            <Select
+              labelId="select-label"
+              value={inputsField?.role}
+              onChange={handleChange}
+            >
+              <MenuItem value="admin">Admin</MenuItem>
+              <MenuItem value="user">User</MenuItem>
+              <MenuItem value="guest">Guest</MenuItem>
+            </Select>
+          </FormControl>
           {errors?.role && <span role="alert">{errors.role.message}</span>}
           <TextField
-            onChange={(e) => setColorTarget(e.target.value)}
+            onChange={handleChange}
             label="Color"
             type="color"
-            value={colorTarget}
+            value={inputsField.color}
             InputLabelProps={{
               shrink: true,
             }}
