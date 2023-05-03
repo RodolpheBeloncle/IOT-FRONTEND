@@ -45,7 +45,7 @@ const UpdateFormModal = ({
     setIsOpenModal(false);
     notification.success({
       message: 'device Updated',
-      description: `Your device ${device.type} has been successfully updated!`,
+      description: `Your device ${device?.type} has been successfully updated!`,
       placement: 'bottomRight',
     });
   };
@@ -107,7 +107,7 @@ const UpdateFormModal = ({
             maxWidth: 600,
           }}
         >
-          {device.type === 'sensor' ? (
+          {device?.type === 'sensor' ? (
             <>
               <Divider orientation="left" plain>
                 Sensor Widget

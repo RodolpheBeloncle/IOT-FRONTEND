@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import './receiver.css';
 import { Card, List, Progress, Space, Row, Col } from 'antd';
+import ProgressCircle from '../components/ProgressCircle';
 import { QosOption } from './index';
 
 const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
@@ -52,7 +53,7 @@ const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
             </Col>
             <Col xs={24} sm={12}>
               <Space wrap>
-                <Progress
+                {/* <Progress
                   type="circle"
                   size={{ xs: 80, sm: 120 }}
                   percent={(parseInt(payload?.payload) * 100) / 50 || 0}
@@ -66,7 +67,8 @@ const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
                     '28%': 'orange',
                     '70%': '#d93027',
                   }}
-                />
+                /> */}
+                <ProgressCircle />
               </Space>
             </Col>
           </Col>

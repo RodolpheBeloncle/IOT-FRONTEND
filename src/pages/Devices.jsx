@@ -1,39 +1,29 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
-import { ColorModeContext, tokens } from "../theme";
-import "../pages/styles/devices.css";
-import { Row } from "antd";
-import axios from "axios";
-import CardDevice from "../components/CardDevice";
-import CustomFormModal from "../components/CustomFormModal";
-import { Box, IconButton, useTheme } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import InputBase from "@mui/material/InputBase";
+import React, { useState, useEffect, useCallback, useContext } from 'react';
+import { ColorModeContext, tokens } from '../theme';
+import '../pages/styles/devices.css';
+import { Row } from 'antd';
+import axios from 'axios';
+import CardDevice from '../components/CardDevice';
+import CustomFormModal from '../components/CustomFormModal';
+import { Box, IconButton, useTheme } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import InputBase from '@mui/material/InputBase';
 
-import { TextField } from "@mui/material";
+import { TextField } from '@mui/material';
 
 const Devices = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [devices, setDevices] = useState([]);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
 
-  // const getDevicesList = async () => {
-  //   axios
-  //     .get(import.meta.env.VITE_REACT_APP_API_DEVICES)
-  //     .then((res) => {
-  //       console.log('Devices : ', res.data);
-  //       setDevices(res.data);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
-
   const getDevicesList = useCallback(() => {
     axios
-      .get("http://localhost:8000/devices")
+      .get('http://localhost:8000/devices')
       .then((res) => {
-        console.log("Devices : ", res.data);
+        console.log('Devices : ', res.data);
         setDevices(res.data);
       })
       .catch((err) => console.log(err));
@@ -58,7 +48,7 @@ const Devices = () => {
   }, []);
   return (
     <>
-      <Row className="row" span={4}>
+      <Row className="row" span={4} style={{ margin: '10px' }}>
         <CustomFormModal
           isOpenModal={isOpenModal}
           setIsOpenModal={setIsOpenModal}
@@ -66,7 +56,7 @@ const Devices = () => {
       </Row>
       {/* SEARCH BAR */}
       <TextField
-        style={{ marginTop: "20px" }}
+        style={{ margin: '20px' }}
         label="Search"
         variant="outlined"
         placeholder={`Search by keyword `}

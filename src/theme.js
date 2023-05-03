@@ -142,7 +142,7 @@ export const themeSettings = (mode) => {
             },
             background: {
               // default: colors.blueAccent[900],
-              default: "#152521"
+              default:"#1E262F"
             },
           }
         : {

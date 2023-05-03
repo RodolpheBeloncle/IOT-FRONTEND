@@ -2,16 +2,12 @@ import React, { useState, useContext } from 'react';
 import './styles/login.css';
 import { ReactComponent as IotLogo } from '../img/iot_logo.svg';
 import { Space, Spin, message } from 'antd';
-import axios from '../services/axiosInterceptor';
-
-// import axios from 'axios';
-import jwtDecode from 'jwt-decode';
+import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContextProvider';
 
 const Login = () => {
-  const { setIsAuthenticated, getCookie, setCookie, clearCookie } =
-    useContext(UserContext);
+  const { setIsAuthenticated, getCookie, setCookie } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(null);
   const navigate = useNavigate();
   const [input, setInput] = useState({
@@ -25,46 +21,38 @@ const Login = () => {
   console.log('cookietoken', tokencookie);
 
   const [messageApi, contextHolder] = message.useMessage();
-
+  //!! fix call api for all query and set crud from mongo + .env
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
-      setIsLoading(true);
-      const { response } = await axios.post('/api/auth/users/login', input, {
+      const { response } = await axios.post('http://localhost:5000/api/auth/users/login', input, {
         widthCredentials: true,
       });
 
-      if (!response.data.token) {
-        setIsAuthenticated(false);
-        setIsLoading(false);
-        message.error(response.data, 2);
-        navigate('/login');
-      }
+      // if (!response.data.token) {
+      //   setIsAuthenticated(false);
+      //   setIsLoading(false);
+      //   alert(response.data);
+      //   navigate('/login');
+      // }
 
-      const decodedToken = jwtDecode(response.data.token);
-      const currentTime = Date.now() / 1000;
-
-      if (decodedToken.exp < currentTime) {
-        setIsAuthenticated(false);
-        clearCookie('token');
-        setIsLoading(false);
-        alert(response.data.message);
-        navigate('/login');
-      }
-
-      console.log('token from userlogin', response.data.token);
-      console.log('responsedatamessage', response.data.message);
-      alert(response.data.message);
+      console.log('token from userlogin', response.token);
+      console.log('responsedatamessage', response.message);
+      await setCookie('token', response.token);
       setIsAuthenticated(true);
       setIsLoading(false);
-      setCookie('token', response.data.token);
+      alert(response.message);
+
       navigate('/');
     } catch ({ response }) {
-      setIsLoading(false);
-      console.log('error', response.data);
-      message.error(response.data, 2);
-      message.info("Don't have an account? click on link below", 2);
+      if (response) {
+        const { data } = response;
+        setIsLoading(false);
+        console.log('error', data);
+        alert(data);
+      }
     }
   };
 
@@ -202,7 +190,13 @@ const Login = () => {
               className="mb-5 pb-lg-2"
               style={{ color: '#fff', fontWeight: 'bolder' }}
             >
-              Forget Password ?<Link style={{ color: '#3ee09a', fontWeight: 'bolder' }} to={'/reset-password'}>Click Here</Link>
+              Forget Password ?
+              <Link
+                style={{ color: '#3ee09a', fontWeight: 'bolder' }}
+                to={'/reset-password'}
+              >
+                Click Here
+              </Link>
             </p>
             <p
               className="mb-5 pb-lg-2"

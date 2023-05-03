@@ -21,7 +21,6 @@ import FAQ from './pages/faq/Faq';
 const App = () => {
   const [theme, colorMode] = useMode();
 
-
   return (
     <>
       <ColorModeContext.Provider value={colorMode}>
@@ -29,6 +28,8 @@ const App = () => {
           <CssBaseline />
 
           <BrowserRouter>
+
+          // !! set context in main component
             <UserContextProvider>
               <Routes>
                 <Route path="/login/" element={<Login />} />
@@ -48,9 +49,10 @@ const App = () => {
                     <Route path=":id" element={<FormUser />} />
                   </Route>
                   <Route path="/dashboard" element={<Dashboard />} />
-
+                  //!! Authorize Route
                   <Route path="/manageTeam" element={<Team />} />
                   <Route path="/manageDevice" element={<ControllersIoT />} />
+                  // !! ================
                   <Route path="/faq" element={<FAQ />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />

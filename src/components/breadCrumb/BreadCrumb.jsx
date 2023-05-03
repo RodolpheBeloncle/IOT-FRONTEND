@@ -1,7 +1,13 @@
 import React, { useContext } from 'react';
 import { Alert, Breadcrumb, Row } from 'antd';
 import './breadCrumb.css';
-import { HashRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
+import {
+  HashRouter,
+  NavLink,
+  Route,
+  Routes,
+  useLocation,
+} from 'react-router-dom';
 import { UserContext } from '../../context/UserContextProvider';
 import { useMediaQuery } from '@mui/material';
 const breadcrumbNameMap = {
@@ -17,12 +23,12 @@ const BreadCrumb = () => {
     const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
     return {
       key: url,
-      title: <Link to={url}>{breadcrumbNameMap[url]}</Link>,
+      title: <NavLink to={url}>{breadcrumbNameMap[url]}</NavLink>,
     };
   });
   const breadcrumbItems = [
     {
-      title: <Link to="/">Dashboard</Link>,
+      title: <NavLink to="/">Dashboard</NavLink>,
       key: 'Dashboard',
     },
   ];
@@ -32,12 +38,12 @@ const BreadCrumb = () => {
     <div className="demo">
       {!isNonMobile && (
         <div className="demo-nav">
-          <Link to="/">Dashboard</Link>
+          <NavLink to="/">Dashboard</NavLink>
           {userInfo.role === 'Admin' ? (
             <>
-              <Link to="/manageTeam">Team</Link>
-              <Link to="/manageDevice">Devices</Link>
-              <Link to="/form/user">New User</Link>
+              <NavLink to="/manageTeam">Team</NavLink>
+              <NavLink to="/manageDevice">Devices</NavLink>
+              <NavLink to="/form/user">New User</NavLink>
             </>
           ) : null}
         </div>

@@ -1,6 +1,5 @@
 import React from "react";
-import { Box } from "@mui/material";
-import { useTheme } from '@mui/material';
+import { useTheme,Box } from '@mui/material';
 import { tokens } from '../theme';
 const ProgressCircle = ({progress = "0.70", size="40"}) => {
   const theme = useTheme()
