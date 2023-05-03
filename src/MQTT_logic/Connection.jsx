@@ -1,6 +1,7 @@
-import React, { useEffect } from "react";
-import { Card, Button } from "antd";
-import { connection_config } from "./config/mqtt_config";
+import React, { useEffect } from 'react';
+import { Card, Button, Row, Col } from 'antd';
+import { Space, Spin, message } from 'antd';
+import { connection_config } from './config/mqtt_config';
 
 const Connection = ({
   connect,
@@ -8,13 +9,14 @@ const Connection = ({
   connectBtn,
   deviceId,
   setConnectStatus,
+  isLoading,
 }) => {
   const handleConnect = () => {
     // console.log(deviceId, url, options);
     const { options } = connection_config;
     console.log(options);
     options.clientId = deviceId;
-    console.log("handleconnect");
+    console.log('handleconnect');
     connect(connection_config.url, connection_config.options);
   };
 
@@ -43,19 +45,38 @@ const Connection = ({
   // ========
 
   return (
-    <Card title="Connection" bordered={false}>
-      {/* <Button
-        type="primary"
-        onClick={() => getRandomProperty(connectionStatus)}
-      ></Button> */}
-      <Button type="primary" onClick={handleConnect}>
-        {connectBtn}
-      </Button>
+    // <Card title="Connection" bordered={false}>
+    //   {/* <Button
+    //     type="primary"
+    //     onClick={() => getRandomProperty(connectionStatus)}
+    //   ></Button> */}
+    //   <Button type="primary" onClick={handleConnect}>
+    //     {connectBtn}
+    //   </Button>
 
-      <Button danger onClick={handleDisconnect}>
-        Disconnect
-      </Button>
-    </Card>
+    //   <Button danger onClick={handleDisconnect}>
+    //     Disconnect
+    //   </Button>
+    // </Card>
+
+    <Col justify="center">
+      <Row justify="center">
+        <Button type="primary" onClick={handleConnect}>
+          {isLoading ? (
+            <Spin tip="Loading" size="small">
+              <div className="content" />
+              {connectBtn}
+            </Spin>
+          ) : (
+            connectBtn
+          )}
+        </Button>
+
+        <Button danger onClick={handleDisconnect}>
+          Disconnect
+        </Button>
+      </Row>
+    </Col>
   );
 };
 

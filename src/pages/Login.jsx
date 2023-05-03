@@ -10,49 +10,78 @@ const Login = () => {
   const { setIsAuthenticated, getCookie, setCookie } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(null);
   const navigate = useNavigate();
-  const [input, setInput] = useState({
+  const [loginCredentials, setLoginCredentials] = useState({
     email: '',
     password: '',
   });
-
-  let googleAuth = getCookie('googleAuth');
-  let tokencookie = getCookie('token');
-  console.log('googleAuth', googleAuth);
-  console.log('cookietoken', tokencookie);
-
   const [messageApi, contextHolder] = message.useMessage();
+
+  // let googleAuth = getCookie('googleAuth');
+  // let tokencookie = getCookie('token');
+  // console.log('googleAuth', googleAuth);
+  // console.log('cookietoken', tokencookie);
+
   //!! fix call api for all query and set crud from mongo + .env
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+
+  //   try {
+  //     const { response } = await axios.post(
+  //       'http://localhost:5000/api/auth/users/login',
+  //       input
+  //     );
+
+  //     // if (!response.data.token) {
+  //     //   setIsAuthenticated(false);
+  //     //   setIsLoading(false);
+  //     //   alert(response.data);
+  //     //   navigate('/login');
+  //     // }
+
+  //     console.log('token from userlogin', response.token);
+  //     console.log('responsedatamessage', response.message);
+  //     await setCookie('token', response.token);
+  //     setIsAuthenticated(true);
+  //     setIsLoading(false);
+  //     alert(response.message);
+
+  //     navigate('/');
+  //   } catch ({ response }) {
+  //     if (response) {
+  //       const { data } = response;
+  //       setIsLoading(false);
+  //       console.log('error', data);
+  //       alert(data);
+  //     }
+  //   }
+  // };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const { response } = await axios.post('http://localhost:5000/api/auth/users/login', input, {
-        widthCredentials: true,
-      });
+      const response = await axios.post(
+        'http://localhost:5000/api/auth/users/login',
+        loginCredentials
+      );
+      const { message, token } = response.data;
 
-      // if (!response.data.token) {
-      //   setIsAuthenticated(false);
-      //   setIsLoading(false);
-      //   alert(response.data);
-      //   navigate('/login');
-      // }
-
-      console.log('token from userlogin', response.token);
-      console.log('responsedatamessage', response.message);
-      await setCookie('token', response.token);
+      await setCookie('token', token);
       setIsAuthenticated(true);
-      setIsLoading(false);
-      alert(response.message);
+      alert(message);
 
       navigate('/');
-    } catch ({ response }) {
-      if (response) {
-        const { data } = response;
-        setIsLoading(false);
-        console.log('error', data);
+    } catch (error) {
+      if (error.response) {
+        const { data } = error.response;
         alert(data);
+      } else {
+        alert('An unexpected error occurred');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -120,15 +149,15 @@ const Login = () => {
         </div>
         <div className="right">
           <form onSubmit={handleLogin}>
-            <div className="d-flex align-items-center mb-3 pb-1">
+            {/* <div className="d-flex align-items-center mb-3 pb-1">
               <IotLogo />
               <i
                 className="fas fa-cubes fa-2x me-3"
                 style={{ color: ' #ff6219' }}
               ></i>
-              {/* <span className="h1 fw-bold mb-0">
+              <span className="h1 fw-bold mb-0">
                 <IotLogo />
-              </span> */}
+              </span> 
             </div>
             <h5
               className="fw-normal mb-3 pb-3"
@@ -184,33 +213,57 @@ const Login = () => {
               >
                 Login
               </button>
-            </div>
+            </div> */}
 
-            <p
-              className="mb-5 pb-lg-2"
-              style={{ color: '#fff', fontWeight: 'bolder' }}
-            >
-              Forget Password ?
-              <Link
-                style={{ color: '#3ee09a', fontWeight: 'bolder' }}
-                to={'/reset-password'}
-              >
-                Click Here
-              </Link>
-            </p>
-            <p
-              className="mb-5 pb-lg-2"
-              style={{ color: '#fff', fontWeight: 'bolder' }}
-            >
-              Don't have an account?{' '}
-              <Link
-                to="/register"
-                style={{ color: '#3ee09a', fontWeight: 'bolder' }}
-              >
-                Register here
-              </Link>
-            </p>
+            <input
+              type="email"
+              value={loginCredentials.email}
+              onChange={(e) =>
+                setLoginCredentials({
+                  ...loginCredentials,
+                  email: e.target.value,
+                })
+              }
+            />
+            <input
+              type="password"
+              value={loginCredentials.password}
+              onChange={(e) =>
+                setLoginCredentials({
+                  ...loginCredentials,
+                  password: e.target.value,
+                })
+              }
+            />
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? 'Logging in...' : 'Log in'}
+            </button>
           </form>
+
+          <p
+            className="mb-5 pb-lg-2"
+            style={{ color: '#fff', fontWeight: 'bolder' }}
+          >
+            Forget Password ?
+            <Link
+              style={{ color: '#3ee09a', fontWeight: 'bolder' }}
+              to={'/reset-password'}
+            >
+              Click Here
+            </Link>
+          </p>
+          <p
+            className="mb-5 pb-lg-2"
+            style={{ color: '#fff', fontWeight: 'bolder' }}
+          >
+            Don't have an account?{' '}
+            <Link
+              to="/register"
+              style={{ color: '#3ee09a', fontWeight: 'bolder' }}
+            >
+              Register here
+            </Link>
+          </p>
         </div>
       </div>
     </div>

@@ -132,7 +132,6 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
     setConnectStatus('connecting');
     setClient(mqtt.connect(host, mqttOption));
     success(`connected to device`);
- 
   };
 
   const mqttDisconnect = () => {
@@ -173,21 +172,9 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
 
   return (
     <>
-      {isLoading && (
-        <Space
-          direction="vertical"
-          style={{
-            width: '100%',
-          }}
-        >
-          <Spin tip="Loading" size="small">
-            <div className="content" />
-          </Spin>
-        </Space>
-      )}
-
       {contextHolder}
       <Connection
+        isLoading={isLoading}
         deviceId={controllersIOT.id}
         connect={mqttConnect}
         disconnect={mqttDisconnect}
