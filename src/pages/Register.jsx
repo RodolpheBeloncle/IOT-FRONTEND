@@ -1,29 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Button, Modal, message, Form, Input } from 'antd';
 import './styles/register.css';
-import axios from '../services/axiosInterceptor';
+// import axios from '../services/axiosInterceptor';
+import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { UserContext } from '../context/UserContextProvider';
 
 const Register = () => {
   const navigate = useNavigate();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const { setCookie } = useContext(UserContext);
+  const [form] = Form.useForm();
 
-  const handleRegister = (form) => {
+  // const handleRegister = (form) => {
+  //   axios
+  //     .post('api/auth/users/register', form)
+  //     .then((response) => {
+  //       console.log(response);
+  //       alert(response.data);
+  //       navigate('/login');
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       alert(error.message);
+  //       console.log(error);
+  //     });
+  // };
+
+  // ? ==== register json_server ====
+  const handleRegister = async (form) => {
+    const { password, email, username } = form;
     axios
-      .post('api/auth/users/register', form)
-      .then((response) => {
-        console.log(response);
-        alert(response.data);
-        navigate('/login');
+      // .post(import.meta.env.VITE_API_USERS, form)
+      .post(import.meta.env.VITE_API_JSONREGISTER, {
+        password,
+        email,
+        username,
       })
-      .catch((error) => {
-        console.log(error);
-        alert(error.message);
-        console.log(error);
+      .then((res) => {
+        console.log('register : ', res.data.accessToken);
+        setCookie('token', res.data.accessToken);
+        alert(res.statusText);
+      })
+      .catch((err) => alert(err))
+      .finally(() => {
+        navigate('/login');
       });
   };
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [form] = Form.useForm();
 
   const onFinish = (values) => {
     setIsModalVisible(true);

@@ -16,6 +16,14 @@ const Login = () => {
   });
   const [messageApi, contextHolder] = message.useMessage();
 
+  const instance = axios.create({
+    withCredentials: true,
+    headers: {
+      Authorization: `Bearer ${getCookie('token')}`,
+    },
+    timeout: 2000,
+  });
+
   // let googleAuth = getCookie('googleAuth');
   // let tokencookie = getCookie('token');
   // console.log('googleAuth', googleAuth);
@@ -57,20 +65,48 @@ const Login = () => {
   //   }
   // };
 
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+
+  //   try {
+  //     const response = await axios.post(
+  //       'http://localhost:5000/api/auth/users/login',
+  //       loginCredentials
+  //     );
+  //     const { message, token } = response.data;
+
+  //     await setCookie('token', token);
+  //     setIsAuthenticated(true);
+  //     alert(message);
+
+  //     navigate('/');
+  //   } catch (error) {
+  //     if (error.response) {
+  //       const { data } = error.response;
+  //       alert(data);
+  //     } else {
+  //       alert('An unexpected error occurred');
+  //     }
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  // ? ==== login json_server ====
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        'http://localhost:5000/api/auth/users/login',
+      const response = await instance.post(
+        import.meta.env.VITE_API_JSONAUTH_LOGIN,
         loginCredentials
       );
-      const { message, token } = response.data;
-
-      await setCookie('token', token);
+      console.log('register : ', response.data.accessToken);
+      setCookie('token', response.data.accessToken);
+      alert(response.statusText);
       setIsAuthenticated(true);
-      alert(message);
 
       navigate('/');
     } catch (error) {
@@ -84,6 +120,20 @@ const Login = () => {
       setIsLoading(false);
     }
   };
+  // // ? ==== TEST getdeviceswidth auth ====
+  // const getUser = async () => {
+  //   console.log('token', getCookie('token'));
+  //   axios
+  //     .get(import.meta.env.VITE_API_AUTH_DEVICES, {
+  //       withCredentials: true,
+  //       headers: {
+  //         Authorization: `Bearer ${getCookie('token')}`,
+  //       },
+  //     })
+  //     .then((res) => res)
+  //     .then((data) => console.log(data));
+  // };
+  // getUser();
 
   const handleGoogleLogin = async () => {
     window.open('http://localhost:5000/auth/google', '_self');
@@ -143,7 +193,7 @@ const Login = () => {
             </Space>
           )}
         </div>
-   
+
         <div className="center">
           <div className="line" />
           <div className="or">OR</div>

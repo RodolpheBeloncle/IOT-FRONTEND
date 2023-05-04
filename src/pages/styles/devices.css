@@ -14,7 +14,14 @@
   width: 200px;
 }
 
+.ant-btn {
+  width:100% !important;
+  margin:2px;
+}
 
+.ant-row {
+  --bs-gutter-x: auto !important;
+}
 
 @media screen and (max-width: 600px) {
   .column {

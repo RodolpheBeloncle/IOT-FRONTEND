@@ -7,7 +7,7 @@ import Navbar from '../components/navbar/Navbar';
 import BreadCrumb from '../components/breadCrumb/BreadCrumb';
 import Topbar from '../components/topbar/Topbar';
 import { MyProSidebarProvider } from '../pages/sidebar/sidebarContext';
-import { userInfo } from 'os';
+
 
 const ProtectedRoute = () => {
   const {
@@ -20,44 +20,44 @@ const ProtectedRoute = () => {
   } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const token = getCookie('token');
-  //   const googleAuth = getCookie('googleAuth');
+  useEffect(() => {
+    const token = getCookie('token');
+    const googleAuth = getCookie('googleAuth');
 
-  //   if (token) {
-  //     const decodedToken = jwtDecode(token);
-  //     const currentTime = Date.now() / 1000;
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
 
-  //     if (decodedToken.exp < currentTime) {
-  //       setIsAuthenticated(false);
-  //       clearCookie('token');
-  //       clearCookie('googleAuth');
-  //       navigate('/login');
-  //     } else {
-  //       const { username, email, role, picture } = jwtDecode(token);
-  //       setUserInfo({
-  //         email: email,
-  //         role: role,
-  //         username: username,
-  //         picture: picture,
-  //       });
-  //       setTokenAuth(token);
-  //       setIsAuthenticated(true);
-  //       navigate('/');
-  //     }
-  //   } else {
-  //     setIsAuthenticated(false);
-  //     clearCookie('token');
-  //     clearCookie('googleAuth');
-  //     navigate('/login');
-  //   }
-  //   isAuthenticated &&
-  //     googleAuth &&
-  //     message.success('google authenticated successfully!', 2);
-  //   isAuthenticated &&
-  //     !googleAuth &&
-  //     message.success('successfully logged in !', 2);
-  // }, [isAuthenticated]);
+      if (decodedToken.exp < currentTime) {
+        setIsAuthenticated(false);
+        clearCookie('token');
+        clearCookie('googleAuth');
+        navigate('/login');
+      } else {
+        const { username, email, role, picture } = jwtDecode(token);
+        setUserInfo({
+          email: email,
+          role: role,
+          username: username,
+          picture: picture,
+        });
+        setTokenAuth(token);
+        setIsAuthenticated(true);
+        navigate('/');
+      }
+    } else {
+      setIsAuthenticated(false);
+      clearCookie('token');
+      clearCookie('googleAuth');
+      navigate('/login');
+    }
+    isAuthenticated &&
+      googleAuth &&
+      message.success('google authenticated successfully!', 2);
+    isAuthenticated &&
+      !googleAuth &&
+      message.success('successfully logged in !', 2);
+  }, [isAuthenticated]);
 
   return (
     <>

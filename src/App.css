@@ -82,11 +82,18 @@ body,
 }
 
 .home {
-  display: flex;
+  /* display: flex;
   padding: 50px 30px;
-  /* justify-content: space-between; */
-  flex-wrap: wrap;
+  justify-content: space-between; 
+  flex-wrap: wrap; */
+
+
+display: flex;
+justify-content: center;
+flex-wrap: wrap;
 }
+
+
 
 .card {
   width: 30%;

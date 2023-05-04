@@ -5,9 +5,10 @@ import { Row } from 'antd';
 import axios from 'axios';
 import CardDevice from '../components/CardDevice';
 import CustomFormModal from '../components/CustomFormModal';
-import { Box, IconButton, useTheme } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
-import InputBase from '@mui/material/InputBase';
+import { useTheme } from '@mui/material';
+
+import { UserContext } from '../context/UserContextProvider';
+import jwtDecode from 'jwt-decode';
 
 import { TextField } from '@mui/material';
 
@@ -18,10 +19,29 @@ const Devices = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
+  // === TEST DECODED ==
+
+  //   Public user (not logged-in) does the following requests :
+  // Request	Response
+  // GET /664/posts	200 OK
+  // POST /664/posts
+  // {text: 'blabla'}	401 UNAUTHORIZED
+  // Logged-in user with id: 1 does the following requests :
+  // Request	Response
+  // GET /600/users/1
+  // Authorization: Bearer xxx.xxx.xxx	200 OK
+  // GET /600/users/23
+  // Authorization: Bearer xxx.xxx.xxx	403 FORBIDDEN
+
+  const { getCookie } = useContext(UserContext);
+
+  console.log('DECODEEDtoken', jwtDecode(getCookie('token')));
+
+  // !! ===============
 
   const getDevicesList = useCallback(() => {
     axios
-      .get('http://localhost:8000/devices')
+      .get(import.meta.env.VITE_API_DEVICES)
       .then((res) => {
         console.log('Devices : ', res.data);
         setDevices(res.data);

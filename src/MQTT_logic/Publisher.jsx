@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Card, Form, Row, Col, Button } from 'antd';
+import { Card, Form, Row, Col, Button, Tag } from 'antd';
 import { PoweroffOutlined } from '@ant-design/icons';
 import { QosOption } from './index';
 
@@ -29,11 +29,8 @@ const Publisher = ({ publish, topic, type }) => {
         <Col gutter={[16, 16]}>
           <Row xs={50}>
             <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
-              Topic:
+              <Tag color="geekblue"> Topic: {topic} </Tag>
             </span>
-          </Row>
-          <Row xs={50}>
-            <span style={{ fontSize: '1.2rem' }}>{topic}</span>
           </Row>
         </Col>
         <Row gutter={[16, 16]}>

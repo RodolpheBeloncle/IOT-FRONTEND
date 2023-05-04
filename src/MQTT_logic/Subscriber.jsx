@@ -85,7 +85,7 @@ const Subscriber = ({ sub, unSub, showUnsub, topic }) => {
             <Row xs={24} sm={8}>
               <Form.Item>
                 <Button type="primary" htmlType="submit" block>
-                  Sub
+                  Subscribe topic
                 </Button>
               </Form.Item>
             </Row>
