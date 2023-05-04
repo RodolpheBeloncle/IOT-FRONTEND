@@ -205,17 +205,14 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
           type={controllersIOT.type}
           topic={controllersIOT.topic}
         />
-      ) : (
-        ''
-      )}
-      {controllersIOT.type === 'sensor' ? (
-        <Subscriber
-          sub={mqttSub}
-          unSub={mqttUnSub}
-          showUnsub={isSubed}
-          topic={controllersIOT.topic}
-        />
       ) : null}
+
+      <Subscriber
+        sub={mqttSub}
+        unSub={mqttUnSub}
+        showUnsub={isSubed}
+        topic={controllersIOT.topic}
+      />
     </>
   );
 };

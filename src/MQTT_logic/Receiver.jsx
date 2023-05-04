@@ -1,8 +1,17 @@
 import React, { useEffect, useState, useContext } from 'react';
 import './receiver.css';
 import { Card, List, Progress, Space, Row, Col } from 'antd';
-import ProgressCircle from '../components/ProgressCircle';
+import ProgressCircle from '../components/progressCircle/ProgressCircle';
 import { QosOption } from './index';
+
+const value = 30;
+const pointer = {
+  value: value,
+};
+
+const gaugeStyles = {
+  display: 'block',
+};
 
 const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
   const [messages, setMessages] = useState([]);
@@ -30,6 +39,8 @@ const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
     if (payload.topic) {
       setMessages((messages) => [...messages, payload]);
     }
+
+    console.log(payload);
   }, []);
 
   const refresh = () => {
@@ -40,7 +51,7 @@ const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
     <>
       <Card title="Receiver">
         {type === 'sensor' && (
-          <Col xs={24} sm={12} style={{ padding: '18px' }}>
+          <Col xs={24} sm={12}>
             <Col gutter={[16, 16]}>
               <Row xs={50}>
                 <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
@@ -50,10 +61,11 @@ const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
               <Row xs={50}>
                 <span style={{ fontSize: '1.2rem' }}>{topic}</span>
               </Row>
+              <ProgressCircle />
             </Col>
-            <Col xs={24} sm={12}>
-              <Space wrap>
-                {/* <Progress
+            <Row xs={24} sm={12}>
+              {/* <Space wrap> */}
+              {/* <Progress
                   type="circle"
                   size={{ xs: 80, sm: 120 }}
                   percent={(parseInt(payload?.payload) * 100) / 50 || 0}
@@ -68,9 +80,10 @@ const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
                     '70%': '#d93027',
                   }}
                 /> */}
-                <ProgressCircle />
-              </Space>
-            </Col>
+
+              {/* <ProgressCircle /> */}
+              {/* </Space> */}
+            </Row>
           </Col>
         )}
       </Card>

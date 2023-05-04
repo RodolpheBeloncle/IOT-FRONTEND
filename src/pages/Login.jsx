@@ -143,6 +143,7 @@ const Login = () => {
             </Space>
           )}
         </div>
+   
         <div className="center">
           <div className="line" />
           <div className="or">OR</div>
