@@ -32,7 +32,7 @@ const Register = () => {
     const { password, email, username } = form;
     axios
       // .post(import.meta.env.VITE_API_USERS, form)
-      .post(import.meta.env.VITE_API_JSONREGISTER, {
+      .post(import.meta.env.VITE_API_JSON_REGISTER, {
         password,
         email,
         username,

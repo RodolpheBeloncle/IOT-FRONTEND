@@ -1,4 +1,4 @@
-body {
+/* body {
 	font-family: sans-serif;
 	text-align: center;
 	display: flex;
@@ -7,24 +7,60 @@ body {
 	align-items: center;
 	text-align: center;
 	min-height: 100vh;
+} */
+
+
+
+.ant-card-body{
+	display: flex;
+justify-content: center;
 }
 
 .app-container {
-	/* height: 400px; */
+	/* height: 400px;
 	width: 300px; 
 	background: #2b5870;
 	border-radius: 20px;
-	box-shadow: 10px 10px 38px 0px rgba(0, 0, 0, 0.75);
+	box-shadow: 10px 10px 38px 0px rgba(0, 0, 0, 0.75); */
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
 }
 
-.temperature-display-container {
-	display: flex;
+.sensor-display-container {
+	/* display: flex;
 	justify-content: center;
 	align-items: center;
-	height: 70%;
+	height: 70%; */
+
+
+	/* width: calc(33.33% - 20px);
+	margin-bottom: 20px;
+	background-color: #fff;
+	box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+	border-radius: 5px;
+	padding: 20px;
+	transition: transform 0.2s ease-in-out;
+
+	font-size: 1.5rem;
+	margin-bottom: 10px;
+	color: #70d8bd; */
+
+	display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 20px;
+    transition: transform 0.2s ease-in-out;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #70d8bd;
 }
 
-.temperature-display {
+.sensor-display {
 	display: flex;
 	border-radius: 50%;
 	color: #ffffff;
@@ -39,17 +75,26 @@ body {
 }
 
 button {
-	border-radius: 100px;
+	/* border-radius: 100px;
 	height: 80px;
 	width: 80px;
 	font-size: 32px;
 	color: #ffffff;
 	background: rgb(105, 104, 104);
-	border: 2px #ffffff solid;
+	border: 2px #ffffff solid; */
+
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: #70d8bd;
+	color: #fff;
+	text-decoration: none;
+	border-radius: 50px !important;
+	transition: background-color 0.2s ease-in-out;
 }
 
 button:hover {
-	background: rgb(184, 184, 184);
+	/* background: rgb(184, 184, 184); */
+	background-color: #5fc5a8;
 	cursor: pointer;
 }
 

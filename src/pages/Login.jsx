@@ -120,7 +120,7 @@ const Login = () => {
       setIsLoading(false);
     }
   };
-  // // ? ==== TEST getdeviceswidth auth ====
+  //  ? ==== TEST getdeviceswidth auth ====
   // const getUser = async () => {
   //   console.log('token', getCookie('token'));
   //   axios
@@ -210,13 +210,13 @@ const Login = () => {
                 <IotLogo />
               </span> 
             </div>
-            <h5
+             <h5
               className="fw-normal mb-3 pb-3"
               style={{ letterSpacing: '1px' }}
             >
               Sign into your account
-            </h5>
-            <div className="form-outline mb-4">
+             </h5>
+             <div className="form-outline mb-4">
               <input
                 type="email"
                 id=""
@@ -231,8 +231,8 @@ const Login = () => {
                   })
                 }
               />
-            </div>
-            <div className="form-outline mb-4">
+             </div>
+             <div className="form-outline mb-4">
               <input
                 placeholder="Enter Password"
                 type="password"
@@ -266,29 +266,52 @@ const Login = () => {
               </button>
             </div> */}
 
-            <input
-              type="email"
-              value={loginCredentials.email}
-              onChange={(e) =>
-                setLoginCredentials({
-                  ...loginCredentials,
-                  email: e.target.value,
-                })
-              }
-            />
-            <input
-              type="password"
-              value={loginCredentials.password}
-              onChange={(e) =>
-                setLoginCredentials({
-                  ...loginCredentials,
-                  password: e.target.value,
-                })
-              }
-            />
-            <button type="submit" disabled={isLoading}>
-              {isLoading ? 'Logging in...' : 'Log in'}
-            </button>
+            <div className="form-outline mb-4">
+              <input
+                className="form-control form-control-lg"
+                type="email"
+                value={loginCredentials.email}
+                onChange={(e) =>
+                  setLoginCredentials({
+                    ...loginCredentials,
+                    email: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="form-outline mb-4">
+              <input
+                className="form-control form-control-lg"
+                type="password"
+                value={loginCredentials.password}
+                onChange={(e) =>
+                  setLoginCredentials({
+                    ...loginCredentials,
+                    password: e.target.value,
+                  })
+                }
+              />
+            </div>
+
+            <div
+              className="pt-1 mb-4"
+              style={{
+                fontWeight: 'bolder',
+              }}
+            >
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="btn btn-dark btn-lg btn-block login-btn"
+                style={{
+                  background: '#3ee09a',
+                  border: 'solid 1px #fff',
+                  width: '100%',
+                }}
+              >
+                {isLoading ? 'Logging in...' : 'Log in'}
+              </button>
+            </div>
           </form>
 
           <p

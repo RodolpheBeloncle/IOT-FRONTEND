@@ -3,7 +3,7 @@ import { useTheme, Box } from '@mui/material';
 import './progressCircle.css';
 
 import { tokens } from '../../theme';
-const ProgressCircle = ({ progress = '0.70', size = '120' }) => {
+const ProgressCircle = ({ progress = '0.70', size = '120',data,controller}) => {
   const [temperatureValue, setTemperatureValue] = useState(10);
   const [temperatureColor, setTemperatureColor] = useState('cold');
 
@@ -46,19 +46,19 @@ const ProgressCircle = ({ progress = '0.70', size = '120' }) => {
           height: `${size}px`,
         }}
       /> */}
-      <Box>
-        <div className="app-container">
-          <div className="temperature-display-container">
-            <div className={`temperature-display ${temperatureColor}`}>
-              {temperatureValue}°C
+      {/* <Box> */}
+        {/* <div className="app-container"> */}
+          <div className="sensor-display-container">
+            <div className={`sensor-display ${temperatureColor}`}>
+              {data.message ? <span>{data.message} {controller.unit}</span>: "No data"}
             </div>
           </div>
           <div className="button-container">
             <button onClick={increaseTemperature}>+</button>
             <button onClick={decreaseTemperature}>-</button>
           </div>
-        </div>
-      </Box>
+        {/* </div> */}
+      {/* </Box> */}
     </>
   );
 };

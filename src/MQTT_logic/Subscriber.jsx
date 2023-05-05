@@ -1,18 +1,27 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Card, Form, Input, Row, Col, Button, Select } from 'antd';
 
 import { QosOption } from './index';
 
 const Subscriber = ({ sub, unSub, showUnsub, topic }) => {
   const [form] = Form.useForm();
+  const [selectedQos, setSelectedQuos] = useState(0);
   const qosOptions = useContext(QosOption);
+
+  function handleSelectChange(value) {
+    console.log('qos selected', selectedQos);
+    setSelectedQuos(value);
+  }
 
   const record = {
     topic: topic,
-    qos: 0,
+    qos: selectedQos,
   };
 
+
+
   const onFinish = (values) => {
+    
     console.log('values', values);
     console.log('record', record);
     sub(values);
@@ -62,6 +71,7 @@ const Subscriber = ({ sub, unSub, showUnsub, topic }) => {
     //   </Row>
     // </Form>
 
+
     <Form
       layout="vertical"
       name="basic"
@@ -77,25 +87,30 @@ const Subscriber = ({ sub, unSub, showUnsub, topic }) => {
         </Col>
         <Col xs={24} sm={12}>
           <Form.Item label="QoS" name="qos">
-            <Select options={qosOptions} />
+            <Select
+              options={qosOptions}
+              value={selectedQos}
+              onChange={handleSelectChange}
+            />
           </Form.Item>
         </Col>
         <Col xs={24}>
           <Row justify="center">
-            <Row xs={24} sm={8}>
-              <Form.Item>
-                <Button type="primary" htmlType="submit" block>
-                  Subscribe topic
-                </Button>
-              </Form.Item>
-            </Row>
-            {showUnsub && (
+            {showUnsub === false ? (
+              <Row xs={24} sm={8}>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit" block>
+                    Subscribe topic
+                  </Button>
+                </Form.Item>
+              </Row>
+            ) : (
               <Row
                 xs={24}
                 sm={8}
                 style={{ marginTop: '16px', textAlign: 'right' }}
               >
-                <Button type="danger" onClick={handleUnsub} block>
+                <Button onClick={handleUnsub} block>
                   Unsubscribe
                 </Button>
               </Row>

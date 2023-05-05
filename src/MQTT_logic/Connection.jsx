@@ -14,7 +14,7 @@ const Connection = ({
   const handleConnect = () => {
     // console.log(deviceId, url, options);
     const { options } = connection_config;
-    console.log(options);
+    console.log("Option MQTT protocol",options);
     options.clientId = deviceId;
     console.log('handleconnect');
     connect(connection_config.url, connection_config.options);

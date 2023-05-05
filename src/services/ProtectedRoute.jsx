@@ -8,7 +8,6 @@ import BreadCrumb from '../components/breadCrumb/BreadCrumb';
 import Topbar from '../components/topbar/Topbar';
 import { MyProSidebarProvider } from '../pages/sidebar/sidebarContext';
 
-
 const ProtectedRoute = () => {
   const {
     isAuthenticated,
@@ -37,6 +36,7 @@ const ProtectedRoute = () => {
         const { username, email, role, picture } = jwtDecode(token);
         setUserInfo({
           email: email,
+          //! reset role JsonServer
           role: role,
           username: username,
           picture: picture,

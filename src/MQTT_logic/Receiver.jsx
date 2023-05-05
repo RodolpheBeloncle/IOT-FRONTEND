@@ -13,12 +13,12 @@ const gaugeStyles = {
   display: 'block',
 };
 
-const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
+const Receiver = ({ sub, unSub, showUnsub, payload,controller }) => {
   const [messages, setMessages] = useState([]);
   const qosOptions = useContext(QosOption);
 
   const record = {
-    topic: topic,
+    topic: controller.topic,
     qos: 0,
   };
 
@@ -40,7 +40,7 @@ const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
       setMessages((messages) => [...messages, payload]);
     }
 
-    console.log(payload);
+    console.log(payload.message);
   }, []);
 
   const refresh = () => {
@@ -50,12 +50,12 @@ const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
   return (
     <>
       <Card title="Receiver">
-        {type === 'sensor' && (
+        {controller.type === 'sensor' && (
           <Col xs={24} sm={12}>
             <Col gutter={[16, 16]}>
               <Row xs={50}>
                 <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
-                  <Tag color="geekblue"> Topic: {topic} </Tag>
+                  <Tag color="geekblue"> Topic: {controller.topic} </Tag>
                 </span>
               </Row>
             </Col>
@@ -80,7 +80,7 @@ const Receiver = ({ sub, unSub, showUnsub, payload, type, topic }) => {
             {/* <ProgressCircle /> */}
             {/* </Space> */}
             {/* </Row> */}
-            <ProgressCircle />
+            <ProgressCircle data={payload} controller={controller} />
           </Col>
         )}
       </Card>

@@ -4,7 +4,7 @@
   "main": "vite.config.js",
   "scripts": {
     "dev": "vite",
-    "start": "npm run dev --no-install",
+    "start": "json-server --watch json_Server/db.json -m ./node_modules/json-server-auth -p 8000",
     "build": "vite build",
     "launch": "json-server --watch json_Server/db.json -p  8000"
   },

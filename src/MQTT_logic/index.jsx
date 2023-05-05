@@ -202,17 +202,17 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
           sub={mqttSub}
           unSub={mqttUnSub}
           showUnsub={isSubed}
-          type={controllersIOT.type}
-          topic={controllersIOT.topic}
+          controller={controllersIOT}
         />
       ) : null}
-
-      <Subscriber
-        sub={mqttSub}
-        unSub={mqttUnSub}
-        showUnsub={isSubed}
-        topic={controllersIOT.topic}
-      />
+      <QosOption.Provider value={qosOption}>
+        <Subscriber
+          sub={mqttSub}
+          unSub={mqttUnSub}
+          showUnsub={isSubed}
+          topic={controllersIOT.topic}
+        />
+      </QosOption.Provider>
     </>
   );
 };

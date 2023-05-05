@@ -33,9 +33,10 @@ const Devices = () => {
   // GET /600/users/23
   // Authorization: Bearer xxx.xxx.xxx	403 FORBIDDEN
 
-  const { getCookie } = useContext(UserContext);
+  const { getCookie, userInfo } = useContext(UserContext);
 
   console.log('DECODEEDtoken', jwtDecode(getCookie('token')));
+  console.log('fakeUserInfo', userInfo);
 
   // !! ===============
 
