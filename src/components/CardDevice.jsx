@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import HookMqtt from '../MQTT_logic';
-import { Col } from 'antd';
 
 const CardDevice = ({ controllersIOT }) => {
   const [connectStatus, setConnectStatus] = useState('Connect');

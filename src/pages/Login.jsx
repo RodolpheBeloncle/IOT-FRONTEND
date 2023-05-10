@@ -271,6 +271,7 @@ const Login = () => {
                 className="form-control form-control-lg"
                 type="email"
                 value={loginCredentials.email}
+                placeholder="Enter Email"
                 onChange={(e) =>
                   setLoginCredentials({
                     ...loginCredentials,
@@ -283,6 +284,7 @@ const Login = () => {
               <input
                 className="form-control form-control-lg"
                 type="password"
+                placeholder="Enter Password"
                 value={loginCredentials.password}
                 onChange={(e) =>
                   setLoginCredentials({

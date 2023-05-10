@@ -1,9 +1,9 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { Space, Spin, message } from 'antd';
 import Connection from './Connection';
-import Publisher from './Publisher';
+import Publisher from './publisher/Publisher';
 import Subscriber from './Subscriber';
-import Receiver from './Receiver';
+import Receiver from './receiver/Receiver';
 import mqtt from 'mqtt';
 
 export const QosOption = createContext([]);
@@ -27,6 +27,7 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
   const [client, setClient] = useState(null);
   const [isSubed, setIsSub] = useState(false);
   const [payload, setPayload] = useState({});
+  const [topic, setTopic] = useState(controllersIOT.topic);
   // const [connectStatus, setConnectStatus] = useState("Connect");
 
   const [messageApi, contextHolder] = message.useMessage();
@@ -93,7 +94,7 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
 
   const mqttSub = () => {
     const record = {
-      topic: controllersIOT.topic,
+      topic: topic,
       qos: 0,
     };
 
@@ -112,7 +113,7 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
 
   const mqttUnSub = () => {
     const record = {
-      topic: controllersIOT.topic,
+      topic: topic,
       qos: 0,
     };
     if (client) {
@@ -123,7 +124,7 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
           warning(error.message);
         }
         setIsSub(false);
-        success(`unsubscribed to topic : ${controllersIOT.topic}`);
+        success(`unsubscribed to topic : ${topic}`);
       });
     }
   };
@@ -168,7 +169,7 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
       });
     }
     // console.log('Received message:', payload);
-  }, [client, connectStatus]);
+  }, [client, connectStatus, topic]);
 
   return (
     <>
@@ -192,7 +193,7 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
           <Publisher
             publish={mqttPublish}
             type={controllersIOT.type}
-            topic={controllersIOT.topic}
+            topic={topic}
           />
         ) : null}
       </QosOption.Provider>
@@ -202,6 +203,7 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
           sub={mqttSub}
           unSub={mqttUnSub}
           showUnsub={isSubed}
+          topic={topic}
           controller={controllersIOT}
         />
       ) : null}
@@ -210,7 +212,8 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
           sub={mqttSub}
           unSub={mqttUnSub}
           showUnsub={isSubed}
-          topic={controllersIOT.topic}
+          topic={topic}
+          setTopic={setTopic}
         />
       </QosOption.Provider>
     </>

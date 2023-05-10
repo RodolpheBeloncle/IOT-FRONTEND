@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme, Box } from '@mui/material';
 import './progressCircle.css';
 
 import { tokens } from '../../theme';
-const ProgressCircle = ({ progress = '0.70', size = '120',data,controller}) => {
+const ProgressCircle = ({
+  progress = '0.70',
+  size = '120',
+  data,
+  controller,
+}) => {
   const [temperatureValue, setTemperatureValue] = useState(10);
   const [temperatureColor, setTemperatureColor] = useState('cold');
 
@@ -19,7 +24,7 @@ const ProgressCircle = ({ progress = '0.70', size = '120',data,controller}) => {
   const decreaseTemperature = () => {
     const newTemperature = temperatureValue - 1;
     setTemperatureValue(newTemperature);
-    if (newTemperature < 15) {
+    if (newTemperature >= 0 && newTemperature <= 15) {
       setTemperatureColor('cold');
     }
   };
@@ -30,6 +35,16 @@ const ProgressCircle = ({ progress = '0.70', size = '120',data,controller}) => {
   // const angle = (parseInt(progress) / 100) * 360;
 
   // console.log(parseInt(progress) / 100 || 0);
+
+  useEffect(() => {
+    if (data.message < '15') {
+      setTemperatureColor('cold');
+    } else if (data.message >= '15' && data.message < '25') {
+      setTemperatureColor('tempered');
+    } else if (data.message >= '25') {
+      setTemperatureColor('hot');
+    }
+  }, []);
   return (
     <>
       {/* <Box
@@ -47,17 +62,23 @@ const ProgressCircle = ({ progress = '0.70', size = '120',data,controller}) => {
         }}
       /> */}
       {/* <Box> */}
-        {/* <div className="app-container"> */}
-          <div className="sensor-display-container">
-            <div className={`sensor-display ${temperatureColor}`}>
-              {data.message ? <span>{data.message} {controller.unit}</span>: "No data"}
-            </div>
-          </div>
-          <div className="button-container">
+      {/* <div className="app-container"> */}
+      <div className="sensor-display-container">
+        <div className={`sensor-display ${temperatureColor}`}>
+          {data.message ? (
+            <span>
+              {data.message} {controller.unit}
+            </span>
+          ) : (
+            'No data'
+          )}
+        </div>
+      </div>
+      {/* <div className="button-container">
             <button onClick={increaseTemperature}>+</button>
             <button onClick={decreaseTemperature}>-</button>
-          </div>
-        {/* </div> */}
+          </div> */}
+      {/* </div> */}
       {/* </Box> */}
     </>
   );
