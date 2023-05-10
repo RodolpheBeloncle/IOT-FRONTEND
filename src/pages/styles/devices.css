@@ -14,8 +14,35 @@
   width: 200px;
 }
 
+.ant-btn {
+  width:100% !important;
+  margin:2px;
+}
+
+.ant-row {
+  --bs-gutter-x: auto !important;
+
+}
+
+.ant-card-body {
+  padding: 24px !important;
+  border-radius: 0 0 8px 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  width: 15rem !important;
+
+}
+
 @media screen and (max-width: 600px) {
   .column {
     flex: 100% !important;
   }
+}
+@media (min-width: 576px){
+.ant-col-sm-12 {
+    display: block !important;
+    flex: 0 0 50% !important;
+    /* min-width: 50%; */
+    max-width: 100% !important;
+}
 }

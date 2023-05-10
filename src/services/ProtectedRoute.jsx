@@ -7,7 +7,6 @@ import Navbar from '../components/navbar/Navbar';
 import BreadCrumb from '../components/breadCrumb/BreadCrumb';
 import Topbar from '../components/topbar/Topbar';
 import { MyProSidebarProvider } from '../pages/sidebar/sidebarContext';
-import { userInfo } from 'os';
 
 const ProtectedRoute = () => {
   const {
@@ -37,6 +36,7 @@ const ProtectedRoute = () => {
         const { username, email, role, picture } = jwtDecode(token);
         setUserInfo({
           email: email,
+          //! reset role JsonServer
           role: role,
           username: username,
           picture: picture,

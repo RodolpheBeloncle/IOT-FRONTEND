@@ -166,43 +166,45 @@ const MyProSidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: '15px 20px 5px 20px' }}
-            >
-              Data
-            </Typography>
-            <Item
-              title="Manage Team"
-              to="/manageTeam"
-              icon={<PeopleOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-            <Item
-              title="Manage Devices"
-              to="/manageDevice"
-              icon={<DevicesOtherIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
-
-            <Typography
-              variant="h6"
-              color={colors.grey[300]}
-              sx={{ m: '15px 20px 5px 20px' }}
-            >
-              Pages
-            </Typography>
-            <Item
-              title="Profile Form"
-              to="/form"
-              icon={<PersonOutlinedIcon />}
-              selected={selected}
-              setSelected={setSelected}
-            />
+            {userInfo.role === 'Admin' ? (
+              <>
+                <Typography
+                  variant="h6"
+                  color={colors.grey[300]}
+                  sx={{ m: '15px 20px 5px 20px' }}
+                >
+                  Data
+                </Typography>
+                <Item
+                  title="Manage Team"
+                  to="/manageTeam"
+                  icon={<PeopleOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Item
+                  title="Manage Devices"
+                  to="/manageDevice"
+                  icon={<DevicesOtherIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+                <Typography
+                  variant="h6"
+                  color={colors.grey[300]}
+                  sx={{ m: '15px 20px 5px 20px' }}
+                >
+                  Pages
+                </Typography>
+                <Item
+                  title="Profile Form"
+                  to="/form/user"
+                  icon={<PersonOutlinedIcon />}
+                  selected={selected}
+                  setSelected={setSelected}
+                />
+              </>
+            ) : null}
 
             <Item
               title="FAQ Page"

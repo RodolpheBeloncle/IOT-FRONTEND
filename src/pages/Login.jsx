@@ -2,71 +2,144 @@ import React, { useState, useContext } from 'react';
 import './styles/login.css';
 import { ReactComponent as IotLogo } from '../img/iot_logo.svg';
 import { Space, Spin, message } from 'antd';
-import axios from '../services/axiosInterceptor';
-
-// import axios from 'axios';
-import jwtDecode from 'jwt-decode';
+import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContextProvider';
 
 const Login = () => {
-  const { setIsAuthenticated, getCookie, setCookie, clearCookie } =
-    useContext(UserContext);
+  const { setIsAuthenticated, getCookie, setCookie } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(null);
   const navigate = useNavigate();
-  const [input, setInput] = useState({
+  const [loginCredentials, setLoginCredentials] = useState({
     email: '',
     password: '',
   });
-
-  let googleAuth = getCookie('googleAuth');
-  let tokencookie = getCookie('token');
-  console.log('googleAuth', googleAuth);
-  console.log('cookietoken', tokencookie);
-
   const [messageApi, contextHolder] = message.useMessage();
 
+  const instance = axios.create({
+    withCredentials: true,
+    headers: {
+      Authorization: `Bearer ${getCookie('token')}`,
+    },
+    timeout: 2000,
+  });
+
+  // let googleAuth = getCookie('googleAuth');
+  // let tokencookie = getCookie('token');
+  // console.log('googleAuth', googleAuth);
+  // console.log('cookietoken', tokencookie);
+
+  //!! fix call api for all query and set crud from mongo + .env
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+
+  //   try {
+  //     const { response } = await axios.post(
+  //       'http://localhost:5000/api/auth/users/login',
+  //       input
+  //     );
+
+  //     // if (!response.data.token) {
+  //     //   setIsAuthenticated(false);
+  //     //   setIsLoading(false);
+  //     //   alert(response.data);
+  //     //   navigate('/login');
+  //     // }
+
+  //     console.log('token from userlogin', response.token);
+  //     console.log('responsedatamessage', response.message);
+  //     await setCookie('token', response.token);
+  //     setIsAuthenticated(true);
+  //     setIsLoading(false);
+  //     alert(response.message);
+
+  //     navigate('/');
+  //   } catch ({ response }) {
+  //     if (response) {
+  //       const { data } = response;
+  //       setIsLoading(false);
+  //       console.log('error', data);
+  //       alert(data);
+  //     }
+  //   }
+  // };
+
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+  //   setIsLoading(true);
+
+  //   try {
+  //     const response = await axios.post(
+  //       'http://localhost:5000/api/auth/users/login',
+  //       loginCredentials
+  //     );
+  //     const { message, token } = response.data;
+
+  //     await setCookie('token', token);
+  //     setIsAuthenticated(true);
+  //     alert(message);
+
+  //     navigate('/');
+  //   } catch (error) {
+  //     if (error.response) {
+  //       const { data } = error.response;
+  //       alert(data);
+  //     } else {
+  //       alert('An unexpected error occurred');
+  //     }
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
+
+  // ? ==== login json_server ====
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
-      setIsLoading(true);
-      const { response } = await axios.post('/api/auth/users/login', input, {
-        widthCredentials: true,
-      });
-
-      if (!response.data.token) {
-        setIsAuthenticated(false);
-        setIsLoading(false);
-        message.error(response.data, 2);
-        navigate('/login');
-      }
-
-      const decodedToken = jwtDecode(response.data.token);
-      const currentTime = Date.now() / 1000;
-
-      if (decodedToken.exp < currentTime) {
-        setIsAuthenticated(false);
-        clearCookie('token');
-        setIsLoading(false);
-        alert(response.data.message);
-        navigate('/login');
-      }
-
-      console.log('token from userlogin', response.data.token);
-      console.log('responsedatamessage', response.data.message);
-      alert(response.data.message);
+      const response = await instance.post(
+        import.meta.env.VITE_API_JSONAUTH_LOGIN,
+        loginCredentials
+      );
+      console.log('register : ', response.data.accessToken);
+      setCookie('token', response.data.accessToken);
+      alert(response.statusText);
       setIsAuthenticated(true);
-      setIsLoading(false);
-      setCookie('token', response.data.token);
+
       navigate('/');
-    } catch ({ response }) {
+    } catch (error) {
+      if (error.response) {
+        const { data } = error.response;
+        alert(data);
+      } else {
+        alert('An unexpected error occurred');
+      }
+    } finally {
       setIsLoading(false);
+<<<<<<< HEAD
       // console.log('error', response.data);
       // message.error(response.data, 2);
       message.info("Don't have an account? click on link below", 2);
+=======
+>>>>>>> test
     }
   };
+  //  ? ==== TEST getdeviceswidth auth ====
+  // const getUser = async () => {
+  //   console.log('token', getCookie('token'));
+  //   axios
+  //     .get(import.meta.env.VITE_API_AUTH_DEVICES, {
+  //       withCredentials: true,
+  //       headers: {
+  //         Authorization: `Bearer ${getCookie('token')}`,
+  //       },
+  //     })
+  //     .then((res) => res)
+  //     .then((data) => console.log(data));
+  // };
+  // getUser();
 
   const handleGoogleLogin = async () => {
     window.open('http://localhost:5000/auth/google', '_self');
@@ -126,29 +199,30 @@ const Login = () => {
             </Space>
           )}
         </div>
+
         <div className="center">
           <div className="line" />
           <div className="or">OR</div>
         </div>
         <div className="right">
           <form onSubmit={handleLogin}>
-            <div className="d-flex align-items-center mb-3 pb-1">
+            {/* <div className="d-flex align-items-center mb-3 pb-1">
               <IotLogo />
               <i
                 className="fas fa-cubes fa-2x me-3"
                 style={{ color: ' #ff6219' }}
               ></i>
-              {/* <span className="h1 fw-bold mb-0">
+              <span className="h1 fw-bold mb-0">
                 <IotLogo />
-              </span> */}
+              </span> 
             </div>
-            <h5
+             <h5
               className="fw-normal mb-3 pb-3"
               style={{ letterSpacing: '1px' }}
             >
               Sign into your account
-            </h5>
-            <div className="form-outline mb-4">
+             </h5>
+             <div className="form-outline mb-4">
               <input
                 type="email"
                 id=""
@@ -163,8 +237,8 @@ const Login = () => {
                   })
                 }
               />
-            </div>
-            <div className="form-outline mb-4">
+             </div>
+             <div className="form-outline mb-4">
               <input
                 placeholder="Enter Password"
                 type="password"
@@ -196,27 +270,82 @@ const Login = () => {
               >
                 Login
               </button>
+            </div> */}
+
+            <div className="form-outline mb-4">
+              <input
+                className="form-control form-control-lg"
+                type="email"
+                value={loginCredentials.email}
+                placeholder="Enter Email"
+                onChange={(e) =>
+                  setLoginCredentials({
+                    ...loginCredentials,
+                    email: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="form-outline mb-4">
+              <input
+                className="form-control form-control-lg"
+                type="password"
+                placeholder="Enter Password"
+                value={loginCredentials.password}
+                onChange={(e) =>
+                  setLoginCredentials({
+                    ...loginCredentials,
+                    password: e.target.value,
+                  })
+                }
+              />
             </div>
 
-            <p
-              className="mb-5 pb-lg-2"
-              style={{ color: '#fff', fontWeight: 'bolder' }}
+            <div
+              className="pt-1 mb-4"
+              style={{
+                fontWeight: 'bolder',
+              }}
             >
-              Forget Password ?<Link style={{ color: '#3ee09a', fontWeight: 'bolder' }} to={'/reset-password'}>Click Here</Link>
-            </p>
-            <p
-              className="mb-5 pb-lg-2"
-              style={{ color: '#fff', fontWeight: 'bolder' }}
-            >
-              Don't have an account?{' '}
-              <Link
-                to="/register"
-                style={{ color: '#3ee09a', fontWeight: 'bolder' }}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="btn btn-dark btn-lg btn-block login-btn"
+                style={{
+                  background: '#3ee09a',
+                  border: 'solid 1px #fff',
+                  width: '100%',
+                }}
               >
-                Register here
-              </Link>
-            </p>
+                {isLoading ? 'Logging in...' : 'Log in'}
+              </button>
+            </div>
           </form>
+
+          <p
+            className="mb-5 pb-lg-2"
+            style={{ color: '#fff', fontWeight: 'bolder' }}
+          >
+            Forget Password ?
+            <Link
+              style={{ color: '#3ee09a', fontWeight: 'bolder' }}
+              to={'/reset-password'}
+            >
+              Click Here
+            </Link>
+          </p>
+          <p
+            className="mb-5 pb-lg-2"
+            style={{ color: '#fff', fontWeight: 'bolder' }}
+          >
+            Don't have an account?{' '}
+            <Link
+              to="/register"
+              style={{ color: '#3ee09a', fontWeight: 'bolder' }}
+            >
+              Register here
+            </Link>
+          </p>
         </div>
       </div>
     </div>

@@ -15,7 +15,7 @@ import DownloadOutlinedIcon from '@mui/icons-material/DownloadOutlined';
 // import PersonAddIcon from '@mui/icons-material/PersonAdd';
 // import TrafficIcon from '@mui/icons-material/Traffic';
 import Header from '../../components/Header';
-import ProgressCircle from '../../components/ProgressCircle';
+import ProgressCircle from '../../components/progressCircle/ProgressCircle';
 
 const Dashboard = () => {
   const theme = useTheme();

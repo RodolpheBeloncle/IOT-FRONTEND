@@ -8,7 +8,7 @@ export const connection_config = {
     connectTimeout: 30 * 1000,
     will: {
       topic: 'WillMsg',
-      payload: 'Connection Closed abnormally..!',
+      payload: 'Connection Closed anormally..!',
       qos: 0,
       retain: false,
     },

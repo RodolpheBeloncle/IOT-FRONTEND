@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext} from 'react';
 import './navbar.css';
 import { Link } from 'react-router-dom';
 
@@ -6,7 +6,7 @@ import { UserContext } from '../../context/UserContextProvider';
 
 const Navbar = () => {
   const { handleLogout, userInfo } = useContext(UserContext);
-  const [showMenu, setShowMenu] = useState(null);
+  // const [showMenu, setShowMenu] = useState(null);
 
   return (
     <div className="navbar">

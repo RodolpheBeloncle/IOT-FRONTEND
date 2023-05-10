@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from '../services/axiosInterceptor';
 // import axios from 'axios';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import { UserContext } from '../context/UserContextProvider';
 // import axios from '../Services/axiosInterceptor';
 const Profil = () => {
-  const { userInfo } = useContext(UserContext);
+  const { userInfo, getCookie, clearCookie } = useContext(UserContext);
   const navigate = useNavigate();
   // !!  === TODO setname in cookie too   ===
 
@@ -18,15 +18,27 @@ const Profil = () => {
   const handleLogout = () => {
     document.cookie =
       'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/login;';
-
-    document.cookie =
-      'username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/login;';
+    clearCookie('token');
+    clearCookie('googleAuth');
     navigate('/login');
   };
 
-  const handleChangePassword = async (e) => {
+  const handleChangeProfil = (e) => {
+    const { name, value } = e.target;
+    setInput((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    // !! handle password if googleauth width changpassword component , check email,notification message,popuupwindow validation
+    // !! change profil picture
     e.preventDefault();
-    const response = await axios
+
+    if (input.password !== input.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+    const token = getCookie('token');
+    await axios
       .post('http://localhost:5000/api/auth/change-password', input, {
         headers: {
           authorization: `Bearer ${token}`,
@@ -34,7 +46,7 @@ const Profil = () => {
       })
       .then((response) => {
         alert(response.data.message);
-        handleLogout();
+        // handleLogout();
       })
       .catch((error) => {
         alert(error);
@@ -58,28 +70,44 @@ const Profil = () => {
             />
           </div>
           <div class="col-md-8">
-            <form>
+            <form onSubmit={handleSubmit}>
               <div class="form-group">
-                <label for="username">Username</label>
+                <label for="username">Update Username</label>
 
                 <input
                   type="text"
-                  class="form-control"
+                  value={input.username}
+                  onChange={handleChangeProfil}
+                  className="form-control"
                   id="username"
-                  placeholder={userInfo.username}
+                  placeholder="username"
                 />
               </div>
               <div class="form-group">
-                <label for="password">Password</label>
+                <label for="password">Update Password</label>
                 <input
                   type="password"
-                  class="form-control"
+                  className="form-control"
                   id="password"
                   placeholder="Enter your password"
+                  value={input.password}
+                  onChange={handleChangeProfil}
                 />
               </div>
+              <div class="form-group">
+                <label>
+                  Confirm Password:
+                  <input
+                    className="form-control"
+                    type="password"
+                    placeholder="Confirm password"
+                    value={input.confirmpassword}
+                    onChange={handleChangeProfil}
+                  />
+                </label>
+              </div>
               <button type="submit" class="btn btn-primary">
-                Submit
+                Update
               </button>
             </form>
           </div>
@@ -107,7 +135,7 @@ const Profil = () => {
     //             <div className="col-md-6 col-lg-7 d-flex align-items-center">
     //               <div className="card-body p-4 p-lg-5 text-black">
     //                 <h1 className="h1 text-center">Profil Page</h1>
-    //                 <form onSubmit={handleChangePassword}>
+    //                 <form onSubmit={handleChangeProfil}>
     //                   <div className="d-flex align-items-center mb-3 pb-1">
     //                     <h2>Welcome</h2>
     //                     <span className="h3 fw-bold mb-0 mx-3">

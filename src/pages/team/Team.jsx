@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Box, Typography, useTheme, Button } from '@mui/material';
+import { Box, Typography, useTheme, Checkbox } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { Button, message, Popconfirm } from 'antd';
 import { UserContext } from '../../context/UserContextProvider';
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
@@ -8,17 +10,39 @@ import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettin
 import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
 import SecurityOutlinedIcon from '@mui/icons-material/SecurityOutlined';
 import Header from '../../components/Header';
-import { message } from 'antd';
 
 const Team = () => {
   const { isAuthenticated } = useContext(UserContext);
   const [selectedRow, setSelectedRow] = useState(null);
   const [gridRows, setGridRows] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const navigate = useNavigate();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const text = 'Are you sure to delete this user?';
+  const description = 'Delete the user';
+
   console.log('auth MANAGE TEAM ', isAuthenticated);
+
+  const handleDelete = (id) => {
+    axios
+      .delete('http://localhost:8000/users' + `/${id}`)
+      .then((res) => {
+        console.log('users', res.data);
+      })
+      .catch((err) => console.log(err));
+    message.success('row deleted', 2);
+
+    console.log('handledelete id :', id);
+    const updatedRows = gridRows.filter((row) => row.id !== id);
+    setGridRows(updatedRows);
+    setSelectedRow(null);
+  };
 
   useEffect(() => {
     axios
-      .get(import.meta.env.VITE_REACT_APP_API_USERS)
+      .get('http://localhost:8000/users')
       .then((res) => {
         console.log('users', res.data);
         setGridRows(res.data);
@@ -26,11 +50,28 @@ const Team = () => {
       .catch((err) => console.log(err));
   }, []);
 
-  const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
-
   const columns = [
+    {
+      field: 'checkbox',
+      headerName: ' ',
+      width: 50,
+      sortable: false,
+      renderCell: (params) => (
+        <Checkbox
+          color="primary"
+          checked={selectedRow === params.row.id}
+          onChange={(event) => {
+            if (event.target.checked) {
+              setSelectedRow(params.row.id);
+            } else {
+              setSelectedRow(null);
+            }
+          }}
+        />
+      ),
+    },
     { field: 'id', headerName: 'Id' },
+
     {
       field: 'username',
       headerName: 'Name',
@@ -58,15 +99,15 @@ const Team = () => {
             display="flex"
             justifyContent="center"
             backgroundColor={
-              role === 'admin'
+              role === 'Admin'
                 ? colors.greenAccent[600]
                 : colors.greenAccent[800]
             }
             borderRadius="4px"
           >
-            {role === 'admin' && <AdminPanelSettingsOutlinedIcon />}
-            {role === 'manager' && <SecurityOutlinedIcon />}
-            {role === 'user' && <LockOpenOutlinedIcon />}
+            {role === 'Admin' && <AdminPanelSettingsOutlinedIcon />}
+            {role === 'User' && <SecurityOutlinedIcon />}
+            {role === 'Guest' && <LockOpenOutlinedIcon />}
             {role === '' && <span>No rôle</span>}
             <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
               {role}
@@ -78,6 +119,7 @@ const Team = () => {
     {
       field: 'actions',
       headerName: 'Actions',
+      sortable: false,
       width: 130,
       renderCell: (params) => (
         <>
@@ -85,43 +127,26 @@ const Team = () => {
             variant="contained"
             color="primary"
             size="small"
-            onClick={() => handleEdit(params.row)}
+            // onClick={() => handleEdit(params.row)}
+            onClick={() => navigate(`/form/user/${params.row.id}`)}
           >
             Edit
           </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            size="small"
-            onClick={() => handleDelete(params.row.id)}
+
+          <Popconfirm
+            placement="top"
+            title={text}
+            description={description}
+            onConfirm={() => handleDelete(params.row.id)}
+            okText="Yes"
+            cancelText="No"
           >
-            Delete
-          </Button>
+            <Button>Delete</Button>
+          </Popconfirm>
         </>
       ),
     },
   ];
-
-  const handleEdit = (row) => {
-    setSelectedRow(row);
-    // open a modal or dialog to edit the selected row
-  };
-
-  const handleDelete = (id) => {
-    console.log(import.meta.env.VITE_REACT_APP_API_USERS + `/${id}`);
-    axios
-      .delete(import.meta.env.VITE_REACT_APP_API_USERS + `/${id}`)
-      .then((res) => {
-        console.log('users', res.data);
-      })
-      .catch((err) => console.log(err));
-    message.success('row deleted', 2);
-
-    console.log('handledelete id :', id);
-    const updatedRows = gridRows.filter((row) => row.id !== id);
-    setGridRows(updatedRows);
-    setSelectedRow(null);
-  };
 
   const handleModifyRow = (editedRow) => {
     console.log('handleModify id :', editedRow.id);
@@ -134,6 +159,15 @@ const Team = () => {
     });
     setGridRows(updatedRows);
     setSelectedRow(null);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   return (
@@ -173,8 +207,11 @@ const Team = () => {
         <DataGrid
           rows={gridRows}
           columns={columns}
-          pageSize={5}
-          checkboxSelection
+          rowsPerPage={rowsPerPage}
+          count={gridRows.length}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
           onRowSelected={(row) => console.log(row)}
           onCellDoubleClick={(params) => console.log(params)}
           onCellClick={(params) => console.log(params)}

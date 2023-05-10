@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from '../services/axiosInterceptor';
+import { ReactComponent as IotLogo } from '../img/iot_logo.svg';
+import './styles/register.css';
 const ChangePassword = () => {
   const { id, token } = useParams();
   const navigate = useNavigate();
@@ -24,19 +26,20 @@ const ChangePassword = () => {
       });
   };
   return (
-    <section className="vh-100" style={{ backgroundColor: '#9A616D' }}>
+    <section className="vh-100">
       <div className="container py-5 h-100">
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col col-xl-10">
             <div className="card" style={{ borderRadius: '1rem' }}>
               <div className="row g-0">
                 <div className="col-md-6 col-lg-5 d-none d-md-block">
-                  <img
+                  {/* <img
                     src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp"
                     alt="login form"
                     className="img-fluid"
                     style={{ borderRadius: '1rem 0 0 1rem' }}
-                  />
+                  /> */}
+                  <IotLogo />
                 </div>
                 <div className="col-md-6 col-lg-7 d-flex align-items-center">
                   <div className="card-body p-4 p-lg-5 text-black">
@@ -46,7 +49,9 @@ const ChangePassword = () => {
                           className="fas fa-cubes fa-2x me-3"
                           style={{ color: ' #ff6219' }}
                         ></i>
-                        <span className="h1 fw-bold mb-0">Forget Password?</span>
+                        <span className="h1 fw-bold mb-0">
+                          Forget Password?
+                        </span>
                       </div>
 
                       <h5
