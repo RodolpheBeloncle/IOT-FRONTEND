@@ -37,8 +37,9 @@ const ProtectedRoute = () => {
         setUserInfo({
           email: email,
           //! reset role JsonServer
-          role: role,
-          username: username,
+          role: "Admin",
+          // username: username,
+          username: email,
           picture: picture,
         });
         setTokenAuth(token);
@@ -53,10 +54,10 @@ const ProtectedRoute = () => {
     }
     isAuthenticated &&
       googleAuth &&
-      message.success('google authenticated successfully!', 2);
+      message.success('google authenticated successfully!', 1);
     isAuthenticated &&
       !googleAuth &&
-      message.success('successfully logged in !', 2);
+      message.success('successfully logged in !', 1);
   }, [isAuthenticated]);
 
   return (

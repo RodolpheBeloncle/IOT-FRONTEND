@@ -70,7 +70,7 @@ const ProgressCircle = ({
               {data.message} {controller.unit}
             </span>
           ) : (
-            'No data'
+            'No Data'
           )}
         </div>
       </div>

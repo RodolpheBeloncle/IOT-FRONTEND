@@ -4,12 +4,10 @@ import '../pages/styles/devices.css';
 import { Row } from 'antd';
 import axios from 'axios';
 import CardDevice from '../components/CardDevice';
-import CustomFormModal from '../components/CustomFormModal';
-import { useTheme } from '@mui/material';
-
 import { UserContext } from '../context/UserContextProvider';
+import CustomFormModal from '../components/customFormModal/CustomFormModal';
+import { useTheme } from '@mui/material';
 import jwtDecode from 'jwt-decode';
-
 import { TextField } from '@mui/material';
 
 const Devices = () => {

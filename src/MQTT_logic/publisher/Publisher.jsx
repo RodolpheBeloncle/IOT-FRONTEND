@@ -39,8 +39,9 @@ const Publisher = ({ publish, topic, type }) => {
           htmlType="submit"
           danger
           style={{
-            height: '100px',
+            height: '80px',
             borderRadius: '50px',
+            marginTop: '5px',
             background: color,
             boxShadow: '10px 10px 38px 0px rgba(0, 0, 0, 0.75)',
           }}
