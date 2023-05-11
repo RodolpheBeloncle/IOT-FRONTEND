@@ -63,7 +63,14 @@ const ProgressCircle = ({
       /> */}
       {/* <Box> */}
       {/* <div className="app-container"> */}
-      <div className="sensor-display-container">
+      <div
+        className="sensor-display-container"
+        style={{
+          height: '80px',
+          marginTop: '5px',
+          boxShadow: '10px 10px 38px 0px rgba(0, 0, 0, 0.75)',
+        }}
+      >
         <div className={`sensor-display ${temperatureColor}`}>
           {data.message ? (
             <span>

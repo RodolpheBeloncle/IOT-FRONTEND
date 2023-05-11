@@ -32,25 +32,17 @@ const ProtectedRoute = () => {
         clearCookie('token');
         clearCookie('googleAuth');
         navigate('/login');
-      } else {
-        const { username, email, role, picture } = jwtDecode(token);
-        setUserInfo({
-          email: email,
-          //! reset role JsonServer
-          role: "Admin",
-          // username: username,
-          username: email,
-          picture: picture,
-        });
-        setTokenAuth(token);
-        setIsAuthenticated(true);
-        navigate('/');
       }
-    } else {
-      setIsAuthenticated(false);
-      clearCookie('token');
-      clearCookie('googleAuth');
-      navigate('/login');
+      const { username, email, role, picture } = jwtDecode(token);
+      setUserInfo({
+        picture,
+        email,
+        role,
+        username,
+      });
+      setTokenAuth(token);
+      setIsAuthenticated(true);
+      navigate('/');
     }
     isAuthenticated &&
       googleAuth &&

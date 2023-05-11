@@ -1,6 +1,6 @@
-import React from "react";
-import "./notFound.css";
-import { Link } from "react-router-dom";
+import React from 'react';
+import './notFound.css';
+import { Link } from 'react-router-dom';
 
 const NotFound = () => (
   <div className="NotFound">

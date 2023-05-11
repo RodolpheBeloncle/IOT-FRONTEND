@@ -3,6 +3,10 @@
     size: bold;
 }
 
+.container {
+    width: 50% !important;
+}
+
 section {
     background-image: url('https://cdn.dribbble.com/userupload/3177588/file/original-0c2dfdb92ee210051844743ec33103d6.png');
     background-size: cover;

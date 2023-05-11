@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { ColorModeContext, tokens } from '../theme';
 import '../pages/styles/devices.css';
 import { Row } from 'antd';
-import axios from 'axios';
+import axios from '../services/axiosInterceptor';
+// import axios from 'axios';
 import CardDevice from '../components/CardDevice';
 import { UserContext } from '../context/UserContextProvider';
 import CustomFormModal from '../components/customFormModal/CustomFormModal';
@@ -17,26 +18,10 @@ const Devices = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
-  // === TEST DECODED ==
-
-  //   Public user (not logged-in) does the following requests :
-  // Request	Response
-  // GET /664/posts	200 OK
-  // POST /664/posts
-  // {text: 'blabla'}	401 UNAUTHORIZED
-  // Logged-in user with id: 1 does the following requests :
-  // Request	Response
-  // GET /600/users/1
-  // Authorization: Bearer xxx.xxx.xxx	200 OK
-  // GET /600/users/23
-  // Authorization: Bearer xxx.xxx.xxx	403 FORBIDDEN
 
   const { getCookie, userInfo } = useContext(UserContext);
 
   console.log('DECODEEDtoken', jwtDecode(getCookie('token')));
-  console.log('fakeUserInfo', userInfo);
-
-  // !! ===============
 
   const getDevicesList = useCallback(() => {
     axios

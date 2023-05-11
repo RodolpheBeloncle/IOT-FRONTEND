@@ -44,6 +44,8 @@ const MyProSidebar = () => {
   const { sidebarRTL, setSidebarRTL, sidebarImage } = useSidebarContext();
   const { userInfo } = useContext(UserContext);
   const { collapseSidebar, toggleSidebar, collapsed, broken } = useProSidebar();
+
+  console.log('fromsidebar', userInfo);
   return (
     <Box
       sx={{
@@ -140,11 +142,7 @@ const MyProSidebar = () => {
                   alt="profile user"
                   width="100px"
                   height="100px"
-                  src={
-                    userInfo.picture
-                      ? userInfo.picture
-                      : 'https://www.pikpng.com/pngl/m/80-805068_my-profile-icon-blank-profile-picture-circle-clipart.png'
-                  }
+                  src={userInfo.picture}
                   style={{ cursor: 'pointer', borderRadius: '50%' }}
                 />
               </Box>

@@ -10,7 +10,6 @@ import Register from './pages/Register';
 import ChangePassword from './pages/ChangePassword';
 import ForgetPassword from './pages/ForgetPassword';
 import Profil from './pages/Profil';
-import Dashboard from './pages/dashboard/Dashboard';
 import Team from './pages/team/Team';
 import ControllersIoT from './pages/controllersiot/ControllersIoT';
 import FormUser from './pages/form/FormUser';
@@ -35,20 +34,15 @@ const App = () => {
             <Route path="/user/reset/:id/:token" element={<ChangePassword />} />
             //? Authenticated Route
             <Route path="/" element={<ProtectedRoute />}>
-              <Route index element={<Devices />} />
+              <Route path="/" element={<Devices />} />
               <Route path="/profil" element={<Profil />} />
               <Route path="form/user">
                 <Route index element={<FormUser />} />
                 <Route path=":id" element={<FormUser />} />
               </Route>
-              <Route path="/dashboard" element={<Dashboard />} />
               //! Admin Route
-              {userInfo.role === 'Admin' && (
-                <>
-                  <Route path="/manageTeam" element={<Team />} />
-                  <Route path="/manageDevice" element={<ControllersIoT />} />
-                </>
-              )}
+              <Route path="/manageTeam" element={<Team />} />
+              <Route path="/manageDevice" element={<ControllersIoT />} />
               // ! ================
               <Route path="/faq" element={<FAQ />} />
             </Route>
