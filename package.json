@@ -21,13 +21,19 @@
     "buffer": "^6.0.3",
     "dotenv": "^16.0.3",
     "js-cookie": "^3.0.5",
-    "jsonwebtoken": "^9.0.0",
+    "json-server-auth": "^2.1.0",
+    "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
     "mqtt": "^4.3.7",
     "npm": "^9.6.4",
+<<<<<<< HEAD
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-gauge-chart": "^0.4.1",
+=======
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+>>>>>>> parent of 08d04d7 (add jauge)
     "react-pro-sidebar": "1.0.0-alpha.7",
     "react-router-dom": "^6.10.0",
     "vite-plugin-node-stdlib-browser": "^0.2.1",

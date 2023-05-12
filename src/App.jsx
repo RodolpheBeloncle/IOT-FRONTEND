@@ -19,11 +19,9 @@ import FAQ from './pages/faq/Faq';
 
 const App = () => {
   const [theme, colorMode] = useMode();
-<<<<<<< HEAD
-  const { isAuthenticated } = useContext(UserContext);
-=======
-  const { userInfo } = useContext(UserContext);
->>>>>>> parent of 15aec37 (fix protectedroute)
+  const { userInfo, isAuthenticated} =
+    useContext(UserContext);
+
 
   return (
     <>
@@ -31,7 +29,7 @@ const App = () => {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-<<<<<<< HEAD
+
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/login/:token" element={<Login />} />
             <Route exact path="/register" element={<Register />} />
@@ -41,20 +39,22 @@ const App = () => {
               path="/user/reset/:id/:token"
               element={<ChangePassword />}
             />
-
-            <Route
-              element={<ProtectedRoute isAuthenticated={isAuthenticated} />}
-            >
-              <Route element={<Devices />} path="/" exact />
-              <Route exact path="/profil" element={<Profil />} />
-              <Route exact path="form/user">
-                <Route exact index element={<FormUser />} />
-                <Route exact path=":id" element={<FormUser />} />
-              </Route>
-              <Route exact path="/manageTeam" element={<Team />} />
-              <Route exact path="/manageDevice" element={<ControllersIoT />} />
-              <Route exact path="/faq" element={<FAQ />} />
-=======
+            {/* <ProtectedRoute isAuthenticated={isAuthenticated}> */}
+            // {/* <Route index element={<Devices />} /> */}
+            {/* <Route exact path="/profil" element={<Profil />} />
+                  <Route exact path="form/user">
+                    <Route exact index element={<FormUser />} />
+                    <Route exact path=":id" element={<FormUser />} />
+                  </Route>
+                  <Route exact path="/manageTeam" element={<Team />} />
+                  <Route
+                    exact
+                    path="/manageDevice"
+                    element={<ControllersIoT />}
+                  />
+                  <Route exact path="/faq" element={<FAQ />} /> */}
+            {/* </ProtectedRoute> */}
+ 
             <Route path="/login/" element={<Login />} />
             <Route path="/login/:token" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -73,7 +73,7 @@ const App = () => {
               <Route path="/manageDevice" element={<ControllersIoT />} />
               // ! ================
               <Route path="/faq" element={<FAQ />} />
->>>>>>> parent of 15aec37 (fix protectedroute)
+
             </Route>
             //? =================
             <Route path="*" element={<NotFound />} />
