@@ -6,12 +6,20 @@ import 'bootstrap/dist/js/bootstrap.bundle.js';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import UserContextProvider from './context/UserContextProvider';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+// const root = ReactDOM.createRoot(document.getElementById('root'));
 
-root.render(
-  <BrowserRouter>
-    <UserContextProvider>
-      <App />
-    </UserContextProvider>
-  </BrowserRouter>
+// root.render(
+//   <BrowserRouter>
+//     <UserContextProvider>
+//       <App />
+//     </UserContextProvider>
+//   </BrowserRouter>
+// );
+
+
+ReactDOM.render(
+
+    <App/>,
+
+  document.getElementById('root')
 );

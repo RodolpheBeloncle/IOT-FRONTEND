@@ -1,21 +1,21 @@
 import React, { useEffect, useContext } from 'react';
 import { UserContext } from '../context/UserContextProvider';
-import { Outlet, useNavigate, Navigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import jwtDecode from 'jwt-decode';
 import Navbar from '../components/navbar/Navbar';
 import BreadCrumb from '../components/breadCrumb/BreadCrumb';
 import Topbar from '../components/topbar/Topbar';
 import { MyProSidebarProvider } from '../pages/sidebar/sidebarContext';
-import Devices from '../pages/devices';
 
-const ProtectedRoute = ({ isAuthenticated }) => {
+const ProtectedRoute = () => {
   const {
+    isAuthenticated,
+    setIsAuthenticated,
     setTokenAuth,
     getCookie,
     clearCookie,
     setUserInfo,
-    setIsAuthenticated,
   } = useContext(UserContext);
   const navigate = useNavigate();
 
@@ -32,18 +32,17 @@ const ProtectedRoute = ({ isAuthenticated }) => {
         clearCookie('token');
         clearCookie('googleAuth');
         navigate('/login');
-      } else {
-        const { username, email, role, picture } = jwtDecode(token);
-        setUserInfo({
-          picture,
-          email,
-          role,
-          username,
-        });
-        setTokenAuth(token);
-        setIsAuthenticated(true);
-        navigate('/');
       }
+      const { username, email, role, picture } = jwtDecode(token);
+      setUserInfo({
+        picture,
+        email,
+        role,
+        username,
+      });
+      setTokenAuth(token);
+      setIsAuthenticated(true);
+      navigate('/');
     }
     isAuthenticated &&
       googleAuth &&
@@ -51,24 +50,23 @@ const ProtectedRoute = ({ isAuthenticated }) => {
     isAuthenticated &&
       !googleAuth &&
       message.success('successfully logged in !', 1);
-  }, []);
-  console.log('protectedroute', isAuthenticated);
+  }, [isAuthenticated]);
 
-  return isAuthenticated === true ? (
-    <MyProSidebarProvider>
-      <div className="app">
-        <div style={{ height: '100%', width: '100%' }}>
-          <main>
-            <Topbar />
-            <Navbar />
-            <BreadCrumb />
-            <Outlet />
-          </main>
+  return (
+    <>
+      <MyProSidebarProvider>
+        <div className="app">
+          <div style={{ height: '100%', width: '100%' }}>
+            <main>
+              <Topbar />
+              <Navbar />
+              <BreadCrumb />
+              <Outlet />
+            </main>
+          </div>
         </div>
-      </div>
-    </MyProSidebarProvider>
-  ) : (
-    <Navigate to="/login" />
+      </MyProSidebarProvider>
+    </>
   );
 };
 

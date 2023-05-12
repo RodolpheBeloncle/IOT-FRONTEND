@@ -95,7 +95,7 @@ const ProgressCircle = ({
                 ].reverse()}
                 arcPadding={0}
                 cornerRadius={3}
-                percent={0.37}
+                // percent={0.37}
                 style={{ width: '90%' }}
               />
             </>
@@ -117,7 +117,9 @@ const ProgressCircle = ({
               ].reverse()}
               arcPadding={0}
               cornerRadius={3}
-              percent={0.37}
+              // hideText
+              formatTextValue={()=>{90}}
+              percent={0.2}
               style={{ width: '90%' }}
             />
           )}
