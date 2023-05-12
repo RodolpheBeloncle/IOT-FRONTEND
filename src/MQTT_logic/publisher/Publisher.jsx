@@ -2,8 +2,9 @@ import React, { useEffect, useContext, useState } from 'react';
 import { Card, Form, Row, Col, Button, Tag } from 'antd';
 import { PoweroffOutlined } from '@ant-design/icons';
 import { QosOption } from '../index';
+import ConnectIndicator from '../../components/connectIndicator/ConnectIndicator';
 
-const Publisher = ({ publish, topic, type }) => {
+const Publisher = ({ publish, topic, type, connectStatus }) => {
   const [color, setColor] = useState('red');
   const [record, setRecord] = useState({
     topic: topic,
@@ -33,8 +34,12 @@ const Publisher = ({ publish, topic, type }) => {
         onFinish={onFinish}
       >
         <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
-          <Tag color="geekblue"> Topic: {topic} </Tag>
+          <Tag style={{ display: 'flex' }} color="geekblue">
+            {' '}
+            Topic: {topic} <ConnectIndicator connectStatus={connectStatus} />
+          </Tag>
         </span>
+
         <Button
           htmlType="submit"
           danger
