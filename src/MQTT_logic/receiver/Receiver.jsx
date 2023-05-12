@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import './receiver.css';
 import { Card, List, Progress, Space, Row, Col, Tag } from 'antd';
 import ProgressCircle from '../../components/progressCircle/ProgressCircle';
+import ConnectIndicator from '../../components/connectIndicator/ConnectIndicator';
 import { QosOption } from '../index';
 
 const value = 30;
@@ -13,11 +14,18 @@ const gaugeStyles = {
   display: 'block',
 };
 
-const Receiver = ({ sub, unSub, showUnsub, payload, controller,topic }) => {
+const Receiver = ({
+  sub,
+  unSub,
+  showUnsub,
+  payload,
+  controller,
+  topic,
+  connectStatus,
+}) => {
   const [messages, setMessages] = useState([]);
   const qosOptions = useContext(QosOption);
 
- 
   // !todo set possiblity to unsubscribe in the recever
   // const handleUnsub = () => {
   //   const values = form.getFieldsValue();
@@ -43,7 +51,10 @@ const Receiver = ({ sub, unSub, showUnsub, payload, controller,topic }) => {
         {controller.type === 'sensor' && (
           <>
             <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
-              <Tag color="geekblue"> Topic: {topic} </Tag>
+              <Tag style={{ display: 'flex' }} color="geekblue">
+                Topic: {topic}
+                <ConnectIndicator connectStatus={connectStatus} />
+              </Tag>
             </span>
             <ProgressCircle data={payload} controller={controller} />
           </>

@@ -35,7 +35,6 @@ const Publisher = ({ publish, topic, type, connectStatus }) => {
       >
         <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
           <Tag style={{ display: 'flex' }} color="geekblue">
-            {' '}
             Topic: {topic} <ConnectIndicator connectStatus={connectStatus} />
           </Tag>
         </span>

@@ -200,6 +200,7 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
           unSub={mqttUnSub}
           showUnsub={isSubed}
           topic={topic}
+          connectStatus={connectStatus}
           controller={controllersIOT}
         />
       ) : null}
