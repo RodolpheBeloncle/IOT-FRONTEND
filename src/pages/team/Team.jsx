@@ -28,7 +28,7 @@ const Team = () => {
 
   const handleDelete = (id) => {
     axios
-      .delete('http://localhost:8000/users' + `/${id}`)
+      .delete('http://localhost:5000/api/user' + `/${id}`)
       .then((res) => {
         console.log('users', res.data);
       })
@@ -36,14 +36,14 @@ const Team = () => {
     message.success('row deleted', 2);
 
     console.log('handledelete id :', id);
-    const updatedRows = gridRows.filter((row) => row.id !== id);
+    const updatedRows = gridRows.filter((row) => row._id !== id);
     setGridRows(updatedRows);
     setSelectedRow(null);
   };
 
   useEffect(() => {
     axios
-      .get('http://localhost:8000/users')
+      .get('http://localhost:5000/api/user')
       .then((res) => {
         console.log('users', res.data);
         setGridRows(res.data);
@@ -60,10 +60,10 @@ const Team = () => {
       renderCell: (params) => (
         <Checkbox
           color="primary"
-          checked={selectedRow === params.row.id}
+          checked={selectedRow === params.row._id}
           onChange={(event) => {
             if (event.target.checked) {
-              setSelectedRow(params.row.id);
+              setSelectedRow(params.row._id);
             } else {
               setSelectedRow(null);
             }
@@ -71,7 +71,7 @@ const Team = () => {
         />
       ),
     },
-    { field: 'id', headerName: 'Id' },
+    { field: '_id', headerName: 'Id' },
 
     {
       field: 'username',
@@ -128,7 +128,7 @@ const Team = () => {
           color="primary"
           size="small"
           // onClick={() => handleEdit(params.row)}
-          onClick={() => navigate(`/form/user/${params.row.id}`)}
+          onClick={() => navigate(`/form/user/${params.row._id}`)}
         >
           <EditFilled />
         </Button>
@@ -145,7 +145,7 @@ const Team = () => {
             placement="top"
             title={text}
             description={description}
-            onConfirm={() => handleDelete(params.row.id)}
+            onConfirm={() => handleDelete(params.row._id)}
             okText="Yes"
             cancelText="No"
           >
@@ -159,9 +159,9 @@ const Team = () => {
   ];
 
   const handleModifyRow = (editedRow) => {
-    console.log('handleModify id :', editedRow.id);
+    console.log('handleModify id :', editedRow._id);
     const updatedRows = rows.map((row) => {
-      if (row.id === editedRow.id) {
+      if (row.id === editedRow._id) {
         return editedRow;
       } else {
         return row;

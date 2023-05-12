@@ -23,6 +23,7 @@ import { useTheme } from '@mui/material';
 import { ColorModeContext, tokens } from '../../theme';
 
 const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
+  // !! todo ALIGN INPUT FIELD + FIX BUTTON / LOGOUT BUTTON / CHECK API
   const [form] = Form.useForm();
   const [formWidget, setFormWidget] = useState('switch');
   const theme = useTheme();
@@ -40,10 +41,10 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
     unit: '',
   });
 
-  const openNotification = (type) => {
+  const openNotification = (widgetName) => {
     notification.success({
       message: 'device Created',
-      description: `Your device type ${type} has been successfully created!`,
+      description: `Your device ${widgetName} has been successfully created!`,
       placement: 'bottomRight',
     });
   };
@@ -71,12 +72,12 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
 
   const onFinish = async () => {
     await axios
-      .post('http://localhost:8000/devices', formInputs)
+      .post('http://localhost:5000/api/device', formInputs)
       .then((res) => {
         console.log('add controllers', res);
-        openNotification(res.data.type);
+        openNotification(formInputs.widgetName);
         handleOk();
-        // form.resetFields();
+        form.resetFields();
       })
       .catch((err) => {
         onFinishFailed(err);

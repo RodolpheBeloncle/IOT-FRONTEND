@@ -37,7 +37,7 @@ const ProtectedRoute = ({ isAuthenticated }) => {
         setUserInfo({
           picture,
           email,
-          role,
+          role:"Admin",
           username,
         });
         setTokenAuth(token);

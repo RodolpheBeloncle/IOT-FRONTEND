@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Gauge from '../Gauge';
+import Gauge from '../gauge/Gauge';
 import { useTheme } from '@mui/material';
 import './progressCircle.css';
 
@@ -63,11 +63,13 @@ const ProgressCircle = ({
                 {data.message} {controller.unit}
               </span> */}
               <Gauge
-                value={parseInt(data?.message ? parseInt(data?.message) : 50)}
-                min={0}
-                max={100}
+                value={parseInt(
+                  data?.message ? parseInt(data?.message) : controller.initValue
+                )}
+                min={controller.initValue}
+                max={controller.maxValue}
                 label={'label'}
-                units={'%'}
+                unit={controller.unit && controller.unit}
               />
             </>
           }
