@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import axios from '../../services/axiosInterceptor';
 import './customFormModal.css';
 import {
   Form,
@@ -22,7 +23,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useTheme } from '@mui/material';
 import { ColorModeContext, tokens } from '../../theme';
 
-const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
+const CustomFormModal = ({ isOpenModal, setIsOpenModal, userInfo }) => {
   const [form] = Form.useForm();
   const [formWidget, setFormWidget] = useState('switch');
   const theme = useTheme();
@@ -38,6 +39,7 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
     off: '',
     maxValue: '',
     unit: '',
+    createdBy: userInfo.email,
   });
 
   const openNotification = (type) => {
@@ -71,7 +73,7 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
 
   const onFinish = async () => {
     await axios
-      .post('http://localhost:8000/devices', formInputs)
+      .post(import.meta.env.VITE_API_DEVICES, formInputs)
       .then((res) => {
         console.log('add controllers', res);
         openNotification(res.data.type);

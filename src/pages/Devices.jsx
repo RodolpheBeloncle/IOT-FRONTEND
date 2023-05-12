@@ -54,6 +54,7 @@ const Devices = () => {
     <>
       <Row className="row" span={4} style={{ margin: '10px' }}>
         <CustomFormModal
+          userInfo={userInfo}
           isOpenModal={isOpenModal}
           setIsOpenModal={setIsOpenModal}
         />

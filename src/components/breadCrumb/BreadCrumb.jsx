@@ -31,6 +31,10 @@ const BreadCrumb = () => {
       title: <NavLink to="/">Dashboard</NavLink>,
       key: 'Dashboard',
     },
+    {
+      title: <NavLink to="/">FAQ</NavLink>,
+      key: 'FAQ',
+    },
   ];
 
   const isNonMobile = useMediaQuery('(min-width:760px)');
@@ -39,6 +43,7 @@ const BreadCrumb = () => {
       {!isNonMobile && (
         <div className="demo-nav">
           <NavLink to="/">Dashboard</NavLink>
+          <NavLink to="/">FAQ</NavLink>
           {userInfo.role === 'Admin' ? (
             <>
               <NavLink to="/manageTeam">Team</NavLink>
@@ -50,6 +55,7 @@ const BreadCrumb = () => {
       )}
       <Routes>
         <Route path="/" element={<span>Dashboard</span>} />
+        <Route path="/faq" element={<span>Faq</span>} />
         {userInfo.role === 'Admin' ? (
           <>
             <Route path="/manageTeam" element={<span>Team</span>} />
