@@ -183,17 +183,13 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
         setConnectStatus={setConnectStatus}
       />
       <QosOption.Provider value={qosOption}>
-        {/* <Subscriber
-          sub={mqttSub}
-          unSub={mqttUnSub}
-          showUnsub={isSubed}
-          topic={controllersIOT.topic}
-        /> */}
+    
         {controllersIOT.type === 'switch' ? (
           <Publisher
             publish={mqttPublish}
             type={controllersIOT.type}
             topic={topic}
+            connectStatus={connectStatus}
           />
         ) : null}
       </QosOption.Provider>
@@ -204,6 +200,7 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
           unSub={mqttUnSub}
           showUnsub={isSubed}
           topic={topic}
+          connectStatus={connectStatus}
           controller={controllersIOT}
         />
       ) : null}

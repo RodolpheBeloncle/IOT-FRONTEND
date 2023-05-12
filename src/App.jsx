@@ -10,7 +10,6 @@ import Register from './pages/Register';
 import ChangePassword from './pages/ChangePassword';
 import ForgetPassword from './pages/ForgetPassword';
 import Profil from './pages/Profil';
-import Dashboard from './pages/dashboard/Dashboard';
 import Team from './pages/team/Team';
 import ControllersIoT from './pages/controllersiot/ControllersIoT';
 import FormUser from './pages/form/FormUser';
@@ -20,7 +19,7 @@ import FAQ from './pages/faq/Faq';
 
 const App = () => {
   const [theme, colorMode] = useMode();
-  const { userInfo } = useContext(UserContext);
+  const { isAuthenticated } = useContext(UserContext);
 
   return (
     <>
@@ -61,31 +60,29 @@ const App = () => {
           </BrowserRouter>
 =======
           <Routes>
-            <Route path="/login/" element={<Login />} />
-            <Route path="/login/:token" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/reset-password" element={<ForgetPassword />} />
-            <Route path="/user/reset/:id/:token" element={<ChangePassword />} />
-            //? Authenticated Route
-            <Route path="/" element={<ProtectedRoute />}>
-              <Route index element={<Devices />} />
-              <Route path="/profil" element={<Profil />} />
-              <Route path="form/user">
-                <Route index element={<FormUser />} />
-                <Route path=":id" element={<FormUser />} />
+            <Route exact path="/login" element={<Login />} />
+            <Route exact path="/login/:token" element={<Login />} />
+            <Route exact path="/register" element={<Register />} />
+            <Route exact path="/reset-password" element={<ForgetPassword />} />
+            <Route
+              exact
+              path="/user/reset/:id/:token"
+              element={<ChangePassword />}
+            />
+
+            <Route
+              element={<ProtectedRoute isAuthenticated={isAuthenticated} />}
+            >
+              <Route element={<Devices />} path="/" exact />
+              <Route exact path="/profil" element={<Profil />} />
+              <Route exact path="form/user">
+                <Route exact index element={<FormUser />} />
+                <Route exact path=":id" element={<FormUser />} />
               </Route>
-              <Route path="/dashboard" element={<Dashboard />} />
-              //! Admin Route
-              {userInfo.role === 'Admin' && (
-                <>
-                  <Route path="/manageTeam" element={<Team />} />
-                  <Route path="/manageDevice" element={<ControllersIoT />} />
-                </>
-              )}
-              // ! ================
-              <Route path="/faq" element={<FAQ />} />
+              <Route exact path="/manageTeam" element={<Team />} />
+              <Route exact path="/manageDevice" element={<ControllersIoT />} />
+              <Route exact path="/faq" element={<FAQ />} />
             </Route>
-            //? =================
             <Route path="*" element={<NotFound />} />
           </Routes>
 >>>>>>> test

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Box, Typography, useTheme, Checkbox } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { Button, message, Popconfirm } from 'antd';
+import { DeleteOutlined, EditFilled } from '@ant-design/icons';
 import { UserContext } from '../../context/UserContextProvider';
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
@@ -117,22 +118,29 @@ const Team = () => {
       },
     },
     {
-      field: 'actions',
-      headerName: 'Actions',
+      field: 'edit',
+      headerName: 'Edit',
       sortable: false,
-      width: 130,
+      width: 100,
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          // onClick={() => handleEdit(params.row)}
+          onClick={() => navigate(`/form/user/${params.row.id}`)}
+        >
+          <EditFilled />
+        </Button>
+      ),
+    },
+    {
+      field: 'delete',
+      headerName: 'Delete',
+      sortable: false,
+      width: 100,
       renderCell: (params) => (
         <>
-          <Button
-            variant="contained"
-            color="primary"
-            size="small"
-            // onClick={() => handleEdit(params.row)}
-            onClick={() => navigate(`/form/user/${params.row.id}`)}
-          >
-            Edit
-          </Button>
-
           <Popconfirm
             placement="top"
             title={text}
@@ -141,7 +149,9 @@ const Team = () => {
             okText="Yes"
             cancelText="No"
           >
-            <Button>Delete</Button>
+            <Button>
+              <DeleteOutlined />
+            </Button>
           </Popconfirm>
         </>
       ),

@@ -46,8 +46,6 @@ body,
   display: flex;
   align-items: center;
   justify-content: space-around;
-
-
   position: fixed;
   top: 0;
   left: 0;
@@ -69,7 +67,7 @@ body,
 }
 
 .listItem {
-  margin-right: 20px;
+  margin-right: 10px;
   font-weight: 500;
   cursor: pointer;
 }
@@ -267,7 +265,6 @@ input{
 }
 
 .video-wrapper {
- 
   position: absolute;
   top: 0;
   bottom: 0;

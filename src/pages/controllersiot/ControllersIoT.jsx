@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
+import './controllersIoT.css';
 import { UserContext } from '../../context/UserContextProvider';
 import axios from 'axios';
 import { Box, useTheme, Checkbox } from '@mui/material';
 import { Row, Button, message, Popconfirm } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import { DataGrid } from '@mui/x-data-grid';
 import { tokens } from '../../theme';
 import UpdateFormModal from '../../components/UpdateFormModal';
@@ -121,34 +123,39 @@ const ControllersIoT = () => {
     //   },
     // },
     {
-      field: 'actions',
-      headerName: 'Actions',
+      field: 'edit',
+      headerName: 'Edit',
       sortable: false,
-      width: 130,
+      width: 100,
       renderCell: (params) => (
-        <>
-          {
-            <UpdateFormModal
-              gridRows={gridRows}
-              setGridRows={setGridRows}
-              device={selectedRow}
-              setDevice={setSelectedRow}
-              isOpenModal={isOpenModal}
-              setIsOpenModal={setIsOpenModal}
-            />
-          }
-
-          <Popconfirm
-            placement="top"
-            title={text}
-            description={description}
-            onConfirm={() => handleDelete(params.row.id)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button>Delete</Button>
-          </Popconfirm>
-        </>
+        <UpdateFormModal
+          gridRows={gridRows}
+          setGridRows={setGridRows}
+          device={selectedRow}
+          setDevice={setSelectedRow}
+          isOpenModal={isOpenModal}
+          setIsOpenModal={setIsOpenModal}
+        />
+      ),
+    },
+    {
+      field: 'delete',
+      headerName: 'Delete',
+      sortable: false,
+      width: 100,
+      renderCell: (params) => (
+        <Popconfirm
+          placement="top"
+          title={text}
+          description={description}
+          onConfirm={() => handleDelete(params.row.id)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button>
+            <DeleteOutlined />
+          </Button>
+        </Popconfirm>
       ),
     },
   ];

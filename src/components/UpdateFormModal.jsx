@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import axios from 'axios';
 import {
   Form,
@@ -12,7 +12,9 @@ import {
   Popconfirm,
   notification,
 } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, EditFilled } from '@ant-design/icons';
+import { useTheme } from '@mui/material';
+import { ColorModeContext, tokens } from '../theme';
 
 const UpdateFormModal = ({
   isOpenModal,
@@ -23,6 +25,9 @@ const UpdateFormModal = ({
   gridRows,
 }) => {
   const [form] = Form.useForm();
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const colorMode = useContext(ColorModeContext);
 
   const openNotification = (type) => {
     notification.success({
@@ -86,11 +91,16 @@ const UpdateFormModal = ({
 
   return (
     <div>
-      <Button type="primary" onClick={showModal}>
-        Update Widget
+      <Button
+        style={{
+          backgroundColor: theme.palette.secondary.main,
+        }}
+        onClick={showModal}
+      >
+        <EditFilled />
       </Button>
       <Modal
-        title="Device Widget Form"
+        title={`Edit ${device?.type}`}
         open={isOpenModal}
         onOk={handleOk}
         onCancel={handleCancel}

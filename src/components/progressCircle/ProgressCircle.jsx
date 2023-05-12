@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme, Box } from '@mui/material';
+import Gauge from '../Gauge';
+import { useTheme } from '@mui/material';
 import './progressCircle.css';
 
 import { tokens } from '../../theme';
@@ -47,31 +48,29 @@ const ProgressCircle = ({
   }, []);
   return (
     <>
-      {/* <Box
-        sx={{
-          background: `radial-gradient(${'#fff'} 55%, transparent 56%),
-                conic-gradient(transparent 0deg ${angle}deg, ${
-            colors.blueAccent[500]
-          } ${angle}deg 360deg),
-                ${colors.redAccent[500]}`,
-          // background: `radial-gradient(to right, #6fcbb6, #9c64f4),  conic-gradient(transparent 0deg ${angle}deg, ${colors.blueAccent[500]} ${angle}deg 360deg),
-          //          ${colors.redAccent[500]}`,
-          borderRadius: '50%',
-          width: `${size}px`,
-          height: `${size}px`,
+      <div
+        className="sensor-display-container"
+        style={{
+          height: '80px',
+          marginTop: '5px',
+          boxShadow: '10px 10px 38px 0px rgba(0, 0, 0, 0.75)',
         }}
-      /> */}
-      {/* <Box> */}
-      {/* <div className="app-container"> */}
-      <div className="sensor-display-container">
+      >
         <div className={`sensor-display ${temperatureColor}`}>
-          {data.message ? (
-            <span>
-              {data.message} {controller.unit}
-            </span>
-          ) : (
-            'No data'
-          )}
+          {
+            <>
+              {/* <span>
+                {data.message} {controller.unit}
+              </span> */}
+              <Gauge
+                value={parseInt(data?.message ? parseInt(data?.message) : 50)}
+                min={0}
+                max={100}
+                label={'label'}
+                units={'%'}
+              />
+            </>
+          }
         </div>
       </div>
       {/* <div className="button-container">
