@@ -39,7 +39,7 @@ const Profil = () => {
     }
     const token = getCookie('token');
     await axios
-      .post('http://localhost:5000/api/auth/change-password', input, {
+      .post(import.meta.env.VITE_API_CHANGE_PROFIL, input, {
         headers: {
           authorization: `Bearer ${token}`,
         },

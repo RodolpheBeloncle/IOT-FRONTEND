@@ -26,12 +26,12 @@ const ControllersIoT = () => {
 
   const handleDelete = (id) => {
     axios
-      .delete('http://localhost:8000/devices' + `/${id}`)
+      .delete(import.meta.env.VITE_API_DEVICES + `/${id}`)
       .then((res) => {
         console.log('devices', res.data);
       })
       .catch((err) => console.log(err));
-    message.success('row deleted', 2);
+    message.success('controller deleted', 2);
 
     console.log('handledelete id :', id);
     const updatedRows = gridRows.filter((row) => row.id !== id);
@@ -41,10 +41,14 @@ const ControllersIoT = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8000/devices')
+      .get(import.meta.env.VITE_API_DEVICES)
       .then((res) => {
         console.log('devices', res.data);
-        setGridRows(res.data);
+        const rows = res.data.map((row) => ({
+          id: row._id, // assuming your MongoDB documents have an _id field
+          ...row, // add any other fields from your document as needed
+        }));
+        setGridRows(rows);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -72,7 +76,7 @@ const ControllersIoT = () => {
         />
       ),
     },
-    { field: 'id', headerName: 'Id' },
+    { field: '_id', headerName: 'Id' },
 
     {
       field: 'widgetName',
@@ -94,34 +98,6 @@ const ControllersIoT = () => {
     { field: 'initValue', headerName: 'init Value', width: 100 },
     { field: 'maxValue', headerName: 'max Value', width: 100 },
     { field: 'createdBy', headerName: 'Created By', width: 100 },
-    // {
-    //   field: "type",
-    //   headerName: "type",
-    //   width: 100,
-    //   renderCell: ({ type: { type } }) => {
-    //     return (
-    //       <Box
-    //         width="100%"
-    //         m="0 auto"
-    //         p="5px"
-    //         display="flex"
-    //         justifyContent="center"
-    //         backgroundColor={
-    //           type === "sensor"
-    //             ? colors.greenAccent[600]
-    //             : colors.greenAccent[800]
-    //         }
-    //         borderRadius="4px"
-    //       >
-    //         {type === "switch" && <AdminPanelSettingsOutlinedIcon />}
-    //         {type === "sensor" && <SecurityOutlinedIcon />}
-    //         <Typography color={colors.grey[100]} sx={{ ml: "5px" }}>
-    //           {type}
-    //         </Typography>
-    //       </Box>
-    //     );
-    //   },
-    // },
     {
       field: 'edit',
       headerName: 'Edit',

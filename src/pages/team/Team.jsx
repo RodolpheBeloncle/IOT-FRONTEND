@@ -28,7 +28,7 @@ const Team = () => {
 
   const handleDelete = (id) => {
     axios
-      .delete('http://localhost:5000/api/user' + `/${id}`)
+      .delete(import.meta.env.VITE_API_USERS + `/${id}`)
       .then((res) => {
         console.log('users', res.data);
       })
@@ -43,7 +43,7 @@ const Team = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/user')
+      .get(import.meta.env.VITE_API_USERS)
       .then((res) => {
         console.log('users', res.data);
         setGridRows(res.data);

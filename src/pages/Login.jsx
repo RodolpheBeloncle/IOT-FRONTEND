@@ -16,37 +16,31 @@ const Login = () => {
   });
   const [messageApi, contextHolder] = message.useMessage();
 
-  // const instance = axios.create({
-  //   withCredentials: true,
-  //   headers: {
-  //     Authorization: `Bearer ${getCookie('token')}`,
-  //   },
-  //   timeout: 2000,
-  // });
-
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
       const response = await axios.post(
-        // import.meta.env.VITE_API_AUTH_LOGIN,
-        'http://127.0.0.1:5000/api/auth/login',
+        import.meta.env.VITE_API_AUTH_LOGIN,
         loginCredentials
       );
       const { message, token } = response.data;
 
       await setCookie('token', token);
       setIsAuthenticated(true);
-      alert(message);
+      // alert(message);
+      message.success(message, 2);
 
       navigate('/');
     } catch (error) {
       if (error.response) {
         const { data } = error.response;
-        alert(data);
+        // alert(data);
+        message.error(data, 2);
       } else {
-        alert('An unexpected error occurred');
+        // alert('An unexpected error occurred');
+        message.error('An unexpected error occurred', 2);
       }
     } finally {
       setIsLoading(false);

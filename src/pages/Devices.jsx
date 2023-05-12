@@ -25,7 +25,7 @@ const Devices = () => {
 
   const getDevicesList = useCallback(() => {
     axios
-      .get(import.meta.env.VITE_API_DEVICES)
+      .get('http://localhost:5000/api/device')
       .then((res) => {
         console.log('Devices : ', res.data);
         setDevices(res.data);
@@ -52,12 +52,12 @@ const Devices = () => {
   }, []);
   return (
     <>
-      <Row className="row" span={4} style={{ margin: '10px' }}>
-        <CustomFormModal
-          isOpenModal={isOpenModal}
-          setIsOpenModal={setIsOpenModal}
-        />
-      </Row>
+      {/* <Row className="row" span={4} style={{ margin: '10px' }}> */}
+      <CustomFormModal
+        isOpenModal={isOpenModal}
+        setIsOpenModal={setIsOpenModal}
+      />
+      {/* </Row> */}
       {/* SEARCH BAR */}
       <TextField
         style={{ margin: '20px' }}

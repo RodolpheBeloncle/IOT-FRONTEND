@@ -66,7 +66,7 @@ const UpdateFormModal = ({
 
   const onFinish = async () => {
     await axios
-      .put(`http://localhost:8000/devices/${device.id}`, device)
+      .put(`${import.meta.env.VITE_API_DEVICES}/${device.id}`, device)
       .then((res) => {
         console.log('add controllers', res);
         openNotification(res.data.type);
