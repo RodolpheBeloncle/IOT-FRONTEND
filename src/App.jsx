@@ -19,8 +19,7 @@ import FAQ from './pages/faq/Faq';
 
 const App = () => {
   const [theme, colorMode] = useMode();
-  const { userInfo, isAuthenticated, setIsAuthenticated } =
-    useContext(UserContext);
+  const { isAuthenticated } = useContext(UserContext);
 
   return (
     <>
@@ -37,25 +36,19 @@ const App = () => {
               path="/user/reset/:id/:token"
               element={<ChangePassword />}
             />
-            {/* <ProtectedRoute isAuthenticated={isAuthenticated}> */}
-            // {/* <Route index element={<Devices />} /> */}
-            {/* <Route exact path="/profil" element={<Profil />} />
-                  <Route exact path="form/user">
-                    <Route exact index element={<FormUser />} />
-                    <Route exact path=":id" element={<FormUser />} />
-                  </Route>
-                  <Route exact path="/manageTeam" element={<Team />} />
-                  <Route
-                    exact
-                    path="/manageDevice"
-                    element={<ControllersIoT />}
-                  />
-                  <Route exact path="/faq" element={<FAQ />} /> */}
-            {/* </ProtectedRoute> */}
+
             <Route
               element={<ProtectedRoute isAuthenticated={isAuthenticated} />}
             >
               <Route element={<Devices />} path="/" exact />
+              <Route exact path="/profil" element={<Profil />} />
+              <Route exact path="form/user">
+                <Route exact index element={<FormUser />} />
+                <Route exact path=":id" element={<FormUser />} />
+              </Route>
+              <Route exact path="/manageTeam" element={<Team />} />
+              <Route exact path="/manageDevice" element={<ControllersIoT />} />
+              <Route exact path="/faq" element={<FAQ />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

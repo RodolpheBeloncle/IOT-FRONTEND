@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme, Box } from '@mui/material';
+import { useTheme } from '@mui/material';
+import GaugeChart from 'react-gauge-chart';
 import './progressCircle.css';
 
 import { tokens } from '../../theme';
@@ -73,11 +74,52 @@ const ProgressCircle = ({
       >
         <div className={`sensor-display ${temperatureColor}`}>
           {data.message ? (
-            <span>
+            <>
+              {/* <span>
               {data.message} {controller.unit}
-            </span>
+            </span> */}
+              <GaugeChart
+                id="gauge-chart3"
+                nrOfLevels={30}
+                colors={[
+                  '#ff0200',
+                  '#ff270a',
+                  '#ff5306',
+                  '#ffa801',
+                  '#ffd301',
+                  '#eef302',
+                  '#c0ff02',
+                  '#73ff01',
+                  '#27ff01',
+                  '#00ff00',
+                ].reverse()}
+                arcPadding={0}
+                cornerRadius={3}
+                percent={0.37}
+                style={{ width: '90%' }}
+              />
+            </>
           ) : (
-            'No Data'
+            <GaugeChart
+              id="gauge-chart3"
+              nrOfLevels={30}
+              colors={[
+                '#ff0200',
+                '#ff270a',
+                '#ff5306',
+                '#ffa801',
+                '#ffd301',
+                '#eef302',
+                '#c0ff02',
+                '#73ff01',
+                '#27ff01',
+                '#00ff00',
+              ].reverse()}
+              arcPadding={0}
+              cornerRadius={3}
+              percent={0.37}
+              style={{ width: '90%' }}
+            />
           )}
         </div>
       </div>
