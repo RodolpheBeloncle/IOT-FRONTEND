@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme, Box } from '@mui/material';
+import Gauge from '../Gauge';
+import { useTheme } from '@mui/material';
 import './progressCircle.css';
 
 import { tokens } from '../../theme';
@@ -47,22 +48,6 @@ const ProgressCircle = ({
   }, []);
   return (
     <>
-      {/* <Box
-        sx={{
-          background: `radial-gradient(${'#fff'} 55%, transparent 56%),
-                conic-gradient(transparent 0deg ${angle}deg, ${
-            colors.blueAccent[500]
-          } ${angle}deg 360deg),
-                ${colors.redAccent[500]}`,
-          // background: `radial-gradient(to right, #6fcbb6, #9c64f4),  conic-gradient(transparent 0deg ${angle}deg, ${colors.blueAccent[500]} ${angle}deg 360deg),
-          //          ${colors.redAccent[500]}`,
-          borderRadius: '50%',
-          width: `${size}px`,
-          height: `${size}px`,
-        }}
-      /> */}
-      {/* <Box> */}
-      {/* <div className="app-container"> */}
       <div
         className="sensor-display-container"
         style={{
@@ -72,61 +57,20 @@ const ProgressCircle = ({
         }}
       >
         <div className={`sensor-display ${temperatureColor}`}>
-          {data.message ? (
-            <span>
-              {data.message} {controller.unit}
-<<<<<<< HEAD
-            </span> */}
-              <GaugeChart
-                id="gauge-chart3"
-                nrOfLevels={30}
-                colors={[
-                  '#ff0200',
-                  '#ff270a',
-                  '#ff5306',
-                  '#ffa801',
-                  '#ffd301',
-                  '#eef302',
-                  '#c0ff02',
-                  '#73ff01',
-                  '#27ff01',
-                  '#00ff00',
-                ].reverse()}
-                arcPadding={0}
-                cornerRadius={3}
-                // percent={0.37}
-                style={{ width: '90%' }}
+          {
+            <>
+              {/* <span>
+                {data.message} {controller.unit}
+              </span> */}
+              <Gauge
+                value={parseInt(data?.message ? parseInt(data?.message) : 50)}
+                min={0}
+                max={100}
+                label={'label'}
+                units={'%'}
               />
             </>
-          ) : (
-            <GaugeChart
-              id="gauge-chart3"
-              nrOfLevels={30}
-              colors={[
-                '#ff0200',
-                '#ff270a',
-                '#ff5306',
-                '#ffa801',
-                '#ffd301',
-                '#eef302',
-                '#c0ff02',
-                '#73ff01',
-                '#27ff01',
-                '#00ff00',
-              ].reverse()}
-              arcPadding={0}
-              cornerRadius={3}
-              // hideText
-              formatTextValue={()=>{90}}
-              percent={0.2}
-              style={{ width: '90%' }}
-            />
-=======
-            </span>
-          ) : (
-            'No Data'
->>>>>>> parent of 08d04d7 (add jauge)
-          )}
+          }
         </div>
       </div>
       {/* <div className="button-container">
