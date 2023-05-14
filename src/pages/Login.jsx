@@ -29,26 +29,18 @@ const Login = () => {
 
       await setCookie('token', token);
       setIsAuthenticated(true);
-      // alert(message);
-      message.success(message, 2);
+      alert(message);
 
       navigate('/');
-    } catch (error) {
-      if (error.response) {
-        const { data } = error.response;
-        // alert(data);
-        message.error(data, 2);
-      } else {
-        // alert('An unexpected error occurred');
-        message.error('An unexpected error occurred', 2);
-      }
+    } catch (err) {
+      alert(err.message);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleGoogleLogin = async () => {
-    window.open('http://127.0.0.1:5000/auth/google', '_self');
+    window.open('http://localhost:5000/auth/google', '_self');
   };
 
   const googleLogin = () => {

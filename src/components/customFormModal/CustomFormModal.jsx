@@ -22,8 +22,8 @@ import AddIcon from '@mui/icons-material/Add';
 import { useTheme } from '@mui/material';
 import { ColorModeContext, tokens } from '../../theme';
 
-const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
-  // !! todo ALIGN INPUT FIELD + FIX BUTTON / LOGOUT BUTTON / CHECK API
+const CustomFormModal = ({ isOpenModal, setIsOpenModal, userInfo }) => {
+  // !! todo FIX BUTTON / LOGOUT BUTTON / CHECK API / clean message alert (login/device)
   const [form] = Form.useForm();
   const [formWidget, setFormWidget] = useState('switch');
   const theme = useTheme();
@@ -39,6 +39,7 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
     off: '',
     maxValue: '',
     unit: '',
+    createdBy: userInfo.email,
   });
 
   const openNotification = (widgetName) => {
@@ -68,6 +69,7 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal }) => {
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
+    alert(errorInfo)
   };
 
   const onFinish = async () => {

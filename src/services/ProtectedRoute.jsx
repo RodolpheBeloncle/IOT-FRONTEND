@@ -22,7 +22,6 @@ const ProtectedRoute = ({ isAuthenticated }) => {
   useEffect(() => {
     const token = getCookie('token');
     const googleAuth = getCookie('googleAuth');
-
     if (token) {
       const decodedToken = jwtDecode(token);
       const currentTime = Date.now() / 1000;
@@ -37,7 +36,7 @@ const ProtectedRoute = ({ isAuthenticated }) => {
         setUserInfo({
           picture,
           email,
-          role:"Admin",
+          role: 'admin',
           username,
         });
         setTokenAuth(token);

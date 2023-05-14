@@ -3,6 +3,7 @@ import './receiver.css';
 import { Card, List, Progress, Space, Row, Col, Tag } from 'antd';
 import ProgressCircle from '../../components/progressCircle/ProgressCircle';
 import ConnectIndicator from '../../components/connectIndicator/ConnectIndicator';
+import TagLabel from '../../components/tagLabel/TagLabel';
 import { QosOption } from '../index';
 
 const value = 30;
@@ -51,6 +52,15 @@ const Receiver = ({
         {controller.type === 'sensor' && (
           <>
             <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+              {controller.createdBy && (
+                <TagLabel
+                  style={{ display: 'flex', fontFamily: 'Lucida Handwriting' }}
+                  label={'createdBy'}
+                  content={controller.createdBy}
+                  color={'cyan'}
+                />
+              )}
+
               <Tag style={{ display: 'flex' }} color="geekblue">
                 Topic: {topic}
                 <ConnectIndicator connectStatus={connectStatus} />

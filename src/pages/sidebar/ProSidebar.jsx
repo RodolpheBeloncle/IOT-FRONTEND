@@ -164,7 +164,7 @@ const MyProSidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            {userInfo.role === 'Admin' ? (
+            {userInfo.role === 'admin' ? (
               <>
                 <Typography
                   variant="h6"

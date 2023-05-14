@@ -1,10 +1,11 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { Card, Form, Row, Col, Button, Tag } from 'antd';
+import { Card, Form, Button, Tag } from 'antd';
 import { PoweroffOutlined } from '@ant-design/icons';
 import { QosOption } from '../index';
 import ConnectIndicator from '../../components/connectIndicator/ConnectIndicator';
+import TagLabel from '../../components/tagLabel/TagLabel';
 
-const Publisher = ({ publish, topic, type, connectStatus }) => {
+const Publisher = ({ publish, topic, controller, connectStatus }) => {
   const [color, setColor] = useState('red');
   const [record, setRecord] = useState({
     topic: topic,
@@ -34,6 +35,14 @@ const Publisher = ({ publish, topic, type, connectStatus }) => {
         onFinish={onFinish}
       >
         <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+          {controller.createdBy && (
+            <TagLabel
+              style={{ display: 'flex', fontFamily: 'Lucida Handwriting' }}
+              label={'createdBy'}
+              content={controller.createdBy}
+              color={'cyan'}
+            />
+          )}
           <Tag style={{ display: 'flex' }} color="geekblue">
             Topic: {topic} <ConnectIndicator connectStatus={connectStatus} />
           </Tag>

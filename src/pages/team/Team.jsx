@@ -46,7 +46,11 @@ const Team = () => {
       .get(import.meta.env.VITE_API_USERS)
       .then((res) => {
         console.log('users', res.data);
-        setGridRows(res.data);
+        const rows = res.data.map((row) => ({
+          id: row._id, // assuming your MongoDB documents have an _id field
+          ...row, // add any other fields from your document as needed
+        }));
+        setGridRows(rows);
       })
       .catch((err) => console.log(err));
   }, []);

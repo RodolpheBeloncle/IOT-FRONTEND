@@ -56,6 +56,7 @@ const Devices = () => {
       <CustomFormModal
         isOpenModal={isOpenModal}
         setIsOpenModal={setIsOpenModal}
+        userInfo={userInfo}
       />
       {/* </Row> */}
       {/* SEARCH BAR */}

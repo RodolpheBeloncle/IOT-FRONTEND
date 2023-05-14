@@ -1,4 +1,5 @@
-import React, { createContext, useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState, useContext } from 'react';
+import { UserContext } from '../context/UserContextProvider';
 import { Space, Spin, message } from 'antd';
 import Connection from './Connection';
 import Publisher from './publisher/Publisher';
@@ -28,6 +29,7 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
   const [isSubed, setIsSub] = useState(false);
   const [payload, setPayload] = useState({});
   const [topic, setTopic] = useState(controllersIOT.topic);
+  const { userInfo } = useContext(UserContext);
   // const [connectStatus, setConnectStatus] = useState("Connect");
 
   const [messageApi, contextHolder] = message.useMessage();
@@ -183,11 +185,10 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
         setConnectStatus={setConnectStatus}
       />
       <QosOption.Provider value={qosOption}>
-    
         {controllersIOT.type === 'switch' ? (
           <Publisher
             publish={mqttPublish}
-            type={controllersIOT.type}
+            controller={controllersIOT}
             topic={topic}
             connectStatus={connectStatus}
           />
@@ -204,15 +205,17 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
           controller={controllersIOT}
         />
       ) : null}
-      <QosOption.Provider value={qosOption}>
-        <Subscriber
-          sub={mqttSub}
-          unSub={mqttUnSub}
-          showUnsub={isSubed}
-          topic={topic}
-          setTopic={setTopic}
-        />
-      </QosOption.Provider>
+      {userInfo.role === 'admin' ? (
+        <QosOption.Provider value={qosOption}>
+          <Subscriber
+            sub={mqttSub}
+            unSub={mqttUnSub}
+            showUnsub={isSubed}
+            topic={topic}
+            setTopic={setTopic}
+          />
+        </QosOption.Provider>
+      ) : null}
     </>
   );
 };

@@ -15,6 +15,11 @@ const ConnectIndicator = ({ connectStatus }) => {
           <div class="led-yellow"></div>
         </div>
       )}
+      {connectStatus === 'reconnecting' && (
+        <div class="led-box">
+          <div class="led-yellow"></div>
+        </div>
+      )}
       {connectStatus === 'connected' && (
         <div class="led-box">
           <div class="led-green"></div>
