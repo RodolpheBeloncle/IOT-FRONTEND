@@ -4,25 +4,25 @@ import './connectIndicator.css';
 const ConnectIndicator = ({ connectStatus }) => {
   console.log(connectStatus);
   return (
-    <div class="container">
+    <div className="container">
       {connectStatus === 'connect' && (
-        <div class="led-box">
-          <div class="led-red"></div>
+        <div className="led-box">
+          <div className="led-red"></div>
         </div>
       )}
       {connectStatus === 'connecting' && (
-        <div class="led-box">
-          <div class="led-yellow"></div>
+        <div className="led-box">
+          <div className="led-yellow"></div>
         </div>
       )}
       {connectStatus === 'reconnecting' && (
-        <div class="led-box">
-          <div class="led-yellow"></div>
+        <div className="led-box">
+          <div className="led-yellow"></div>
         </div>
       )}
       {connectStatus === 'connected' && (
-        <div class="led-box">
-          <div class="led-green"></div>
+        <div className="led-box">
+          <div className="led-green"></div>
         </div>
       )}
     </div>

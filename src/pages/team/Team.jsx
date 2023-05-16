@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
+import '../styles/team.css';
 import { Box, Typography, useTheme, Checkbox } from '@mui/material';
+import emptyProfil from '../../assets/profile.png';
 import { useNavigate } from 'react-router-dom';
 import { Button, message, Popconfirm } from 'antd';
 import { DeleteOutlined, EditFilled } from '@ant-design/icons';
@@ -75,14 +77,19 @@ const Team = () => {
         />
       ),
     },
-    { field: '_id', headerName: 'Id' },
-
     {
-      field: 'username',
-      headerName: 'Name',
-      width: 200,
-      cellClassName: 'name-column--cell',
+      field: 'picture',
+      headerName: 'user',
+      flex: 1,
+      renderCell: (params) => {
+        return (
+          <div className="cellWithImg">
+            <img className="cellImg" src={params.row.picture} alt="avatar" />
+          </div>
+        );
+      },
     },
+
     {
       field: 'isVerified',
       headerName: 'isVerified',

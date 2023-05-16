@@ -7,7 +7,7 @@ import Navbar from '../components/navbar/Navbar';
 import BreadCrumb from '../components/breadCrumb/BreadCrumb';
 import Topbar from '../components/topbar/Topbar';
 import { MyProSidebarProvider } from '../pages/sidebar/sidebarContext';
-import Devices from '../pages/devices';
+
 
 const ProtectedRoute = ({ isAuthenticated }) => {
   const {

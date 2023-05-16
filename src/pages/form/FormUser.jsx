@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import emptyProfil from '../../assets/profile.png';
 import axios from 'axios';
 import {
   Box,
@@ -15,9 +16,10 @@ import {
 } from '@mui/material';
 import { newUser } from '../../interface/NewUser';
 
-import { Popconfirm, notification } from 'antd';
+import { Upload, message, Popconfirm, notification } from 'antd';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { ColorModeContext, tokens } from '../../theme';
-import { Upload } from 'antd';
+
 import ImgCrop from 'antd-img-crop';
 import * as yup from 'yup';
 import { useMediaQuery } from '@mui/material';
@@ -25,33 +27,43 @@ import Header from '../../components/Header';
 
 const FormUser = () => {
   const { id } = useParams();
+  console.log('ID', id);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const [colorTarget, setColorTarget] = useState('');
   const [userRole, setUserRole] = useState('User');
-  const [fileList, setFileList] = useState([]);
+  const [picture, setPicture] = useState('');
+  const [fileList, setFileList] = useState([
+    {
+      uid: '-1',
+      name: 'image.png',
+      status: 'done',
+      url: emptyProfil,
+    },
+  ]);
+  const navigate = useNavigate();
 
   const [inputsField, setInputsField] = useState(newUser);
 
   const checkoutSchema = yup.object().shape({
-    username: yup.string().required('Required'),
-    email: yup.string().email('Invalid email!').required('Required'),
-    password: yup
-      .string()
-      .required('No password provided.')
-      .min(8, 'Password is too short - should be 8 chars minimum.')
-      .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
-    role: yup.string().oneOf(['Admin', 'User', 'Guest']).required(),
-    isVerified: yup.boolean(),
-    picture: yup.array(),
-    color: yup
-      .string()
-      .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'Invalid color value'),
+    // username: yup.string().required('Required'),
+    // email: yup.string().email('Invalid email!').required('Required'),
+    // password: yup
+    //   .string()
+    //   .required('No password provided.')
+    //   .min(8, 'Password is too short - should be 8 chars minimum.')
+    //   .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
+    // role: yup.string().oneOf(['admin', 'user', 'guest']).required(),
+    // isVerified: yup.boolean(),
+    // picture: yup.array(),
+    // color: yup
+    //   .string()
+    //   .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'Invalid color value'),
   });
   const [errors, setErrors] = useState({});
 
-  const openNotification = () => {
+  const notificationSucess = () => {
     notification.success({
       message: 'User Created',
       description: `${
@@ -59,6 +71,14 @@ const FormUser = () => {
           ? 'User has been successfully updated!'
           : 'User has been successfully created!'
       }`,
+      placement: 'top',
+    });
+  };
+
+  const notificationError = (err) => {
+    notification.error({
+      message: 'error',
+      description: err.data.message,
       placement: 'top',
     });
   };
@@ -89,52 +109,13 @@ const FormUser = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const onChangeFile = ({ file, fileList }) => {
+    console.log('fileList', fileList);
+    setFileList(fileList);
 
-    try {
-      checkoutSchema
-        .validate(inputsField, { abortEarly: false })
-        .then(() => {
-          id
-            ? axios.put(`http://localhost:8000/users/${id}`, inputsField)
-            : axios.post('http://localhost:8000/users', inputsField);
-          console.log('Form data is valid:', inputsField);
-
-          openNotification();
-          setInputsField({
-            username: '',
-            email: '',
-            password: '',
-            isVerified: false,
-            picture: [],
-            role: 'User',
-            color: '#ffffff',
-          });
-          // form data is valid, proceed with submission
-
-          // await axios.post(import.meta.env.VITE_REACT_APP_API_USERS, inputsField);
-        })
-        .catch((error) => {
-          notification.error({
-            message: 'Error input',
-            description: `please fix error : ${error}`,
-            placement: 'top',
-          });
-        });
-    } catch (err) {
-      // validation errors occurred, update error state
-      const validationErrors = {};
-
-      setErrors(validationErrors);
-    }
-  };
-
-  const onChangeFile = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
     setInputsField((prevState) => ({
       ...prevState,
-      picture: fileList,
+      picture: file,
     }));
   };
 
@@ -153,17 +134,71 @@ const FormUser = () => {
     imgWindow?.document.write(image.outerHTML);
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const form = new FormData();
+    form.append(inputsField);
+
+    try {
+      checkoutSchema.validate(inputsField, { abortEarly: false });
+      await axios.put(`${import.meta.env.VITE_API_USERS}/${id}`, form);
+      console.log('form', form);
+      // axios.post(import.meta.env.VITE_API_USERS, inputsField);
+
+      notificationSucess();
+      // navigate('/');
+    } catch (err) {
+      // validation errors occurred, update error state
+      const validationErrors = {};
+
+      setErrors(validationErrors);
+      notification.error({
+        message: err.message,
+        description: `please fix error : ${error}`,
+        placement: 'top',
+      });
+    } finally {
+      setInputsField({
+        username: '',
+        email: '',
+        // password: '',
+        isVerified: false,
+        picture: [],
+        role: 'user',
+        color: '#ffffff',
+      });
+    }
+  };
+
   const getUserById = useCallback(async () => {
-    const response = await axios.get(`http://localhost:8000/users/${id}`);
+    const response = await axios.get(`${import.meta.env.VITE_API_USERS}/${id}`);
 
     console.log('getuser', response.data);
+    const { picture } = response.data;
     setInputsField(response.data);
+
+    setFileList([
+      {
+        uid: '-1',
+        name: 'image.png',
+        status: 'done',
+        url: picture || '',
+      },
+    ]);
   }, []);
 
   useEffect(() => {
     id && getUserById();
     id && setColorTarget(inputsField.color);
     id && setUserRole(inputsField.role);
+    let defaultImage = [
+      {
+        uid: '-1',
+        name: 'image.png',
+        status: 'done',
+        url: inputsField?.picture,
+      },
+    ];
   }, []);
 
   const isNonMobile = useMediaQuery('(min-width:600px)');
@@ -185,7 +220,7 @@ const FormUser = () => {
         >
           <ImgCrop rotationSlider>
             <Upload
-              // action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+              action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
               listType="picture-card"
               fileList={fileList}
               onChange={onChangeFile}
@@ -195,6 +230,7 @@ const FormUser = () => {
               {fileList.length < 1 && '+ Upload'}
             </Upload>
           </ImgCrop>
+
           <TextField
             label={id ? '' : 'Username'}
             name="username"
@@ -211,7 +247,7 @@ const FormUser = () => {
             error={!!errors.email}
             required
           />
-          <TextField
+          {/* <TextField
             label={id ? '' : 'Password'}
             name="password"
             type="password"
@@ -219,7 +255,7 @@ const FormUser = () => {
             onChange={handleChange}
             error={!!errors.password}
             required
-          />
+          /> */}
           <FormControlLabel
             control={
               <Checkbox
@@ -239,9 +275,9 @@ const FormUser = () => {
               value={userRole}
               onChange={handleChangeRole}
             >
-              <MenuItem value="Admin">Admin</MenuItem>
-              <MenuItem value="User">User</MenuItem>
-              <MenuItem value="Guest">Guest</MenuItem>
+              <MenuItem value="admin">Admin</MenuItem>
+              <MenuItem value="user">User</MenuItem>
+              <MenuItem value="guest">Guest</MenuItem>
             </Select>
           </FormControl>
           {errors?.role && <span role="alert">{errors.role.message}</span>}
@@ -270,7 +306,7 @@ const FormUser = () => {
             onOpenChange={() => console.log('open change')}
           >
             <Button
-              // type="submit"
+              type="submit"
               // onClick={(e) => handleSubmit(e)}
               variant="contained"
               style={{
