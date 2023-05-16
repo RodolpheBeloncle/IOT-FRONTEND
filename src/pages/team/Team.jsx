@@ -84,7 +84,11 @@ const Team = () => {
       renderCell: (params) => {
         return (
           <div className="cellWithImg">
-            <img className="cellImg" src={params.row.picture} alt="avatar" />
+            <img
+              className="cellImg"
+              src={params.row.picture ? params.row.picture : emptyProfil}
+              alt="avatar"
+            />
           </div>
         );
       },

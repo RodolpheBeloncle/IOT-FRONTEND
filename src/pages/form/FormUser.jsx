@@ -42,6 +42,7 @@ const FormUser = () => {
       url: emptyProfil,
     },
   ]);
+  const [confirmVisible, setConfirmVisible] = useState(false);
   const navigate = useNavigate();
 
   const [inputsField, setInputsField] = useState(newUser);
@@ -134,29 +135,90 @@ const FormUser = () => {
     imgWindow?.document.write(image.outerHTML);
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //       const form = await new FormData();
+  //     const { color, picture, role, username, email } = inputsField;
+  //     form.append('color', color);
+  //     form.append('picture', picture);
+  //     form.append('role', role);
+  //     form.append('username', username);
+  //     form.append('email', email);
+  //     // checkoutSchema.validate(inputsField, { abortEarly: false });
+  //     await axios.put(`${import.meta.env.VITE_API_USERS}/${id}`, form);
+
+  //     console.log('form', form);
+  //     // axios.post(import.meta.env.VITE_API_USERS, inputsField);
+
+  //     notificationSucess();
+  //     // navigate('/');
+  //   } catch (err) {
+  //     // validation errors occurred, update error state
+  //     // const validationErrors = {};
+  //     // setErrors(validationErrors);
+  //     // notification.error({
+  //     //   message: 'form error',
+  //     //   description: `please fix error : ${err.message}`,
+  //     //   placement: 'top',
+  //     // });
+  //   } finally {
+  //     setInputsField({
+  //       username: '',
+  //       email: '',
+  //       // password: '',
+  //       isVerified: false,
+  //       picture: [],
+  //       role: 'user',
+  //       color: '#ffffff',
+  //     });
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const form = new FormData();
-    form.append(inputsField);
 
     try {
-      checkoutSchema.validate(inputsField, { abortEarly: false });
-      await axios.put(`${import.meta.env.VITE_API_USERS}/${id}`, form);
-      console.log('form', form);
-      // axios.post(import.meta.env.VITE_API_USERS, inputsField);
+      // form fields and their values stored in state variables
+      const form = await new FormData();
+      const { color, picture, role, username, email, isVerified } = inputsField;
+      form.append('color', color);
+      form.append('picture', picture);
+      form.append('role', role);
+      form.append('isVerified', isVerified);
+      form.append('username', username);
+      form.append('email', email);
 
-      notificationSucess();
-      // navigate('/');
-    } catch (err) {
-      // validation errors occurred, update error state
-      const validationErrors = {};
+      let response;
 
-      setErrors(validationErrors);
-      notification.error({
-        message: err.message,
-        description: `please fix error : ${error}`,
-        placement: 'top',
-      });
+      if (id) {
+        // Update existing user logic
+        console.log('Updating user:', id);
+        response = await axios.put(
+          `${import.meta.env.VITE_API_USERS}/${id}`,
+          form
+        );
+      } else {
+        // Create new user logic
+        console.log('Creating new user');
+        response = await axios.post(import.meta.env.VITE_API_USERS, form);
+      }
+
+      // Handle the API response
+      if (response.status === 200) {
+        // Successful API call
+        message.success('Form submitted successfully!');
+        // Reset the form fields or perform any other necessary cleanup
+        // Assuming you have a function to reset the form fields
+        navigate('/');
+      } else {
+        // API call failed
+        message.error('Failed to submit the form. Please try again.');
+      }
+    } catch (error) {
+      // Handle any errors that occur during the API call
+      console.error('API error:', error);
+      message.error('An error occurred. Please try again later.');
     } finally {
       setInputsField({
         username: '',
@@ -174,7 +236,7 @@ const FormUser = () => {
     const response = await axios.get(`${import.meta.env.VITE_API_USERS}/${id}`);
 
     console.log('getuser', response.data);
-    const { picture } = response.data;
+
     setInputsField(response.data);
 
     setFileList([
@@ -182,7 +244,7 @@ const FormUser = () => {
         uid: '-1',
         name: 'image.png',
         status: 'done',
-        url: picture || '',
+        url: response.data.picture,
       },
     ]);
   }, []);
@@ -191,14 +253,6 @@ const FormUser = () => {
     id && getUserById();
     id && setColorTarget(inputsField.color);
     id && setUserRole(inputsField.role);
-    let defaultImage = [
-      {
-        uid: '-1',
-        name: 'image.png',
-        status: 'done',
-        url: inputsField?.picture,
-      },
-    ];
   }, []);
 
   const isNonMobile = useMediaQuery('(min-width:600px)');
@@ -259,6 +313,7 @@ const FormUser = () => {
           <FormControlLabel
             control={
               <Checkbox
+                checked={inputsField?.isVerified}
                 value={inputsField?.isVerified}
                 onChange={handleChange}
                 name="isVerified"
@@ -272,7 +327,7 @@ const FormUser = () => {
             <InputLabel id="select-label">Select a role</InputLabel>
             <Select
               labelId="select-label"
-              value={userRole}
+              value={inputsField.role}
               onChange={handleChangeRole}
             >
               <MenuItem value="admin">Admin</MenuItem>
@@ -293,7 +348,7 @@ const FormUser = () => {
           />
         </Box>
 
-        <Box display="flex" justifyContent="end" mt="20px">
+        {/* <Box display="flex" justifyContent="end" mt="20px">
           <Popconfirm
             placement="topRight"
             title="Confirm Creation"
@@ -302,12 +357,33 @@ const FormUser = () => {
                 ? 'Are you sur to update this user ?'
                 : 'Are you sur to create this new user ?'
             }`}
-            onConfirm={handleSubmit}
             onOpenChange={() => console.log('open change')}
           >
             <Button
               type="submit"
-              // onClick={(e) => handleSubmit(e)}
+              onClick={(e) => handleSubmit(e)}
+              variant="contained"
+              style={{
+                backgroundColor: colors.greenAccent[600],
+              }}
+            >
+              {`${id ? 'Update User' : 'Create New User'}`}
+            </Button>
+          </Popconfirm>
+        </Box> */}
+
+        <Box display="flex" justifyContent="end" mt="20px">
+          <Popconfirm
+            placement="topRight"
+            title="Confirm Creation"
+            open={confirmVisible}
+            onConfirm={handleSubmit}
+            onCancel={() => setConfirmVisible(false)}
+            onOpenChange={(visible) => setConfirmVisible(visible)}
+          >
+            <Button
+              // type="submit"
+              onClick={() => setConfirmVisible(true)}
               variant="contained"
               style={{
                 backgroundColor: colors.greenAccent[600],
