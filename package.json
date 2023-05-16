@@ -31,6 +31,7 @@
     "react-dom": "^18.2.0",
     "react-pro-sidebar": "1.0.0-alpha.7",
     "react-router-dom": "^6.10.0",
+    "sweetalert2": "^11.4.8",
     "vite-plugin-node-stdlib-browser": "^0.2.1",
     "vite-plugin-notifier": "^0.1.5",
     "yup": "0.32.11"

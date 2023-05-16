@@ -39,7 +39,9 @@ const BreadCrumb = () => {
       {!isNonMobile && (
         <div className="demo-nav">
           <NavLink to="/">Dashboard</NavLink>
-          {userInfo.role === 'Admin' ? (
+          <NavLink to="/profil">Profil</NavLink>
+          <NavLink to="/FAQ">FAQ</NavLink>
+          {userInfo.role === 'admin' ? (
             <>
               <NavLink to="/manageTeam">Team</NavLink>
               <NavLink to="/manageDevice">Devices</NavLink>
@@ -50,7 +52,9 @@ const BreadCrumb = () => {
       )}
       <Routes>
         <Route path="/" element={<span>Dashboard</span>} />
-        {userInfo.role === 'Admin' ? (
+        <Route path="/profil" element={<span>Profil</span>} />
+        <Route path="/FAQ" element={<span>FAQ</span>} />
+        {userInfo.role === 'admin' ? (
           <>
             <Route path="/manageTeam" element={<span>Team</span>} />
             <Route path="/manageDevice" element={<span>Devices</span>} />

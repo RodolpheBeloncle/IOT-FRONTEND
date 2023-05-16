@@ -42,13 +42,14 @@ const App = () => {
             >
               <Route element={<Devices />} path="/" exact />
               <Route exact path="/profil" element={<Profil />} />
+              <Route exact path="/faq" element={<FAQ />} />
               <Route exact path="form/user">
                 <Route exact index element={<FormUser />} />
                 <Route exact path=":id" element={<FormUser />} />
               </Route>
               <Route exact path="/manageTeam" element={<Team />} />
               <Route exact path="/manageDevice" element={<ControllersIoT />} />
-              <Route exact path="/faq" element={<FAQ />} />
+             
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

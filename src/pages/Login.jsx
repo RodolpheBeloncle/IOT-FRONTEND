@@ -66,14 +66,12 @@ const Login = () => {
         />
       </div>
       {contextHolder}
-      {/* <h1 className="loginTitle">Choose a Login Method</h1> */}
-      <div className="wrapper">
-        <div className="left">
-          {/* <div classNameName="loginButton google" onClick={googleLogin}>
-            <img src={google} alt="" classNameName="icon" />
-          </div> */}
 
-          <div className="google-btn" onClick={googleLogin}>
+      <div className="wrapper">
+        {/* <IotLogo /> */}
+        <div className="left">
+          <IotLogo />
+          {/* <div className="google-btn" onClick={googleLogin}>
             <div className="google-icon-wrapper">
               <img
                 className="google-icon"
@@ -82,6 +80,18 @@ const Login = () => {
             </div>
             <p className="btn-text">
               <b>Sign in with google</b>
+            </p>
+          </div> */}
+          <div className="google-btn" onClick={googleLogin}>
+            <div className="google-icon-wrapper">
+              <img
+                className="google-icon"
+                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+                alt="Google Icon"
+              />
+            </div>
+            <p className="btn-text">
+              <b>Sign in with Google</b>
             </p>
           </div>
           {isLoading && (

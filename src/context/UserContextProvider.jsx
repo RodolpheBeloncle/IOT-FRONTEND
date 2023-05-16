@@ -8,6 +8,7 @@ export const UserContext = createContext();
 
 export const UserContextProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
   const [tokenAuth, setTokenAuth] = useState(null);
   const [userInfo, setUserInfo] = useState({
     email: '',
@@ -28,8 +29,6 @@ export const UserContextProvider = ({ children }) => {
   function setCookie(key, value) {
     Cookies.set(key, value, { expires: 7 });
   }
-
-
 
   const handleLogout = async () => {
     try {
@@ -77,6 +76,8 @@ export const UserContextProvider = ({ children }) => {
         setTokenAuth,
         userInfo,
         setUserInfo,
+        isLoading,
+        setIsLoading,
       }}
     >
       {children}

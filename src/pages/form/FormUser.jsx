@@ -1,6 +1,10 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
+import './formUser.css';
 import { useParams, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { UserContext } from '../../context/UserContextProvider';
 import emptyProfil from '../../assets/profile.png';
+import securedApi from '../../services/axiosInterceptor';
 import axios from 'axios';
 import {
   Box,
@@ -15,9 +19,8 @@ import {
   useTheme,
 } from '@mui/material';
 import { newUser } from '../../interface/NewUser';
-import { Upload, message, Popconfirm, notification } from 'antd';
+import { Upload, message, Popconfirm } from 'antd';
 import { ColorModeContext, tokens } from '../../theme';
-
 import ImgCrop from 'antd-img-crop';
 import * as yup from 'yup';
 import { useMediaQuery } from '@mui/material';
@@ -25,6 +28,7 @@ import Header from '../../components/Header';
 
 const FormUser = () => {
   const { id } = useParams();
+  const { getCookie, isLoading, setIsLoading } = useContext(UserContext);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
@@ -60,25 +64,19 @@ const FormUser = () => {
   });
   const [errors, setErrors] = useState({});
 
-  const notificationSucess = () => {
-    notification.success({
-      message: 'User Created',
-      description: `${
-        id
-          ? 'User has been successfully updated!'
-          : 'User has been successfully created!'
-      }`,
-      placement: 'top',
+  const notificationSucess = async (response) => {
+    Swal.fire({
+      title: response,
+      showClass: {
+        popup: 'animate__animated animate__fadeInDown',
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutUp',
+      },
     });
   };
 
-  const notificationError = (err) => {
-    notification.error({
-      message: 'error',
-      description: err.data.message,
-      placement: 'top',
-    });
-  };
+  const notificationError = async (err) => {};
 
   const handleChange = (e) => {
     console.log(e.target.value);
@@ -131,50 +129,14 @@ const FormUser = () => {
     imgWindow?.document.write(image.outerHTML);
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //       const form = await new FormData();
-  //     const { color, picture, role, username, email } = inputsField;
-  //     form.append('color', color);
-  //     form.append('picture', picture);
-  //     form.append('role', role);
-  //     form.append('username', username);
-  //     form.append('email', email);
-  //     // checkoutSchema.validate(inputsField, { abortEarly: false });
-  //     await axios.put(`${import.meta.env.VITE_API_USERS}/${id}`, form);
-
-  //     console.log('form', form);
-  //     // axios.post(import.meta.env.VITE_API_USERS, inputsField);
-
-  //     notificationSucess();
-  //     // navigate('/');
-  //   } catch (err) {
-  //     // validation errors occurred, update error state
-  //     // const validationErrors = {};
-  //     // setErrors(validationErrors);
-  //     // notification.error({
-  //     //   message: 'form error',
-  //     //   description: `please fix error : ${err.message}`,
-  //     //   placement: 'top',
-  //     // });
-  //   } finally {
-  //     setInputsField({
-  //       username: '',
-  //       email: '',
-  //       // password: '',
-  //       isVerified: false,
-  //       picture: [],
-  //       role: 'user',
-  //       color: '#ffffff',
-  //     });
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      // set User Credientials
+      const token = getCookie('token');
+      const headers = { Authorization: `Bearer ${token}` };
+
       // form fields and their values stored in state variables
       const form = await new FormData();
       const { color, picture, role, username, email, isVerified, password } =
@@ -192,9 +154,10 @@ const FormUser = () => {
       if (id) {
         // Update existing user logic
         console.log('Updating user:', id);
-        response = await axios.put(
-          `${import.meta.env.VITE_API_USERS}/${id}`,
-          form
+        response = await securedApi.put(
+          `${import.meta.env.VITE_API_AUTH_USERS}/${id}`,
+          form,
+          { headers }
         );
       } else {
         // Create new user logic
@@ -202,13 +165,19 @@ const FormUser = () => {
           console.log('Creating new user info : ', element);
         });
 
-        response = await axios.post(import.meta.env.VITE_API_USERS, form);
+        response = await securedApi.post(
+          import.meta.env.VITE_API_AUTH_USERS,
+          form,
+          {
+            headers,
+          }
+        );
       }
 
       // Handle the API response
       if (response.status === 200) {
         // Successful API call
-        notificationSucess();
+        notificationSucess(response);
         // Reset the form fields or perform any other necessary cleanup
         // Assuming you have a function to reset the form fields
         navigate('/');
@@ -216,10 +185,10 @@ const FormUser = () => {
         // API call failed
         message.error('Failed to submit the form. Please try again.');
       }
-    } catch (error) {
+    } catch ({ response }) {
       // Handle any errors that occur during the API call
-      console.error('API error:', error);
-      notificationError(error);
+      console.error('API error:', response.data);
+      notificationError(response.data);
     } finally {
       setInputsField({
         username: '',
@@ -256,7 +225,7 @@ const FormUser = () => {
         url: response.data.picture,
       },
     ]);
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     console.log('ID', id);
@@ -315,7 +284,7 @@ const FormUser = () => {
           </ImgCrop>
 
           <TextField
-            label={id ? '' : 'Username'}
+            label={'Username'}
             name="username"
             value={inputsField?.username}
             onChange={handleChange}
@@ -323,22 +292,24 @@ const FormUser = () => {
             required
           />
           <TextField
-            label={id ? '' : 'Email'}
+            label={'Email'}
             name="email"
             value={inputsField?.email}
             onChange={handleChange}
             error={!!errors.email}
             required
           />
-          <TextField
-            label={id ? '' : 'Password'}
-            name="password"
-            type="password"
-            value={inputsField?.password}
-            onChange={handleChange}
-            error={!!errors.password}
-            required
-          />
+          <FormControl>
+            <TextField
+              label={'Password'}
+              name="password"
+              type="password"
+              value={inputsField?.password}
+              onChange={handleChange}
+              error={!!errors.password}
+              required
+            />
+          </FormControl>
           <FormControlLabel
             control={
               <Checkbox

@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const instance = axios.create({
+const securedApi = axios.create({
   baseURL: 'http://localhost:5000/',
   widthCredentials: true,
   timeout: 2000,
 });
 
-export default instance;
+export default securedApi;

@@ -3,7 +3,7 @@ import './controllersIoT.css';
 import { UserContext } from '../../context/UserContextProvider';
 import axios from 'axios';
 import { Box, useTheme, Checkbox } from '@mui/material';
-import { Row, Button, message, Popconfirm } from 'antd';
+import { Button, message, Popconfirm } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { DataGrid } from '@mui/x-data-grid';
 import { tokens } from '../../theme';
@@ -60,7 +60,7 @@ const ControllersIoT = () => {
     {
       field: 'checkbox',
       headerName: ' ',
-      width: 50,
+      flex: 1,
       sortable: false,
       renderCell: (params) => (
         <Checkbox
@@ -76,13 +76,12 @@ const ControllersIoT = () => {
         />
       ),
     },
-    { field: '_id', headerName: 'Id' },
 
     {
       field: 'widgetName',
       headerName: 'Widget Name',
       cellClassName: 'name-column--cell',
-      width: 200,
+      flex: 1,
     },
     {
       field: 'type',
@@ -90,19 +89,19 @@ const ControllersIoT = () => {
       type: 'string',
       headerAlign: 'left',
       align: 'left',
-      width: 100,
+      flex: 1,
     },
 
-    { field: 'topic', headerName: 'Topic', width: 100 },
-    { field: 'unit', headerName: 'Unit', width: 100 },
-    { field: 'initValue', headerName: 'init Value', width: 100 },
-    { field: 'maxValue', headerName: 'max Value', width: 100 },
-    { field: 'createdBy', headerName: 'Created By', width: 100 },
+    { field: 'topic', headerName: 'Topic', flex: 1 },
+    { field: 'unit', headerName: 'Unit', flex: 1 },
+    { field: 'initValue', headerName: 'init Value', flex: 1 },
+    { field: 'maxValue', headerName: 'max Value', flex: 1 },
+    { field: 'createdBy', headerName: 'Created By', flex: 1 },
     {
       field: 'edit',
       headerName: 'Edit',
       sortable: false,
-      width: 100,
+      flex: 1,
       renderCell: (params) => (
         <UpdateFormModal
           gridRows={gridRows}
@@ -118,7 +117,7 @@ const ControllersIoT = () => {
       field: 'delete',
       headerName: 'Delete',
       sortable: false,
-      width: 100,
+      flex: 1,
       renderCell: (params) => (
         <Popconfirm
           placement="top"

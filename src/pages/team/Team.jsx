@@ -61,7 +61,7 @@ const Team = () => {
     {
       field: 'checkbox',
       headerName: ' ',
-      width: 50,
+      flex: 1,
       sortable: false,
       renderCell: (params) => (
         <Checkbox
@@ -96,16 +96,17 @@ const Team = () => {
 
     {
       field: 'isVerified',
+      flex: 1,
       headerName: 'isVerified',
       type: 'boolean',
       headerAlign: 'left',
       align: 'left',
     },
-    { field: 'email', headerName: 'Email', width: 200 },
+    { field: 'email', headerName: 'Email', flex: 2 },
     {
       field: 'Role',
       headerName: 'Role Llvel',
-      width: 100,
+      flex: 2,
       renderCell: ({ row: { role } }) => {
         return (
           <Box
@@ -116,14 +117,14 @@ const Team = () => {
             justifyContent="center"
             backgroundColor={
               role === 'Admin'
-                ? colors.greenAccent[600]
-                : colors.greenAccent[800]
+                ? colors.greenAccent[100]
+                : colors.greenAccent[600]
             }
             borderRadius="4px"
           >
-            {role === 'Admin' && <AdminPanelSettingsOutlinedIcon />}
-            {role === 'User' && <SecurityOutlinedIcon />}
-            {role === 'Guest' && <LockOpenOutlinedIcon />}
+            {role === 'admin' && <AdminPanelSettingsOutlinedIcon />}
+            {role === 'user' && <SecurityOutlinedIcon />}
+            {role === 'guest' && <LockOpenOutlinedIcon />}
             {role === '' && <span>No rôle</span>}
             <Typography color={colors.grey[100]} sx={{ ml: '5px' }}>
               {role}
@@ -136,13 +137,12 @@ const Team = () => {
       field: 'edit',
       headerName: 'Edit',
       sortable: false,
-      width: 100,
+      flex: 1,
       renderCell: (params) => (
         <Button
           variant="contained"
           color="primary"
           size="small"
-          // onClick={() => handleEdit(params.row)}
           onClick={() => navigate(`/form/user/${params.row._id}`)}
         >
           <EditFilled />
@@ -153,7 +153,7 @@ const Team = () => {
       field: 'delete',
       headerName: 'Delete',
       sortable: false,
-      width: 100,
+      flex: 1,
       renderCell: (params) => (
         <>
           <Popconfirm
