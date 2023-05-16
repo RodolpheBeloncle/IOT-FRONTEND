@@ -15,9 +15,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { newUser } from '../../interface/NewUser';
-
 import { Upload, message, Popconfirm, notification } from 'antd';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { ColorModeContext, tokens } from '../../theme';
 
 import ImgCrop from 'antd-img-crop';
@@ -27,13 +25,11 @@ import Header from '../../components/Header';
 
 const FormUser = () => {
   const { id } = useParams();
-  console.log('ID', id);
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
   const [colorTarget, setColorTarget] = useState('');
   const [userRole, setUserRole] = useState('User');
-  const [picture, setPicture] = useState('');
   const [fileList, setFileList] = useState([
     {
       uid: '-1',
@@ -181,10 +177,12 @@ const FormUser = () => {
     try {
       // form fields and their values stored in state variables
       const form = await new FormData();
-      const { color, picture, role, username, email, isVerified } = inputsField;
+      const { color, picture, role, username, email, isVerified, password } =
+        inputsField;
       form.append('color', color);
       form.append('picture', picture);
       form.append('role', role);
+      form.append('password', password);
       form.append('isVerified', isVerified);
       form.append('username', username);
       form.append('email', email);
@@ -200,14 +198,17 @@ const FormUser = () => {
         );
       } else {
         // Create new user logic
-        console.log('Creating new user');
+        form.forEach((element) => {
+          console.log('Creating new user info : ', element);
+        });
+
         response = await axios.post(import.meta.env.VITE_API_USERS, form);
       }
 
       // Handle the API response
       if (response.status === 200) {
         // Successful API call
-        message.success('Form submitted successfully!');
+        notificationSucess();
         // Reset the form fields or perform any other necessary cleanup
         // Assuming you have a function to reset the form fields
         navigate('/');
@@ -218,17 +219,25 @@ const FormUser = () => {
     } catch (error) {
       // Handle any errors that occur during the API call
       console.error('API error:', error);
-      message.error('An error occurred. Please try again later.');
+      notificationError(error);
     } finally {
       setInputsField({
         username: '',
         email: '',
-        // password: '',
+        password: '',
         isVerified: false,
         picture: [],
         role: 'user',
         color: '#ffffff',
       });
+      setFileList([
+        {
+          uid: '-1',
+          name: 'image.png',
+          status: 'done',
+          url: emptyProfil,
+        },
+      ]);
     }
   };
 
@@ -247,13 +256,33 @@ const FormUser = () => {
         url: response.data.picture,
       },
     ]);
-  }, []);
+  }, [id]);
 
   useEffect(() => {
+    console.log('ID', id);
     id && getUserById();
     id && setColorTarget(inputsField.color);
     id && setUserRole(inputsField.role);
-  }, []);
+    !id &&
+      setInputsField({
+        username: '',
+        email: '',
+        password: '',
+        isVerified: false,
+        picture: [],
+        role: 'user',
+        color: '#ffffff',
+      });
+    !id &&
+      setFileList([
+        {
+          uid: '-1',
+          name: 'image.png',
+          status: 'done',
+          url: emptyProfil,
+        },
+      ]);
+  }, [id]);
 
   const isNonMobile = useMediaQuery('(min-width:600px)');
   return (
@@ -301,7 +330,7 @@ const FormUser = () => {
             error={!!errors.email}
             required
           />
-          {/* <TextField
+          <TextField
             label={id ? '' : 'Password'}
             name="password"
             type="password"
@@ -309,7 +338,7 @@ const FormUser = () => {
             onChange={handleChange}
             error={!!errors.password}
             required
-          /> */}
+          />
           <FormControlLabel
             control={
               <Checkbox
@@ -347,30 +376,6 @@ const FormUser = () => {
             error={!!errors.color}
           />
         </Box>
-
-        {/* <Box display="flex" justifyContent="end" mt="20px">
-          <Popconfirm
-            placement="topRight"
-            title="Confirm Creation"
-            description={`${
-              id
-                ? 'Are you sur to update this user ?'
-                : 'Are you sur to create this new user ?'
-            }`}
-            onOpenChange={() => console.log('open change')}
-          >
-            <Button
-              type="submit"
-              onClick={(e) => handleSubmit(e)}
-              variant="contained"
-              style={{
-                backgroundColor: colors.greenAccent[600],
-              }}
-            >
-              {`${id ? 'Update User' : 'Create New User'}`}
-            </Button>
-          </Popconfirm>
-        </Box> */}
 
         <Box display="flex" justifyContent="end" mt="20px">
           <Popconfirm
