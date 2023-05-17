@@ -15,7 +15,6 @@ import { useTheme } from '@mui/material';
 import { ColorModeContext, tokens } from '../../theme';
 
 const CustomFormModal = ({ isOpenModal, setIsOpenModal, userInfo }) => {
-  // !! todo FIX BUTTON / LOGOUT BUTTON / CHECK API / clean message alert (login/device)
   const [form] = Form.useForm();
   const { getCookie, isLoading, setIsLoading } = useContext(UserContext);
   const [formWidget, setFormWidget] = useState('switch');

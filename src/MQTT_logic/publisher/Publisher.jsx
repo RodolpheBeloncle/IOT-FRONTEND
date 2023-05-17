@@ -35,15 +35,35 @@ const Publisher = ({ publish, topic, controller, connectStatus }) => {
         onFinish={onFinish}
       >
         <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+          {controller.widgetName && (
+            <TagLabel
+              style={{
+                display: 'flex',
+                fontFamily: 'Lucida Handwriting',
+              }}
+              label={'widget'}
+              content={controller.widgetName}
+              color={'red'}
+            />
+          )}
           {controller.createdBy && (
             <TagLabel
-              style={{ display: 'flex', fontFamily: 'Lucida Handwriting' }}
+              style={{
+                display: 'flex',
+                fontFamily: 'Lucida Handwriting',
+              }}
               label={'createdBy'}
               content={controller.createdBy}
               color={'cyan'}
             />
           )}
-          <Tag style={{ display: 'flex' }} color="geekblue">
+          <Tag
+            style={{
+              display: 'flex',
+              fontFamily: 'Lucida Handwriting',
+            }}
+            color="geekblue"
+          >
             Topic: {topic} <ConnectIndicator connectStatus={connectStatus} />
           </Tag>
         </span>

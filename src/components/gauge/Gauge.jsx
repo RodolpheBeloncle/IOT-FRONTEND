@@ -50,6 +50,12 @@ const Gauge = ({ value = 50, min, max, label, unit }) => {
         <text x="0" y="-0.1" textAnchor="middle" fontSize="0.28px">
           {formattedValue}
         </text>
+        <text x="-0.8" y="-0.1" textAnchor="start" fontSize="0.15px">
+          {min}
+        </text>
+        <text x="0.95" y="-0.1" textAnchor="end" fontSize="0.15px">
+          {max}
+        </text>
         <defs>
           <linearGradient
             id="Gauge__gradient"

@@ -5,10 +5,10 @@
 }
 
 .led-box {
-  height: 30px;
-  width: 25%;
+  /* height: 30px;
+  width: 25%; */
   /* margin: 10px 0; */
-  padding:2px;
+  /* padding:2px; */
   float: left;
 }
 

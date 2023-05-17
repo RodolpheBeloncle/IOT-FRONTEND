@@ -1,13 +1,8 @@
 import React, { useContext } from 'react';
-import { Alert, Breadcrumb, Row } from 'antd';
 import './breadCrumb.css';
-import {
-  HashRouter,
-  NavLink,
-  Route,
-  Routes,
-  useLocation,
-} from 'react-router-dom';
+import { ColorModeContext, tokens } from '../../theme';
+import { useTheme } from '@mui/material';
+import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
 import { UserContext } from '../../context/UserContextProvider';
 import { useMediaQuery } from '@mui/material';
 const breadcrumbNameMap = {
@@ -17,6 +12,9 @@ const breadcrumbNameMap = {
 
 const BreadCrumb = () => {
   const { userInfo } = useContext(UserContext);
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
+  const colorMode = useContext(ColorModeContext);
   const location = useLocation();
   const pathSnippets = location.pathname.split('/').filter((i) => i);
   const extraBreadcrumbItems = pathSnippets.map((_, index) => {
@@ -35,22 +33,43 @@ const BreadCrumb = () => {
 
   const isNonMobile = useMediaQuery('(min-width:760px)');
   return (
-    <div className="demo">
+    <div className="breadcrumb">
       {!isNonMobile && (
-        <div className="demo-nav">
-          <NavLink to="/">Dashboard</NavLink>
-          <NavLink to="/profil">Profil</NavLink>
-          <NavLink to="/FAQ">FAQ</NavLink>
+        <div className="breadcrumb-nav">
+          <NavLink style={{ color: colors.greenAccent[500] }} to="/">
+            Dashboard
+          </NavLink>
+          <NavLink style={{ color: colors.greenAccent[500] }} to="/profil">
+            Profil
+          </NavLink>
+          <NavLink style={{ color: colors.greenAccent[500] }} to="/FAQ">
+            FAQ
+          </NavLink>
           {userInfo.role === 'admin' ? (
             <>
-              <NavLink to="/manageTeam">Team</NavLink>
-              <NavLink to="/manageDevice">Devices</NavLink>
-              <NavLink to="/form/user">New User</NavLink>
+              <NavLink
+                style={{ color: colors.greenAccent[500] }}
+                to="/manageTeam"
+              >
+                Team
+              </NavLink>
+              <NavLink
+                style={{ color: colors.greenAccent[500] }}
+                to="/manageDevice"
+              >
+                Devices
+              </NavLink>
+              <NavLink
+                style={{ color: colors.greenAccent[500] }}
+                to="/form/user"
+              >
+                New User
+              </NavLink>
             </>
           ) : null}
         </div>
       )}
-      <Routes>
+      {/* <Routes>
         <Route path="/" element={<span>Dashboard</span>} />
         <Route path="/profil" element={<span>Profil</span>} />
         <Route path="/FAQ" element={<span>FAQ</span>} />
@@ -62,7 +81,7 @@ const BreadCrumb = () => {
           </>
         ) : null}
         <Route path="/profil" element={<span>Profil</span>} />
-      </Routes>
+      </Routes> */}
       {/* <Breadcrumb items={breadcrumbItems} /> */}
     </div>
   );
