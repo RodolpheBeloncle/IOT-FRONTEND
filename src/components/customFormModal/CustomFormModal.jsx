@@ -1,17 +1,9 @@
-import React, { useState, useContext } from 'react';
-import axios from 'axios';
+import React, { useState, useContext, useEffect } from 'react';
+import securedApi from '../../services/axiosInterceptor';
+import { UserContext } from '../../context/UserContextProvider';
+import Swal from 'sweetalert2';
 import './customFormModal.css';
-import {
-  Form,
-  Input,
-  Modal,
-  Row,
-  Col,
-  Radio,
-  Divider,
-  Popconfirm,
-  notification,
-} from 'antd';
+import { Form, Input, Modal, Row, Col, Radio, Divider, Popconfirm } from 'antd';
 import {
   PoweroffOutlined,
   LineChartOutlined,
@@ -25,6 +17,7 @@ import { ColorModeContext, tokens } from '../../theme';
 const CustomFormModal = ({ isOpenModal, setIsOpenModal, userInfo }) => {
   // !! todo FIX BUTTON / LOGOUT BUTTON / CHECK API / clean message alert (login/device)
   const [form] = Form.useForm();
+  const { getCookie, isLoading, setIsLoading } = useContext(UserContext);
   const [formWidget, setFormWidget] = useState('switch');
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -41,14 +34,6 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal, userInfo }) => {
     unit: '',
     createdBy: userInfo.email,
   });
-
-  const openNotification = (widgetName) => {
-    notification.success({
-      message: 'device Created',
-      description: `Your device ${widgetName} has been successfully created!`,
-      placement: 'bottomRight',
-    });
-  };
 
   const onFormInputsChange = (values) => {
     setFormInputs((prevState) => ({ ...prevState, ...values }));
@@ -69,22 +54,59 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal, userInfo }) => {
 
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
-    alert(errorInfo)
+    alert(errorInfo);
+  };
+
+  const onCreate = async (widget) => {
+    // If the form submission is successful, trigger the notification
+
+    Swal.fire({
+      icon: 'success',
+      title: '☑️ Successful',
+      text: `${widget} have been successfully created`,
+      customClass: {
+        container: 'popup-modal-container',
+        icon: 'popup-modal-icon', // Add a custom class for the icon
+      },
+      showConfirmButton: false, // Hide the default "OK" button
+      timer: 2000,
+    });
+  };
+
+  const throwError = async (error) => {
+    Swal.fire({
+      icon: 'error',
+      title: `⚠️ error`,
+      text: error,
+      customClass: {
+        container: 'popup-modal-container',
+        icon: 'popup-modal-icon', // Add a custom class for the icon
+      },
+      showConfirmButton: false,
+      timer: 2000,
+    });
   };
 
   const onFinish = async () => {
-    await axios
-      .post(import.meta.env.VITE_API_DEVICES, formInputs)
-      .then((res) => {
-        console.log('add controllers', res);
-        openNotification(formInputs.widgetName);
-        handleOk();
-        form.resetFields();
-      })
-      .catch((err) => {
-        onFinishFailed(err);
-        console.log(err);
-      });
+    try {
+      // Set user credentials
+      const token = getCookie('token');
+      const headers = { Authorization: `Bearer ${token}` };
+      const response = await securedApi.post(
+        import.meta.env.VITE_API_AUTH_DEVICES,
+        formInputs,
+        { headers: headers }
+      );
+
+      console.log('add controllers', response);
+      handleOk();
+      form.resetFields();
+      onCreate(formInputs.widgetName);
+    } catch (error) {
+      console.log(error.response.data);
+      handleCancel();
+      throwError(error.response.data);
+    }
   };
 
   return (

@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
 import './formUser.css';
 import { useParams, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
 import { UserContext } from '../../context/UserContextProvider';
 import emptyProfil from '../../assets/profile.png';
 import securedApi from '../../services/axiosInterceptor';
@@ -19,7 +18,7 @@ import {
   useTheme,
 } from '@mui/material';
 import { newUser } from '../../interface/NewUser';
-import { Upload, message, Popconfirm } from 'antd';
+import { Upload, message, Popconfirm, notification } from 'antd';
 import { ColorModeContext, tokens } from '../../theme';
 import ImgCrop from 'antd-img-crop';
 import * as yup from 'yup';
@@ -63,20 +62,6 @@ const FormUser = () => {
     //   .matches(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'Invalid color value'),
   });
   const [errors, setErrors] = useState({});
-
-  const notificationSucess = async (response) => {
-    Swal.fire({
-      title: response,
-      showClass: {
-        popup: 'animate__animated animate__fadeInDown',
-      },
-      hideClass: {
-        popup: 'animate__animated animate__fadeOutUp',
-      },
-    });
-  };
-
-  const notificationError = async (err) => {};
 
   const handleChange = (e) => {
     console.log(e.target.value);
@@ -133,12 +118,12 @@ const FormUser = () => {
     e.preventDefault();
 
     try {
-      // set User Credientials
+      // Set user credentials
       const token = getCookie('token');
       const headers = { Authorization: `Bearer ${token}` };
 
-      // form fields and their values stored in state variables
-      const form = await new FormData();
+      // Form fields and their values stored in state variables
+      const form = new FormData();
       const { color, picture, role, username, email, isVerified, password } =
         inputsField;
       form.append('color', color);
@@ -154,41 +139,48 @@ const FormUser = () => {
       if (id) {
         // Update existing user logic
         console.log('Updating user:', id);
+
         response = await securedApi.put(
           `${import.meta.env.VITE_API_AUTH_USERS}/${id}`,
           form,
-          { headers }
+          { headers: headers }
         );
+        notification.success({
+          message: 'Sucess',
+          description: response,
+          placement: 'top',
+        });
+        navigate('/');
       } else {
         // Create new user logic
         form.forEach((element) => {
-          console.log('Creating new user info : ', element);
+          console.log('Creating new user info:', element);
         });
 
         response = await securedApi.post(
           import.meta.env.VITE_API_AUTH_USERS,
           form,
-          {
-            headers,
-          }
+          { headers }
         );
+        notification.success({
+          message: 'Controller deleted',
+          description: response,
+          placement: 'top',
+        });
+        navigate('/');
       }
 
       // Handle the API response
-      if (response.status === 200) {
-        // Successful API call
-        notificationSucess(response);
-        // Reset the form fields or perform any other necessary cleanup
-        // Assuming you have a function to reset the form fields
-        navigate('/');
-      } else {
-        // API call failed
-        message.error('Failed to submit the form. Please try again.');
+      if (response.status !== 200) {
+        throw new Error('API call failed');
       }
-    } catch ({ response }) {
-      // Handle any errors that occur during the API call
-      console.error('API error:', response.data);
-      notificationError(response.data);
+    } catch (error) {
+      console.error('API error:', error);
+      notification.error({
+        message: 'error',
+        description: error.response.data,
+        placement: 'top',
+      });
     } finally {
       setInputsField({
         username: '',
@@ -204,7 +196,7 @@ const FormUser = () => {
           uid: '-1',
           name: 'image.png',
           status: 'done',
-          url: emptyProfil,
+          url: emptyProfile,
         },
       ]);
     }

@@ -9,6 +9,7 @@
     align-content: center;
     flex-wrap: wrap;
 }
+
 .css-13qp4b7-MuiButtonBase-root-MuiButton-root{
     background-color : #64bda5 !important;
 }
@@ -32,7 +33,13 @@
     transform: translate(-50%, -50%) !important;
 }
 
-@media (max-width: 580px){
+/* @media screen and (max-width: 600px) {
+    .column {
+      flex: 100% !important;
+    }
+  } */
+
+  @media (max-width: 580px){
     .ant-col {
       display: flex !important;
       flex-direction: column !important;

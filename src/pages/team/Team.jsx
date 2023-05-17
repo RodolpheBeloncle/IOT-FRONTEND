@@ -3,10 +3,11 @@ import '../styles/team.css';
 import { Box, Typography, useTheme, Checkbox } from '@mui/material';
 import emptyProfil from '../../assets/profile.png';
 import { useNavigate } from 'react-router-dom';
-import { Button, message, Popconfirm } from 'antd';
+import { Button, message, Popconfirm ,notification} from 'antd';
 import { DeleteOutlined, EditFilled } from '@ant-design/icons';
 import { UserContext } from '../../context/UserContextProvider';
 import axios from 'axios';
+import securedApi from '../../services/axiosInterceptor';
 import { DataGrid } from '@mui/x-data-grid';
 import { tokens } from '../../theme';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
@@ -16,6 +17,7 @@ import Header from '../../components/Header';
 
 const Team = () => {
   const { isAuthenticated } = useContext(UserContext);
+  const { getCookie, isLoading, setIsLoading } = useContext(UserContext);
   const [selectedRow, setSelectedRow] = useState(null);
   const [gridRows, setGridRows] = useState([]);
   const [page, setPage] = useState(0);
@@ -28,19 +30,25 @@ const Team = () => {
 
   console.log('auth MANAGE TEAM ', isAuthenticated);
 
-  const handleDelete = (id) => {
-    axios
-      .delete(import.meta.env.VITE_API_USERS + `/${id}`)
-      .then((res) => {
-        console.log('users', res.data);
-      })
-      .catch((err) => console.log(err));
-    message.success('row deleted', 2);
+  const handleDelete = async (id) => {
+    try {
+      // Set user credentials
+      const token = getCookie('token');
+      const headers = { Authorization: `Bearer ${token}` };
 
-    console.log('handledelete id :', id);
-    const updatedRows = gridRows.filter((row) => row._id !== id);
-    setGridRows(updatedRows);
-    setSelectedRow(null);
+      await securedApi.delete(`${import.meta.env.VITE_API_AUTH_USERS}/${id}`, {
+        headers,
+      });
+      console.log('User deleted successfully');
+      message.success('Row deleted', 2);
+
+      console.log('handleDelete id:', id);
+      const updatedRows = gridRows.filter((row) => row._id !== id);
+      setGridRows(updatedRows);
+      setSelectedRow(null);
+    } catch (err) {
+      console.log('Error deleting user:', err);
+    }
   };
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Button, Modal, message, Form, Input } from 'antd';
+import { Button, Modal, message, Form, Input, notification } from 'antd';
 import './styles/register.css';
 import axios from '../services/axiosInterceptor';
 // import axios from 'axios';
@@ -9,28 +9,39 @@ import { UserContext } from '../context/UserContextProvider';
 const Register = () => {
   const navigate = useNavigate();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const { setCookie } = useContext(UserContext);
+  const { isLoading, setIsLoading } = useContext(UserContext);
   const [form] = Form.useForm();
 
   const handleRegister = async (form) => {
     const { password, email, username } = form;
-    axios
-      .post(import.meta.env.VITE_API_AUTH_REGISTER, {
-        password,
-        email,
-        username,
-      })
-      .then((response) => {
-        console.log(response);
-        alert(response);
-      })
-      .catch((error) => {
-        alert(error.message);
-        console.log(error);
-      })
-      .finally(() => {
-        navigate('/login');
+
+    try {
+      const response = await axios.post(
+        import.meta.env.VITE_API_AUTH_REGISTER,
+        {
+          password,
+          email,
+          username,
+        }
+      );
+
+      notification.success({
+        message: 'Registration Successful',
+        description: response,
+        placement: 'top',
       });
+
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+      notification.error({
+        message: 'error',
+        description: error.response.data,
+        placement: 'top',
+      });
+    } finally {
+      navigate('/login');
+    }
   };
 
   const onFinish = (values) => {

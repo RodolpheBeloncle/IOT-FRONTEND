@@ -1,18 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
+import Spinner from '../../components/spinner/Spinner';
 import './controllersIoT.css';
 import { UserContext } from '../../context/UserContextProvider';
 import axios from 'axios';
+import securedApi from '../../services/axiosInterceptor';
 import { Box, useTheme, Checkbox } from '@mui/material';
-import { Button, message, Popconfirm } from 'antd';
+import { Button, message, Popconfirm, notification } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import { DataGrid } from '@mui/x-data-grid';
 import { tokens } from '../../theme';
-import UpdateFormModal from '../../components/UpdateFormModal';
+import UpdateFormModal from '../../components/updateFormModal/UpdateFormModal';
 
 import Header from '../../components/Header';
 
 const ControllersIoT = () => {
   //!! SET USERINFO TO KNOW WHO CREATED OR UPDATD BY
+  const { getCookie, isLoading, setIsLoading } = useContext(UserContext);
   const { isAuthenticated } = useContext(UserContext);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
@@ -24,23 +27,80 @@ const ControllersIoT = () => {
   const text = 'Are you sure to delete this device?';
   const description = 'Delete this device';
 
-  const handleDelete = (id) => {
-    axios
-      .delete(import.meta.env.VITE_API_DEVICES + `/${id}`)
-      .then((res) => {
-        console.log('devices', res.data);
-      })
-      .catch((err) => console.log(err));
-    message.success('controller deleted', 2);
+  // const handleDelete = async (id) => {
+  //   try {
+  //     const token = getCookie('token');
+  //     const headers = { Authorization: `Bearer ${token}` };
 
-    console.log('handledelete id :', id);
-    const updatedRows = gridRows.filter((row) => row.id !== id);
-    setGridRows(updatedRows);
-    setSelectedRow(null);
+  //     const response = await securedApi.delete(
+  //       `${import.meta.env.VITE_API_AUTH_DEVICES}/${id}`,
+  //       {
+  //         headers: headers,
+  //       }
+  //     );
+  //     console.log('devices', response.data);
+
+  //     notification.success({
+  //       message: 'Controller deleted',
+  //       description: response,
+  //       placement: 'top',
+  //     });
+
+  //     console.log('handleDelete id:', id);
+  //     const updatedRows = gridRows.filter((row) => row.id !== id);
+  //     setGridRows(updatedRows);
+  //     setSelectedRow(null);
+  //   } catch (error) {
+  //     console.log(err);
+  //     notification.error({
+  //       message: 'error',
+  //       description: error.response.data,
+  //       placement: 'top',
+  //     });
+  //   }
+  // };
+
+  const handleDelete = async (id) => {
+    try {
+      setIsLoading(true); // Set loading state to true
+
+      const token = getCookie('token');
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const response = await securedApi.delete(
+        `${import.meta.env.VITE_API_AUTH_DEVICES}/${id}`,
+        {
+          headers: headers,
+        }
+      );
+      console.log('devices', response.data);
+
+      notification.success({
+        message: 'Controller deleted',
+        description: response,
+        placement: 'top',
+      });
+
+      console.log('handleDelete id:', id);
+      const updatedRows = gridRows.filter((row) => row.id !== id);
+      setGridRows(updatedRows);
+      setSelectedRow(null);
+    } catch (error) {
+      console.log(error);
+      notification.error({
+        message: 'Error',
+        description: error.response.data,
+        placement: 'top',
+      });
+    } finally {
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+    }
   };
 
-  useEffect(() => {
-    axios
+  const getDevices = async () => {
+    await axios
       .get(import.meta.env.VITE_API_DEVICES)
       .then((res) => {
         console.log('devices', res.data);
@@ -50,7 +110,18 @@ const ControllersIoT = () => {
         }));
         setGridRows(rows);
       })
-      .catch((err) => console.log(err));
+      .catch((error) => {
+        console.log(error);
+        notification.error({
+          message: 'error',
+          description: error.response.data,
+          placement: 'top',
+        });
+      });
+  };
+
+  useEffect(() => {
+    getDevices();
   }, []);
 
   const theme = useTheme();
@@ -104,12 +175,10 @@ const ControllersIoT = () => {
       flex: 1,
       renderCell: (params) => (
         <UpdateFormModal
-          gridRows={gridRows}
-          setGridRows={setGridRows}
           device={selectedRow}
-          setDevice={setSelectedRow}
           isOpenModal={isOpenModal}
           setIsOpenModal={setIsOpenModal}
+          refreshData={getDevices}
         />
       ),
     },
@@ -129,6 +198,7 @@ const ControllersIoT = () => {
         >
           <Button>
             <DeleteOutlined />
+            <Spinner isLoading={isLoading} key={params.row.id} />
           </Button>
         </Popconfirm>
       ),

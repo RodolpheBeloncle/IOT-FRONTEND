@@ -1,14 +1,14 @@
 import React, { useState, useContext } from 'react';
 import './styles/login.css';
 import { ReactComponent as IotLogo } from '../img/iot_logo.svg';
-import { Space, Spin, message } from 'antd';
+import { Space, Spin, notification, message } from 'antd';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { UserContext } from '../context/UserContextProvider';
 
 const Login = () => {
-  const { setIsAuthenticated, getCookie, setCookie } = useContext(UserContext);
-  const [isLoading, setIsLoading] = useState(null);
+  const { setIsAuthenticated, getCookie, setCookie, isLoading, setIsLoading } =
+    useContext(UserContext);
   const navigate = useNavigate();
   const [loginCredentials, setLoginCredentials] = useState({
     email: '',
@@ -25,15 +25,26 @@ const Login = () => {
         import.meta.env.VITE_API_AUTH_LOGIN,
         loginCredentials
       );
+
       const { message, token } = response.data;
 
       await setCookie('token', token);
       setIsAuthenticated(true);
-      alert(message);
+
+   
+      notification.success({
+        message: 'Login Successful',
+        description: message,
+        placement: 'bottomRight',
+      });
 
       navigate('/');
-    } catch (err) {
-      alert(err.message);
+    } catch (error) {
+      notification.error({
+        message: 'error',
+        description: error.response.data,
+        placement: 'top',
+      });
     } finally {
       setIsLoading(false);
     }
