@@ -1,9 +1,5 @@
 # react-vite-iot-project
 
-# FrontEnd_IOT_PROJECT
-
-# FrontEnd_IOT_PROJECT
-
 # IOT-FRONTEND
 
 #LAUNCH JSON_SERVER
