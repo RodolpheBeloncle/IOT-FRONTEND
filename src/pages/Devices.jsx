@@ -53,11 +53,13 @@ const Devices = () => {
   return (
     <>
       {/* <Row className="row" span={4} style={{ margin: '10px' }}> */}
-      <CustomFormModal
-        isOpenModal={isOpenModal}
-        setIsOpenModal={setIsOpenModal}
-        userInfo={userInfo}
-      />
+      {userInfo.role === 'admin' && (
+        <CustomFormModal
+          isOpenModal={isOpenModal}
+          setIsOpenModal={setIsOpenModal}
+          userInfo={userInfo}
+        />
+      )}
       {/* </Row> */}
       {/* SEARCH BAR */}
       <TextField

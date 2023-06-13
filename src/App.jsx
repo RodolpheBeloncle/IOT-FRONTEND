@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import './app.css';
 import { CssBaseline, ThemeProvider } from '@mui/material';
 import { ColorModeContext, useMode } from './theme';
 import { Routes, Route } from 'react-router-dom';
@@ -16,6 +15,7 @@ import FormUser from './pages/form/FormUser';
 import NotFound from './pages/notFound/NotFound';
 import { UserContext } from './context/UserContextProvider';
 import FAQ from './pages/faq/Faq';
+import './App.css';
 
 const App = () => {
   const [theme, colorMode] = useMode();
@@ -49,7 +49,6 @@ const App = () => {
               </Route>
               <Route exact path="/manageTeam" element={<Team />} />
               <Route exact path="/manageDevice" element={<ControllersIoT />} />
-             
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>

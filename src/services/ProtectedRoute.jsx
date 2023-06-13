@@ -8,7 +8,6 @@ import BreadCrumb from '../components/breadCrumb/BreadCrumb';
 import Topbar from '../components/topbar/Topbar';
 import { MyProSidebarProvider } from '../pages/sidebar/sidebarContext';
 
-
 const ProtectedRoute = ({ isAuthenticated }) => {
   const {
     setTokenAuth,
@@ -36,7 +35,7 @@ const ProtectedRoute = ({ isAuthenticated }) => {
         setUserInfo({
           picture,
           email,
-          role:"admin",
+          role,
           username,
         });
         setTokenAuth(token);
