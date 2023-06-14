@@ -9,12 +9,10 @@ const Subscriber = ({ sub, unSub, showUnsub, topic, setTopic }) => {
   const qosOptions = useContext(QosOption);
 
   function handleSelectChange(value) {
-    console.log('qos selected', selectedQos);
     setSelectedQuos(value);
   }
 
   function handleChangeTopic(event) {
-    console.log('onChangeTopic : ', event.target.value);
     setTopic(event.target.value);
   }
 
@@ -24,14 +22,11 @@ const Subscriber = ({ sub, unSub, showUnsub, topic, setTopic }) => {
   };
 
   const onFinish = (values) => {
-    console.log('values', values);
-    console.log('record', record);
     sub(values);
   };
 
   const handleUnsub = () => {
     const values = form.getFieldsValue();
-    console.log('unsub', values);
     unSub(values);
   };
 

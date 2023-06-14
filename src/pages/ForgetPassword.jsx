@@ -16,12 +16,10 @@ const ForgetPassword = () => {
         email: email,
       })
       .then(({ response }) => {
-        console.log(response);
         alert(response);
         navigate('/login');
       })
       .catch((error) => {
-        console.log(error);
         alert(error);
       });
   };

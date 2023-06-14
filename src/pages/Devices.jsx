@@ -21,13 +21,10 @@ const Devices = () => {
 
   const { getCookie, userInfo } = useContext(UserContext);
 
-  console.log('DECODEEDtoken', jwtDecode(getCookie('token')));
-
   const getDevicesList = useCallback(() => {
     axios
       .get('http://localhost:5000/api/device')
       .then((res) => {
-        console.log('Devices : ', res.data);
         setDevices(res.data);
       })
       .catch((err) => console.log(err));
@@ -78,7 +75,10 @@ const Devices = () => {
         {filteredData?.length > 0 ? (
           filteredData.map((controller, index) => (
             <Row key={index} className="row" span={4}>
-              <CardDevice key={controller.id} controllersIOT={controller} />
+              <CardDevice
+                key={controller.id}
+                controllersIOT={controller}
+              />
             </Row>
           ))
         ) : (

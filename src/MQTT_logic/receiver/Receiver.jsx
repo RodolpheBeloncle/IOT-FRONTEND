@@ -27,19 +27,12 @@ const Receiver = ({
   const [messages, setMessages] = useState([]);
   const qosOptions = useContext(QosOption);
 
-  // !todo set possiblity to unsubscribe in the recever
-  // const handleUnsub = () => {
-  //   const values = form.getFieldsValue();
-  //   console.log('unsub', values);
-  //   unSub(values);
-  // };
-
   useEffect(() => {
     if (payload.topic) {
       setMessages((messages) => [...messages, payload]);
     }
 
-    console.log(payload.message);
+    console.log("payload message : ",payload.message);
   }, [topic]);
 
   const refresh = () => {

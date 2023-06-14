@@ -64,7 +64,6 @@ const FormUser = () => {
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    console.log(e.target.value);
     const { name, value, type, checked } = e.target;
     setInputsField((prevData) => ({
       ...prevData,
@@ -73,7 +72,6 @@ const FormUser = () => {
   };
 
   const handleChangeRole = (e) => {
-    console.log('role: ', e.target.value);
     setUserRole(e.target.value);
     setInputsField((prevData) => ({
       ...prevData,
@@ -81,7 +79,6 @@ const FormUser = () => {
     }));
   };
   const handleChangeColor = (e) => {
-    console.log('color: ', e.target.value);
     setColorTarget(e.target.value);
     setInputsField((prevData) => ({
       ...prevData,
@@ -90,7 +87,6 @@ const FormUser = () => {
   };
 
   const onChangeFile = ({ file, fileList }) => {
-    console.log('fileList', fileList);
     setFileList(fileList);
 
     setInputsField((prevState) => ({
@@ -137,9 +133,6 @@ const FormUser = () => {
       let response;
 
       if (id) {
-        // Update existing user logic
-        console.log('Updating user:', id);
-
         response = await securedApi.put(
           `${import.meta.env.VITE_API_AUTH_USERS}/${id}`,
           form,
@@ -154,7 +147,6 @@ const FormUser = () => {
       } else {
         // Create new user logic
         form.forEach((element) => {
-          console.log('Creating new user info:', element);
         });
 
         response = await securedApi.post(
@@ -175,7 +167,6 @@ const FormUser = () => {
         throw new Error('API call failed');
       }
     } catch (error) {
-      console.error('API error:', error);
       notification.error({
         message: 'error',
         description: error.response.data,
@@ -204,11 +195,7 @@ const FormUser = () => {
 
   const getUserById = useCallback(async () => {
     const response = await axios.get(`${import.meta.env.VITE_API_USERS}/${id}`);
-
-    console.log('getuser', response.data);
-
     setInputsField(response.data);
-
     setFileList([
       {
         uid: '-1',
@@ -220,7 +207,7 @@ const FormUser = () => {
   }, []);
 
   useEffect(() => {
-    console.log('ID', id);
+  
     id && getUserById();
     id && setColorTarget(inputsField.color);
     id && setUserRole(inputsField.role);

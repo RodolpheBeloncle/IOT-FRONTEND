@@ -14,7 +14,6 @@ const Publisher = ({ publish, topic, controller, connectStatus }) => {
   });
 
   const onFinish = () => {
-    console.log('onFinish', Object.assign(record));
     publish(record);
   };
 

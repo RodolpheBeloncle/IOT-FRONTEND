@@ -22,47 +22,13 @@ const ControllersIoT = () => {
   const [gridRows, setGridRows] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  console.log('auth MANAGE TEAM ', isAuthenticated);
-
+ 
   const text = 'Are you sure to delete this device?';
   const description = 'Delete this device';
 
-  // const handleDelete = async (id) => {
-  //   try {
-  //     const token = getCookie('token');
-  //     const headers = { Authorization: `Bearer ${token}` };
-
-  //     const response = await securedApi.delete(
-  //       `${import.meta.env.VITE_API_AUTH_DEVICES}/${id}`,
-  //       {
-  //         headers: headers,
-  //       }
-  //     );
-  //     console.log('devices', response.data);
-
-  //     notification.success({
-  //       message: 'Controller deleted',
-  //       description: response,
-  //       placement: 'top',
-  //     });
-
-  //     console.log('handleDelete id:', id);
-  //     const updatedRows = gridRows.filter((row) => row.id !== id);
-  //     setGridRows(updatedRows);
-  //     setSelectedRow(null);
-  //   } catch (error) {
-  //     console.log(err);
-  //     notification.error({
-  //       message: 'error',
-  //       description: error.response.data,
-  //       placement: 'top',
-  //     });
-  //   }
-  // };
-
   const handleDelete = async (id) => {
     try {
-      setIsLoading(true); // Set loading state to true
+      setIsLoading(true);
 
       const token = getCookie('token');
       const headers = { Authorization: `Bearer ${token}` };
@@ -73,20 +39,17 @@ const ControllersIoT = () => {
           headers: headers,
         }
       );
-      console.log('devices', response.data);
-
+     
       notification.success({
         message: 'Controller deleted',
         description: response,
         placement: 'top',
       });
 
-      console.log('handleDelete id:', id);
       const updatedRows = gridRows.filter((row) => row.id !== id);
       setGridRows(updatedRows);
       setSelectedRow(null);
     } catch (error) {
-      console.log(error);
       notification.error({
         message: 'Error',
         description: error.response.data,
@@ -103,7 +66,7 @@ const ControllersIoT = () => {
     await axios
       .get(import.meta.env.VITE_API_DEVICES)
       .then((res) => {
-        console.log('devices', res.data);
+     
         const rows = res.data.map((row) => ({
           id: row._id, // assuming your MongoDB documents have an _id field
           ...row, // add any other fields from your document as needed
@@ -111,7 +74,6 @@ const ControllersIoT = () => {
         setGridRows(rows);
       })
       .catch((error) => {
-        console.log(error);
         notification.error({
           message: 'error',
           description: error.response.data,
@@ -206,7 +168,6 @@ const ControllersIoT = () => {
   ];
 
   const handleModifyRow = (editedRow) => {
-    console.log('handleModify id :', editedRow.id);
     const updatedRows = rows.map((row) => {
       if (row.id === editedRow.id) {
         return editedRow;

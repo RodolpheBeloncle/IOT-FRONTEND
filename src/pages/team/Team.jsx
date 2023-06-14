@@ -28,8 +28,6 @@ const Team = () => {
   const text = 'Are you sure to delete this user?';
   const description = 'Delete the user';
 
-  console.log('auth MANAGE TEAM ', isAuthenticated);
-
   const handleDelete = async (id) => {
     try {
       // Set user credentials
@@ -39,15 +37,11 @@ const Team = () => {
       await securedApi.delete(`${import.meta.env.VITE_API_AUTH_USERS}/${id}`, {
         headers,
       });
-      console.log('User deleted successfully');
       message.success('Row deleted', 2);
-
-      console.log('handleDelete id:', id);
       const updatedRows = gridRows.filter((row) => row._id !== id);
       setGridRows(updatedRows);
       setSelectedRow(null);
     } catch (err) {
-      console.log('Error deleting user:', err);
     }
   };
 
@@ -55,7 +49,6 @@ const Team = () => {
     axios
       .get(import.meta.env.VITE_API_USERS)
       .then((res) => {
-        console.log('users', res.data);
         const rows = res.data.map((row) => ({
           id: row._id, // assuming your MongoDB documents have an _id field
           ...row, // add any other fields from your document as needed
@@ -182,7 +175,6 @@ const Team = () => {
   ];
 
   const handleModifyRow = (editedRow) => {
-    console.log('handleModify id :', editedRow._id);
     const updatedRows = rows.map((row) => {
       if (row.id === editedRow._id) {
         return editedRow;

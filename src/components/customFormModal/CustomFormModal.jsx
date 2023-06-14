@@ -36,7 +36,6 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal, userInfo }) => {
 
   const onFormInputsChange = (values) => {
     setFormInputs((prevState) => ({ ...prevState, ...values }));
-    console.log('onChange target value  : ', values);
   };
 
   const showModal = () => {
@@ -52,7 +51,6 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal, userInfo }) => {
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
     alert(errorInfo);
   };
 
@@ -97,12 +95,11 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal, userInfo }) => {
         { headers: headers }
       );
 
-      console.log('add controllers', response);
+    
       handleOk();
       form.resetFields();
       onCreate(formInputs.widgetName);
     } catch (error) {
-      console.log(error.response.data);
       handleCancel();
       throwError(error.response.data);
     }
@@ -135,7 +132,6 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal, userInfo }) => {
                 ...prevState,
                 type: e.target.value,
               }));
-              console.log('type', e.target.value);
             }}
           >
             {' '}
@@ -151,7 +147,6 @@ const CustomFormModal = ({ isOpenModal, setIsOpenModal, userInfo }) => {
                 ...prevState,
                 type: e.target.value,
               }));
-              console.log('type', e.target.value);
             }}
           >
             {' '}

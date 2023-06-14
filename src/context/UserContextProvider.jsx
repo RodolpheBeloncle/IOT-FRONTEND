@@ -38,7 +38,6 @@ export const UserContextProvider = ({ children }) => {
       message.success('successfully logout !', 2);
       navigate('/login');
     } catch (error) {
-      console.log('logout error : ', error);
       message.error(error, 2);
     }
   };
@@ -51,15 +50,13 @@ export const UserContextProvider = ({ children }) => {
       const tokenCookie = await cookieArray.find((cookie) =>
         cookie.trim().startsWith('token=')
       );
-      console.log('token', tokenCookie);
+
       if (tokenCookie) {
         const token = tokenCookie.split('=')[1];
-        console.log('token', jwtDecode(token));
+
         setTokenAuth(token);
       }
-    } catch (error) {
-      console.log('message error : ', error);
-    }
+    } catch (error) {}
   };
 
   return (

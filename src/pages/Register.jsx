@@ -27,13 +27,10 @@ const Register = () => {
 
       notification.success({
         message: 'Registration Successful',
-        description: response,
+        description: response.data,
         placement: 'top',
       });
-
-      console.log(response);
     } catch (error) {
-      console.log(error);
       notification.error({
         message: 'error',
         description: error.response.data,
@@ -46,14 +43,12 @@ const Register = () => {
 
   const onFinish = (values) => {
     setIsModalVisible(true);
-    console.log('Form values:', values);
   };
 
   const handleModalOk = () => {
     form.validateFields().then((values) => {
       setIsModalVisible(false);
       handleRegister(values);
-      console.log('Registering user:', values);
       form.resetFields();
     });
   };

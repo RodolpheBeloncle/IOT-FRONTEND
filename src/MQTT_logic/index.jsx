@@ -62,37 +62,10 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
       client.publish(topic, payload, options, (error) => {
         if (error) {
           console.log('Publish error: ', error.message);
-          // !! handle this error warning(error.message);
         }
       });
     }
   };
-
-  // const mqttSub = (subscription) => {
-  //   if (client) {
-  //     const { topic, qos } = subscription;
-  //     client.subscribe(topic, { qos }, (error) => {
-  //       if (error) {
-  //         console.log('Subscribe to topics error', error);
-  //         return;
-  //       }
-  //       setIsSub(true);
-  //     });
-  //   }
-  // };
-
-  // const mqttUnSub = (subscription) => {
-  //   if (client) {
-  //     const { topic } = subscription;
-  //     client.unsubscribe(topic, (error) => {
-  //       if (error) {
-  //         console.log('Unsubscribe error', error);
-  //         return;
-  //       }
-  //       setIsSub(false);
-  //     });
-  //   }
-  // };
 
   const mqttSub = () => {
     const record = {
@@ -104,8 +77,7 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
       const { topic, qos } = record;
       client.subscribe(topic, { qos }, (error) => {
         if (error) {
-          console.log('Subscribe to topics error', error.message);
-          // !! handle this error warning(error.message);
+          console.log('client subscribe error : ', error);
         }
         setIsSub(true);
         success(`subscribed to topic : ${controllersIOT.topic}`);
@@ -122,7 +94,6 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
       const { topic } = record;
       client.unsubscribe(topic, (error) => {
         if (error) {
-          console.log('Unsubscribe error', error.message);
           warning(error.message);
         }
         setIsSub(false);
@@ -170,7 +141,6 @@ const HookMqtt = ({ controllersIOT, connectStatus, setConnectStatus }) => {
         setPayload({ topic, message: message.toString() });
       });
     }
-    // console.log('Received message:', payload);
   }, [client, connectStatus, topic]);
 
   return (

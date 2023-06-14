@@ -2,7 +2,6 @@ import React from 'react';
 import './connectIndicator.css';
 
 const ConnectIndicator = ({ connectStatus }) => {
-  console.log(connectStatus);
   return (
     <div className="container">
       {connectStatus === 'connect' && (

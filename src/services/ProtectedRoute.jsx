@@ -50,7 +50,7 @@ const ProtectedRoute = ({ isAuthenticated }) => {
       !googleAuth &&
       message.success('successfully logged in !', 1);
   }, []);
-  console.log('protectedroute', isAuthenticated);
+  console.log('isAuthenticated : ', isAuthenticated);
 
   return isAuthenticated === true ? (
     <MyProSidebarProvider>

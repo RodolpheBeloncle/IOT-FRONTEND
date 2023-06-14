@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import HookMqtt from '../MQTT_logic';
 
-const CardDevice = ({ controllersIOT }) => {
+const CardDevice = ({ controllersIOT}) => {
   const [connectStatus, setConnectStatus] = useState('connect');
   const [backgroundCol, setBackgroundCol] = useState('Red');
 
@@ -20,8 +20,7 @@ const CardDevice = ({ controllersIOT }) => {
         ? 'Orange'
         : 'Red'
     );
-    // console.log("connectstatus from cardevice", connectStatus);
-    // console.log("backgroundcol", backgroundCol);
+
   }, [connectStatus, backgroundCol]);
   return (
     <div className="card">

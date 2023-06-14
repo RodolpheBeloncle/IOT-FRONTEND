@@ -10,8 +10,6 @@ export const useAuth = () => {
   const login = (token, username) => {
     document.cookie = `token=${token}`;
     document.cookie = `username=${username}`;
-
-    console.log('Cooky have been seted!!!');
     setIsAuthenticated(true);
   };
 
@@ -26,8 +24,6 @@ export const useAuth = () => {
   const checkAuthentication = async () => {
     document.cookie = `token=${token}`;
     const token = document.cookie.token;
-
-    console.log('decoded token : ', jwtDecode(token));
     try {
       if (token) {
         const decodedToken = jwtDecode(token);
@@ -44,7 +40,6 @@ export const useAuth = () => {
         setIsAuthenticated(false);
       }
     } catch (error) {
-      console.log('error token', error.message);
     }
   };
 

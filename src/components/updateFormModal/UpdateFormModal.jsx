@@ -36,11 +36,8 @@ const UpdateFormModal = ({
   };
   const handleFormInputChange = (changedValues, allValues) => {
     // Handle the form input change here
-    console.log('Changed Values:', changedValues);
-    console.log('All Values:', allValues);
     form.setFieldValue(allValues);
 
-    console.log('form.getFieldValue', form.getFieldValue());
   };
 
   const showModal = () => {
@@ -57,7 +54,6 @@ const UpdateFormModal = ({
   };
 
   const handleCancel = () => {
-    console.log('cancel');
     setIsOpenModal(false);
   };
 
@@ -83,7 +79,6 @@ const UpdateFormModal = ({
       // Delay the loading spinner for 1 second
       setTimeout(() => {
         setIsLoading(false);
-        console.log('API response:', response);
         notification.success({
           message: 'Success',
           description: response,

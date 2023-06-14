@@ -33,9 +33,6 @@ const ProgressCircle = ({
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const angle = progress * 360;
-  // const angle = (parseInt(progress) / 100) * 360;
-
-  // console.log(parseInt(progress) / 100 || 0);
 
   useEffect(() => {
     if (data.message < '15') {
