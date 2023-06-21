@@ -46,7 +46,7 @@ const Devices = () => {
 
   useEffect(() => {
     getDevicesList();
-  }, []);
+  }, [devices]);
   return (
     <>
       {/* <Row className="row" span={4} style={{ margin: '10px' }}> */}
@@ -75,10 +75,7 @@ const Devices = () => {
         {filteredData?.length > 0 ? (
           filteredData.map((controller, index) => (
             <Row key={index} className="row" span={4}>
-              <CardDevice
-                key={controller.id}
-                controllersIOT={controller}
-              />
+              <CardDevice key={controller.id} controllersIOT={controller} />
             </Row>
           ))
         ) : (
