@@ -21,14 +21,14 @@ const Devices = () => {
 
   const { getCookie, userInfo } = useContext(UserContext);
 
-  const getDevicesList = useCallback(() => {
-    axios
-      .get('http://localhost:5000/api/device')
-      .then((res) => {
-        setDevices(res.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  const getDevicesList = async () => {
+    try {
+      const response = await axios.get(import.meta.env.VITE_API_DEVICES);
+      setDevices(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
@@ -45,8 +45,10 @@ const Devices = () => {
   });
 
   useEffect(() => {
-    getDevicesList();
-  }, [devices]);
+    getDevicesList(); // Fetch devices data once when the component mounts
+  }, []); // Empty dependency array to run the effect only once
+
+  console.log('test', devices);
   return (
     <>
       {/* <Row className="row" span={4} style={{ margin: '10px' }}> */}

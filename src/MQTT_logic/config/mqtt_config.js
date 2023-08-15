@@ -1,3 +1,4 @@
+
 export const connection_config = {
   url: import.meta.env.VITE_REACT_APP_MQTT_BROKER_URL,
   options: {
@@ -12,10 +13,15 @@ export const connection_config = {
       qos: 0,
       retain: false,
     },
-    requestCert: true,
-    rejectUnauthorized: false,
-    clientId: '',
-    username: import.meta.env.VITE_REACT_APP_BROKER_AUTH_USER_NAME,
-    password: import.meta.env.VITE_REACT_APP_BROKER_AUTH_PASSWORD,
+  
+    clientId: 'randomclient',
+
   },
 };
+     //rejectUnauthorized: true,
+    //requestCert: true,
+    // username: import.meta.env.VITE_REACT_APP_BROKER_AUTH_USER_NAME,
+    // password: import.meta.env.VITE_REACT_APP_BROKER_AUTH_PASSWORD,
+    // ca: [fs.readFileSync(import.meta.env.VITE_SSL_CA_CERT)],
+    // cert: fs.readFileSync(import.meta.env.VITE_SSL_SERVER_CERT),
+    // key: fs.readFileSync(import.meta.env.VITE_SSL_SERVER_KEY),

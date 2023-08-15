@@ -31,7 +31,6 @@ const Login = () => {
       await setCookie('token', token);
       setIsAuthenticated(true);
 
-   
       notification.success({
         message: 'Login Successful',
         description: message,
@@ -51,7 +50,7 @@ const Login = () => {
   };
 
   const handleGoogleLogin = async () => {
-    window.open('http://localhost:5000/auth/google', '_self');
+    window.open(import.meta.env.VITE_API_AUTH_GOOGLE_LOGIN, '_self');
   };
 
   const googleLogin = () => {
@@ -82,17 +81,6 @@ const Login = () => {
         {/* <IotLogo /> */}
         <div className="left">
           <IotLogo />
-          {/* <div className="google-btn" onClick={googleLogin}>
-            <div className="google-icon-wrapper">
-              <img
-                className="google-icon"
-                src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
-              />
-            </div>
-            <p className="btn-text">
-              <b>Sign in with google</b>
-            </p>
-          </div> */}
           <div className="google-btn" onClick={googleLogin}>
             <div className="google-icon-wrapper">
               <img

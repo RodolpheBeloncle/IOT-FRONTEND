@@ -19,8 +19,18 @@ export default {
     }),
   ],
   server: {
-    host: '0.0.0.0',
+    // host: '0.0.0.0',
     port: 3000,
+    // https: {
+    //   ca: fs.readFileSync('./src/certs/ca.crt'),
+    //   key: fs.readFileSync('./src/certs/mosquitto_server.key'),
+    //   cert: fs.readFileSync('./src/certs/mosquitto_server.crt'),
+    // },
+
+    hmr: {
+      // ...
+      protocol: 'ws', // Use 'ws' for WebSocket
+    },
   },
 
   resolve: {
